@@ -27,9 +27,10 @@ if (!$is_included) {
 
 require_once __DIR__ . '/func/func.php';
 
-$tb_user = 'x_user';
-$tb_mchs = 'x_mchs';
-$tb_lib  = 'x_lib';
+// 被 include 时不覆盖调用方已设置的表名（如 kj.php 中 $tb_lib 可能为 x_lib_total）
+if (!isset($tb_user)) $tb_user = 'x_user';
+if (!isset($tb_mchs)) $tb_mchs = 'x_mchs';
+if (!isset($tb_lib))  $tb_lib  = 'x_lib';
 
 /** 根据商户回调根地址 + 方法名拼出请求 URL，如 https://www.baidu.com -> https://www.baidu.com/getBalance */
 function task_mch_method_url($callback_url, $method) {

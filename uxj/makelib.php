@@ -669,7 +669,7 @@ switch ($_REQUEST['xtype']) {
                         'pid'     => $p['pid'],
                         'content' => isset($p['con']) ? $p['con'] : '',
                         'je'      => (float)$p['je'],
-                        'gname'   => isset($p['gname']) ? $p['gname'] : '',
+                        'gname'   => isset($p['gname']) ? $p['gname'] : (isset($config['gname']) ? $config['gname'] : ''),
                     );
                 }
             }
