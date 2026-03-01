@@ -252,6 +252,7 @@ switch ($_REQUEST['xtype']) {
         $arr = json_decode($str, true);
         $ca  = count($arr);
         $kksql->query($updatestr);
+        $cancelled_ids = array(); // 收集被设为 z=7 的注单 ID
         for ($i = 0; $i < $ca; $i++) {
             $pid = '';
 			$zt = $arr[$i]['zt'];
@@ -259,14 +260,46 @@ switch ($_REQUEST['xtype']) {
             $msql->next_record();
             if($msql->f('id')!=''){
 			   if($zt==0){
-				  $sql = "update `$tb_lib` set z=7 where id='".$msql->f('id')."'";				  
+				  $sql = "update `$tb_lib` set z=7 where id='".$msql->f('id')."'";
+				  $cancelled_ids[] = (int)$msql->f('id');
 			   }else  if($zt==1){
 				  $sql = "update `$tb_lib` set z=9 where id='".$msql->f('id')."'";
-			   }			   
+			   }
                $fsql->query($sql);
 			}
         }
         $kksql->query($updatecc);
+        // 规则六：取消注单后按用户分组推送 cancelOrder 通知
+        if (!empty($cancelled_ids)) {
+            if (!function_exists('mch_notify_cancel_orders')) {
+                require_once __DIR__ . '/../task_notify_mch.php';
+            }
+            $id_list = implode(',', $cancelled_ids);
+            $msql->query("SELECT id,tid,code,userid,qishu,dates,gid,bid,sid,cid,pid,content,je,time FROM `$tb_lib` WHERE id IN ($id_list)");
+            $cancel_by_user = array();
+            while ($msql->next_record()) {
+                $uid_c = $msql->f('userid');
+                $cancel_by_user[$uid_c][] = array(
+                    'id'      => $msql->f('id'),
+                    'tid'     => $msql->f('tid'),
+                    'code'    => $msql->f('code'),
+                    'userid'  => $uid_c,
+                    'qishu'   => $msql->f('qishu'),
+                    'dates'   => $msql->f('dates'),
+                    'gid'     => $msql->f('gid'),
+                    'bid'     => $msql->f('bid'),
+                    'sid'     => $msql->f('sid'),
+                    'cid'     => $msql->f('cid'),
+                    'pid'     => $msql->f('pid'),
+                    'content' => $msql->f('content'),
+                    'je'      => (float)$msql->f('je'),
+                    'time'    => $msql->f('time'),
+                );
+            }
+            foreach ($cancel_by_user as $uid_c => $orders_c) {
+                mch_notify_cancel_orders($uid_c, $orders_c);
+            }
+        }
         echo 1;
         break;
 		

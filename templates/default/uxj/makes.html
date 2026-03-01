@@ -33,6 +33,39 @@ var js=0;
 var sss="make";
 var ustatus = {+$status+};
 </script>
+<script type="text/javascript">
+/* 规则三：进入游戏后实时无刷新轮询余额，同步运营商余额并刷新显示 */
+(function(){
+    var _balUrl = 'makelib.php';
+    var _balInterval = 30000;
+    function _refreshBalance(){
+        $.ajax({
+            url: _balUrl,
+            type: 'GET',
+            data: {xtype: 'getbalance'},
+            dataType: 'json',
+            timeout: 8000,
+            success: function(d){
+                if(d && d.code === 0){
+                    var b = (typeof d.kmoney !== 'undefined') ? d.kmoney : d.money;
+                    var v = parseFloat(b).toFixed(1);
+                    // 优先更新已知余额元素
+                    if($('#ux_balance_val').length) $('#ux_balance_val').text(v);
+                    if(typeof window.updateBalanceDisplay === 'function') window.updateBalanceDisplay(v);
+                }
+            }
+        });
+    }
+    $(function(){
+        // 在头部余额区插入显示
+        if($('#ux_balance_bar').length === 0){
+            $('#header .lottery_info_left').append('<span class="result" id="ux_balance_bar">余额：<span id="ux_balance_val">{+$kmoney+}</span></span>');
+        }
+        setTimeout(_refreshBalance, 2000);
+        setInterval(_refreshBalance, _balInterval);
+    });
+})();
+</script>
 <div class="sub main" style="display: none;">
 {+if $fenlei!=100+}<a href='javascript:void(0)' bid='' >两面盘</a> {+/if+}
       {+if $fenlei==107+}<a href='javascript:void(0)' bid='15'>单号1 ~ 10</a>{+/if+}

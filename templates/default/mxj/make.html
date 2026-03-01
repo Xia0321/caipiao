@@ -10,6 +10,32 @@ top.document.title = document.title;
 var sss='make|ss';
 var js=0;
 </script>
+<script type="text/javascript">
+/* 规则三：进入游戏后实时无刷新轮询余额 */
+(function(){
+    var _balUrl = 'makelib.php';
+    var _balInterval = 30000; // 每30秒轮询一次
+    function _refreshBalance(){
+        $.ajax({
+            url: _balUrl,
+            type: 'GET',
+            data: {xtype: 'getbalance'},
+            dataType: 'json',
+            timeout: 8000,
+            success: function(d){
+                if(d && d.code === 0){
+                    var b = (typeof d.kmoney !== 'undefined') ? d.kmoney : d.money;
+                    $('#money').text(parseFloat(b).toFixed(1));
+                }
+            }
+        });
+    }
+    $(function(){
+        setTimeout(_refreshBalance, 2000); // 进入页面2秒后首次拉取
+        setInterval(_refreshBalance, _balInterval);
+    });
+})();
+</script>
     	 <div id="orderform" class='oh fw700 hide'>
     		<div id="ordermask"></div>
     		<div id="orderformbox">

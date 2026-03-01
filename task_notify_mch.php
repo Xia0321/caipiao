@@ -57,52 +57,254 @@ function task_mch_http_post($url, $payload, $mch_secret = '') {
 }
 
 /**
- * 下注时变更余额通知：向该用户所属商户的 changeBalance 地址发起请求，可带上本次下注详情。
+ * 向上遍历用户层级，找到最顶级的 API 代理，并获取其商户回调信息。
+ * 逐级通过 fid（直接上级）轮询直到最顶层，再从中找出开启了 API 模式的代理。
+ * @param string $userid 会员 userid
+ * @return array|null 含 agent_userid, agent_username, mch_code, callback_url, mch_secret，无则 null
+ */
+function mch_get_top_api_agent($userid) {
+    global $msql, $tb_user, $tb_mchs;
+    $userid = trim($userid);
+    if ($userid === '') return null;
+
+    // 通过 fid（直接上级）逐级向上轮询，收集完整祖先链（从近到远）
+    $ancestors = array();
+    $current   = $userid;
+    $visited   = array($userid => true);
+    for ($i = 0; $i < 10; $i++) {
+        $msql->query("SELECT fid, layer FROM `$tb_user` WHERE userid='" . addslashes($current) . "'");
+        $msql->next_record();
+        $layer = (int)$msql->f('layer');
+        $fid   = $msql->f('fid');
+        if ($layer <= 1 || $fid === '' || $fid === null || $fid === '0') break;
+        if (isset($visited[$fid])) break; // 防止循环
+        $visited[$fid]  = true;
+        $ancestors[]    = $fid;
+        $current        = $fid;
+    }
+
+    // 反转：最顶级排在最前，优先匹配
+    $chain = array_reverse($ancestors);
+
+    foreach ($chain as $anc_id) {
+        $safe = addslashes($anc_id);
+        $msql->query("SELECT userid, username, ifagent, is_api, mch_code, status FROM `$tb_user` WHERE userid='$safe' AND ifagent='1' AND is_api='1' AND status='1'");
+        $msql->next_record();
+        $anc_userid = $msql->f('userid');
+        if ($anc_userid === '' || $anc_userid === null) continue;
+        $mch_code = $msql->f('mch_code');
+        if ($mch_code === '' || $mch_code === null) continue;
+        $anc_username = $msql->f('username');
+        // 查商户回调配置
+        $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
+        $msql->next_record();
+        $cb  = $msql->f('callback_url');
+        $sec = $msql->f('mch_secret');
+        $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
+        $mch_secret   = ($sec !== null) ? $sec : '';
+        if ($callback_url === '') continue;
+        return array(
+            'agent_userid'   => $anc_userid,
+            'agent_username' => $anc_username,
+            'mch_code'       => $mch_code,
+            'callback_url'   => $callback_url,
+            'mch_secret'     => $mch_secret,
+        );
+    }
+
+    // 兼容旧逻辑：用户自身直接打标 is_api=1（API 注册时写入）
+    $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND is_api='1' AND status='1' AND mch_code!=''");
+    $msql->next_record();
+    $self_id  = $msql->f('userid');
+    if ($self_id !== '' && $self_id !== null) {
+        $mch_code     = $msql->f('mch_code');
+        $self_uname   = $msql->f('username');
+        $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
+        $msql->next_record();
+        $cb  = $msql->f('callback_url');
+        $sec = $msql->f('mch_secret');
+        $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
+        $mch_secret   = ($sec !== null) ? $sec : '';
+        if ($callback_url !== '') {
+            return array(
+                'agent_userid'   => $self_id,
+                'agent_username' => $self_uname,
+                'mch_code'       => $mch_code,
+                'callback_url'   => $callback_url,
+                'mch_secret'     => $mch_secret,
+            );
+        }
+    }
+
+    return null;
+}
+
+/**
+ * 向运营商请求最新余额（getBalance），更新本地数据库并返回最新余额。
+ * @param string     $userid     会员 userid
+ * @param array|null $agent_info 可选，mch_get_top_api_agent 的返回值；null 则内部查询
+ * @return array|null 含 money, kmoney；无 API 代理或请求失败时返回 null
+ */
+function mch_get_balance_from_api($userid, $agent_info = null) {
+    global $msql, $tb_user;
+    $userid = trim($userid);
+    if ($userid === '') return null;
+
+    if ($agent_info === null) {
+        $agent_info = mch_get_top_api_agent($userid);
+    }
+    if ($agent_info === null) return null;
+
+    $msql->query("SELECT username FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
+    $msql->next_record();
+    $username = $msql->f('username');
+
+    $url     = task_mch_method_url($agent_info['callback_url'], 'getBalance');
+    $payload = array(
+        'userid'      => $userid,
+        'username'    => $username,
+        'mch_code'    => $agent_info['mch_code'],
+        'notify_time' => date('Y-m-d H:i:s'),
+    );
+    $ret = task_mch_http_post($url, $payload, $agent_info['mch_secret']);
+    if ($ret['err'] !== '' || $ret['body'] === '') return null;
+
+    $data = @json_decode($ret['body'], true);
+    if (!is_array($data)) return null;
+
+    $money  = isset($data['money'])   ? (float)$data['money']   : (isset($data['balance']) ? (float)$data['balance'] : null);
+    $kmoney = isset($data['kmoney'])  ? (float)$data['kmoney']  : null;
+
+    // 合理性校验，防止恶意值篡改
+    $max_balance = 1000000000;
+    if ($money  !== null && ($money  < 0 || $money  > $max_balance)) $money  = null;
+    if ($kmoney !== null && ($kmoney < 0 || $kmoney > $max_balance)) $kmoney = null;
+
+    if ($money !== null || $kmoney !== null) {
+        $uid = addslashes($userid);
+        if ($money !== null && $kmoney !== null) {
+            $msql->query("UPDATE `$tb_user` SET money='$money', kmoney='$kmoney' WHERE userid='$uid'");
+        } elseif ($money !== null) {
+            $msql->query("UPDATE `$tb_user` SET money='$money' WHERE userid='$uid'");
+        } else {
+            $msql->query("UPDATE `$tb_user` SET kmoney='$kmoney' WHERE userid='$uid'");
+        }
+    }
+
+    // 返回数据库最新值
+    $msql->query("SELECT money, kmoney FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
+    $msql->next_record();
+    return array(
+        'money'  => (float)$msql->f('money'),
+        'kmoney' => (float)$msql->f('kmoney'),
+    );
+}
+
+/**
+ * 解析运营商通知响应中的余额，与本地期望值核对；若不一致记录日志并更新本地余额。
+ * 规则七：每次通知都必须核对运营商反馈余额，确保与系统预期一致。
+ * @param string     $userid          会员 userid
+ * @param string     $response_body   运营商 HTTP 响应 body
+ * @param float|null $expected_kmoney 期望的 kmoney；null 则读取当前本地值
+ * @return array 含 operator_balance (float|null), matched (bool)
+ */
+function mch_verify_and_update_balance($userid, $response_body, $expected_kmoney = null) {
+    global $msql, $tb_user;
+
+    if ($expected_kmoney === null) {
+        $msql->query("SELECT kmoney FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
+        $msql->next_record();
+        $expected_kmoney = (float)$msql->f('kmoney');
+    }
+
+    $data = @json_decode($response_body, true);
+    if (!is_array($data)) {
+        return array('operator_balance' => null, 'matched' => false);
+    }
+
+    $op_money  = isset($data['money'])   ? (float)$data['money']   : (isset($data['balance']) ? (float)$data['balance'] : null);
+    $op_kmoney = isset($data['kmoney'])  ? (float)$data['kmoney']  : null;
+    $op_main   = ($op_kmoney !== null) ? $op_kmoney : $op_money;
+
+    $matched = ($op_main === null) ? true : (abs($op_main - $expected_kmoney) < 0.02);
+
+    // 更新本地余额（合理性校验后）
+    $max_balance = 1000000000;
+    if ($op_money  !== null && ($op_money  < 0 || $op_money  > $max_balance)) $op_money  = null;
+    if ($op_kmoney !== null && ($op_kmoney < 0 || $op_kmoney > $max_balance)) $op_kmoney = null;
+
+    if ($op_money !== null || $op_kmoney !== null) {
+        $uid = addslashes($userid);
+        if ($op_money !== null && $op_kmoney !== null) {
+            $msql->query("UPDATE `$tb_user` SET money='$op_money', kmoney='$op_kmoney' WHERE userid='$uid'");
+        } elseif ($op_money !== null) {
+            $msql->query("UPDATE `$tb_user` SET money='$op_money' WHERE userid='$uid'");
+        } else {
+            $msql->query("UPDATE `$tb_user` SET kmoney='$op_kmoney' WHERE userid='$uid'");
+        }
+    }
+
+    // 余额不一致时写入日志
+    if (!$matched && $op_main !== null) {
+        $log_dir  = __DIR__ . '/logs';
+        if (!is_dir($log_dir)) @mkdir($log_dir, 0755, true);
+        $log_line = date('Y-m-d H:i:s') . ' BALANCE_MISMATCH userid=' . $userid
+            . ' local=' . $expected_kmoney . ' operator=' . $op_main
+            . ' diff=' . round($op_main - $expected_kmoney, 4) . "\n";
+        @file_put_contents($log_dir . '/balance_verify.log', $log_line, FILE_APPEND | LOCK_EX);
+    }
+
+    return array('operator_balance' => $op_main, 'matched' => $matched);
+}
+
+/**
+ * 下注时变更余额通知：遍历层级找到最顶级 API 代理，向其 changeBalance 地址发起请求，带上本次下注详情。
+ * 通知后自动核对运营商反馈余额（规则七）。
  * @param string $userid 会员 userid
  * @param float  $amount 变动金额（正数）
  * @param string $type   deduct=扣款（下注）, add=加款（如退款、派奖）
- * @param array  $orders 本次下注的注单列表，每项含 tid,gid,qishu,bid,sid,cid,pid,content,je,gname 等，便于回调方记账
- * @return bool 是否成功请求到商户（不解析商户返回内容）
+ * @param array  $orders 本次下注的注单列表，每项含 tid,gid,qishu,bid,sid,cid,pid,content,je,gname 等
+ * @return bool 是否成功请求到商户
  */
 function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders = array()) {
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
     $amount = (float) $amount;
-    if ($userid === '' || $amount <= 0) {
-        return false;
-    }
-    $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND is_api=1 AND status=1 AND mch_code!=''");
+    if ($userid === '' || $amount <= 0) return false;
+
+    // 遍历层级找到最顶级 API 代理（规则三/四核心逻辑）
+    $agent = mch_get_top_api_agent($userid);
+    if ($agent === null) return false;
+
+    // 读取当前本地 kmoney 作为期望值（此时已完成扣款）
+    $msql->query("SELECT username, kmoney FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
     $msql->next_record();
-    if ($msql->f('userid') !== $userid) {
-        return false;
-    }
-    $username  = $msql->f('username');
-    $mch_code   = $msql->f('mch_code');
-    $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-    $msql->next_record();
-    if ($msql->f('callback_url') === '' || $msql->f('callback_url') === null) {
-        return false;
-    }
-    $callback_url = trim($msql->f('callback_url'));
-    $mch_secret   = $msql->f('mch_secret');
-    $url = task_mch_method_url($callback_url, 'changeBalance');
+    $username        = $msql->f('username');
+    $expected_kmoney = (float)$msql->f('kmoney');
+
+    $url     = task_mch_method_url($agent['callback_url'], 'changeBalance');
     $payload = array(
-        'userid'     => $userid,
-        'username'   => $username,
-        'mch_code'   => $mch_code,
-        'amount'     => $amount,
-        'type'       => $type,
-        'notify_time'=> date('Y-m-d H:i:s'),
+        'userid'      => $userid,
+        'username'    => $username,
+        'mch_code'    => $agent['mch_code'],
+        'amount'      => $amount,
+        'type'        => $type,
+        'notify_time' => date('Y-m-d H:i:s'),
     );
     if (!empty($orders)) {
         $payload['orders'] = $orders;
     }
-    $ret = task_mch_http_post($url, $payload, $mch_secret);
-    return $ret['err'] === '';
+    $ret = task_mch_http_post($url, $payload, $agent['mch_secret']);
+    if ($ret['err'] !== '') return false;
+
+    // 规则七：核对运营商反馈余额
+    mch_verify_and_update_balance($userid, $ret['body'], $expected_kmoney);
+    return true;
 }
 
 /**
- * 注单结算通知：向商户 settleOrder 地址推送已结算注单（有效投注、输赢金额等）。
+ * 注单结算通知：遍历层级找到最顶级 API 代理，向其 settleOrder 地址推送已结算注单。
+ * 通知后自动核对运营商反馈余额（规则七）。
  * @param string $userid 会员 userid
  * @param array  $orders 已结算注单列表，每项含 id,tid,code,userid,qishu,dates,gid,bid,sid,cid,pid,content,je,prize,z,valid_je,win_loss,time 等
  * @return bool 是否成功请求到商户
@@ -110,37 +312,43 @@ function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders =
 function mch_notify_settle_orders($userid, $orders) {
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
-    if ($userid === '' || empty($orders)) {
-        return false;
-    }
-    $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND is_api=1 AND status=1 AND mch_code!=''");
+    if ($userid === '' || empty($orders)) return false;
+
+    // 遍历层级找到最顶级 API 代理（规则五核心逻辑）
+    $agent = mch_get_top_api_agent($userid);
+    if ($agent === null) return false;
+
+    // 结算前读取本地 kmoney + 计算本批奖金总额，作为运营商反馈余额的期望值
+    // 运营商结算后余额 = 本地 kmoney（未含奖金）+ 本期奖金总和
+    $msql->query("SELECT username, kmoney FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
     $msql->next_record();
-    if ($msql->f('userid') !== $userid) {
-        return false;
+    $username        = $msql->f('username');
+    $current_kmoney  = (float)$msql->f('kmoney');
+    $total_prize     = 0;
+    foreach ($orders as $o) {
+        $total_prize += (float)$o['prize'];
     }
-    $username   = $msql->f('username');
-    $mch_code   = $msql->f('mch_code');
-    $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-    $msql->next_record();
-    if ($msql->f('callback_url') === '' || $msql->f('callback_url') === null) {
-        return false;
-    }
-    $callback_url = trim($msql->f('callback_url'));
-    $mch_secret   = $msql->f('mch_secret');
-    $url = task_mch_method_url($callback_url, 'settleOrder');
+    $settle_expected = $current_kmoney + $total_prize;
+
+    $url     = task_mch_method_url($agent['callback_url'], 'settleOrder');
     $payload = array(
-        'userid'     => $userid,
-        'username'   => $username,
-        'mch_code'   => $mch_code,
-        'orders'     => $orders,
-        'notify_time'=> date('Y-m-d H:i:s'),
+        'userid'      => $userid,
+        'username'    => $username,
+        'mch_code'    => $agent['mch_code'],
+        'orders'      => $orders,
+        'notify_time' => date('Y-m-d H:i:s'),
     );
-    $ret = task_mch_http_post($url, $payload, $mch_secret);
-    return $ret['err'] === '';
+    $ret = task_mch_http_post($url, $payload, $agent['mch_secret']);
+    if ($ret['err'] !== '') return false;
+
+    // 规则七：核对运营商反馈余额（期望 = 结算前本地余额 + 本期奖金总额）
+    mch_verify_and_update_balance($userid, $ret['body'], $settle_expected);
+    return true;
 }
 
 /**
- * 取消注单通知：向商户 cancelOrder 地址推送被取消的注单，便于回调方加回余额。
+ * 取消注单通知：遍历层级找到最顶级 API 代理，向其 cancelOrder 地址推送被取消的注单。
+ * 通知后自动核对运营商反馈余额（规则七）。
  * @param string $userid 会员 userid
  * @param array  $orders 被取消的注单列表，每项含 id,tid,code,qishu,gid,bid,sid,cid,pid,content,je,time 等
  * @return bool 是否成功请求到商户
@@ -148,33 +356,38 @@ function mch_notify_settle_orders($userid, $orders) {
 function mch_notify_cancel_orders($userid, $orders) {
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
-    if ($userid === '' || empty($orders)) {
-        return false;
-    }
-    $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND is_api=1 AND status=1 AND mch_code!=''");
+    if ($userid === '' || empty($orders)) return false;
+
+    // 遍历层级找到最顶级 API 代理（规则六核心逻辑）
+    $agent = mch_get_top_api_agent($userid);
+    if ($agent === null) return false;
+
+    // 取消前读取本地 kmoney 并计算退款总额，作为核对期望值
+    // cancelOrder 通知时本地余额尚未退回，运营商收到通知后会加回，其反馈余额 = 本地 kmoney + 退款总额
+    $msql->query("SELECT username, kmoney FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
     $msql->next_record();
-    if ($msql->f('userid') !== $userid) {
-        return false;
+    $username        = $msql->f('username');
+    $before_kmoney   = (float)$msql->f('kmoney');
+    $total_refund    = 0;
+    foreach ($orders as $o) {
+        $total_refund += (float)$o['je'];
     }
-    $username   = $msql->f('username');
-    $mch_code   = $msql->f('mch_code');
-    $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-    $msql->next_record();
-    if ($msql->f('callback_url') === '' || $msql->f('callback_url') === null) {
-        return false;
-    }
-    $callback_url = trim($msql->f('callback_url'));
-    $mch_secret   = $msql->f('mch_secret');
-    $url = task_mch_method_url($callback_url, 'cancelOrder');
+    $expected_after = $before_kmoney + $total_refund;
+
+    $url     = task_mch_method_url($agent['callback_url'], 'cancelOrder');
     $payload = array(
-        'userid'     => $userid,
-        'username'   => $username,
-        'mch_code'   => $mch_code,
-        'orders'     => $orders,
-        'notify_time'=> date('Y-m-d H:i:s'),
+        'userid'      => $userid,
+        'username'    => $username,
+        'mch_code'    => $agent['mch_code'],
+        'orders'      => $orders,
+        'notify_time' => date('Y-m-d H:i:s'),
     );
-    $ret = task_mch_http_post($url, $payload, $mch_secret);
-    return $ret['err'] === '';
+    $ret = task_mch_http_post($url, $payload, $agent['mch_secret']);
+    if ($ret['err'] !== '') return false;
+
+    // 规则七：核对运营商反馈余额（期望 = 本地原余额 + 退款总额）
+    mch_verify_and_update_balance($userid, $ret['body'], $expected_after);
+    return true;
 }
 
 // 仅在被直接访问时执行任务逻辑，被 include 时只提供函数
@@ -205,63 +418,15 @@ $action = isset($_REQUEST['action']) ? trim($_REQUEST['action']) : 'notify';
 
 switch ($action) {
     case 'getBalance':
-        // 实时获取 is_api=1 用户余额：向商户 getBalance 地址请求，可选回写本地余额
-        $msql->query("SELECT userid, username, mch_code, money, kmoney FROM `$tb_user` WHERE is_api=1 AND status=1 AND mch_code!=''");
-        $user_list = array();
+        // 实时获取所有 is_api=1 用户余额：通过层级遍历找到对应的顶级 API 代理并请求 getBalance
+        // 使用 mch_get_balance_from_api() 保持与其他通知路径一致的层级遍历逻辑
+        $msql->query("SELECT userid FROM `$tb_user` WHERE is_api=1 AND status=1");
+        $uid_list = array();
         while ($msql->next_record()) {
-            $user_list[] = array(
-                'userid'   => $msql->f('userid'),
-                'username' => $msql->f('username'),
-                'mch_code' => $msql->f('mch_code'),
-                'money'    => (float)$msql->f('money'),
-                'kmoney'   => (float)$msql->f('kmoney'),
-            );
+            $uid_list[] = $msql->f('userid');
         }
-        foreach ($user_list as $u) {
-            $mch_code = $u['mch_code'];
-            $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-            $msql->next_record();
-            if ($msql->f('callback_url') === '' || $msql->f('callback_url') === null) {
-                continue;
-            }
-            $callback_url = trim($msql->f('callback_url'));
-            $mch_secret   = $msql->f('mch_secret');
-            $url = task_mch_method_url($callback_url, 'getBalance');
-            $payload = array(
-                'userid'     => $u['userid'],
-                'username'   => $u['username'],
-                'mch_code'   => $mch_code,
-                'notify_time'=> date('Y-m-d H:i:s'),
-            );
-            $ret = task_mch_http_post($url, $payload, $mch_secret);
-            if ($ret['err'] !== '') {
-                continue;
-            }
-            $data = @json_decode($ret['body'], true);
-            if (!is_array($data)) {
-                continue;
-            }
-            // 若商户返回 balance 或 money/kmoney，则回写本地（可选）
-            $money  = isset($data['money'])  ? (float)$data['money']  : (isset($data['balance']) ? (float)$data['balance'] : null);
-            $kmoney = isset($data['kmoney']) ? (float)$data['kmoney'] : null;
-            // BugN4 fix: 回写前检查数据合理性，防止恶意商户返回异常值篡改余额
-            $max_balance = isset($config['maxmoney']) ? (float)$config['maxmoney'] : 1000000000;
-            if ($money !== null && ($money < 0 || $money > $max_balance)) {
-                $money = null;
-            }
-            if ($kmoney !== null && ($kmoney < 0 || $kmoney > $max_balance)) {
-                $kmoney = null;
-            }
-            if ($money !== null || $kmoney !== null) {
-                $uid = addslashes($u['userid']);
-                if ($money !== null && $kmoney !== null) {
-                    $msql->query("UPDATE `$tb_user` SET money='$money', kmoney='$kmoney' WHERE userid='$uid'");
-                } elseif ($money !== null) {
-                    $msql->query("UPDATE `$tb_user` SET money='$money' WHERE userid='$uid'");
-                } else {
-                    $msql->query("UPDATE `$tb_user` SET kmoney='$kmoney' WHERE userid='$uid'");
-                }
-            }
+        foreach ($uid_list as $uid) {
+            mch_get_balance_from_api($uid);
         }
         if (php_sapi_name() !== 'cli' && isset($_REQUEST['action'])) {
             header('Content-Type: application/json; charset=utf-8');

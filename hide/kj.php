@@ -670,6 +670,44 @@ switch ($_REQUEST['xtype']) {
         $ztype = json_decode($msql->f("ztype"),true);
         $mtype = json_decode($msql->f("mtype"),true);
         $val =  calc($fenlei,$gid,$cs,$qishu,$mnum,$ztype,$mtype,true);
+        // 规则五：结算完成后按用户分组推送 settleOrder 通知
+        if ($val == 1) {
+            if (!function_exists('mch_notify_settle_orders')) {
+                require_once __DIR__ . '/../task_notify_mch.php';
+            }
+            $whi_kj = " gid='" . addslashes($gid) . "' AND qishu='" . addslashes($qishu) . "' AND kk=1 ";
+            $msql->query("SELECT id,tid,code,userid,qishu,dates,gid,bid,sid,cid,pid,content,je,prize,z,time FROM `$tb_lib` WHERE $whi_kj");
+            $kj_by_user = array();
+            while ($msql->next_record()) {
+                $uid_kj   = $msql->f('userid');
+                $je_kj    = (float)$msql->f('je');
+                $prize_kj = (float)$msql->f('prize');
+                $z_kj     = (int)$msql->f('z');
+                $kj_by_user[$uid_kj][] = array(
+                    'id'       => $msql->f('id'),
+                    'tid'      => $msql->f('tid'),
+                    'code'     => $msql->f('code'),
+                    'userid'   => $uid_kj,
+                    'qishu'    => $msql->f('qishu'),
+                    'dates'    => $msql->f('dates'),
+                    'gid'      => $msql->f('gid'),
+                    'bid'      => $msql->f('bid'),
+                    'sid'      => $msql->f('sid'),
+                    'cid'      => $msql->f('cid'),
+                    'pid'      => $msql->f('pid'),
+                    'content'  => $msql->f('content'),
+                    'je'       => $je_kj,
+                    'prize'    => $prize_kj,
+                    'z'        => $z_kj,
+                    'valid_je' => ($z_kj == 7) ? 0 : $je_kj,
+                    'win_loss' => $prize_kj - $je_kj,
+                    'time'     => $msql->f('time'),
+                );
+            }
+            foreach ($kj_by_user as $uid_kj => $orders_kj) {
+                mch_notify_settle_orders($uid_kj, $orders_kj);
+            }
+        }
         echo $val;
         break;
     case "xtkj";
