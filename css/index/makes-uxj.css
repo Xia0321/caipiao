@@ -1,0 +1,542 @@
+/**
+ * makes-uxj.css - UI enhancements for uxj make (makes.html) page
+ * Does not change JS-critical IDs/classes; overrides/adds layout and visuals only.
+ */
+@charset "utf-8";
+
+/* ----- Layout ----- */
+#main {
+	max-width: 900px;
+	margin: 0 auto 20px;
+	padding: 0 10px;
+	overflow: visible;
+}
+
+/* ----- Sub nav (两面盘 / 单球等) ----- */
+.sub.main {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 4px 12px;
+	padding: 8px 12px;
+	margin-bottom: 10px;
+	border-radius: 6px;
+	height: auto;
+	min-height: 36px;
+}
+
+.sub.main a {
+	padding: 4px 10px;
+	border-radius: 4px;
+	transition: background 0.2s, color 0.2s;
+}
+
+.sub.main a:hover,
+.sub.main .click {
+	background: rgba(255,255,255,0.25);
+}
+
+/* ----- Header block ----- */
+#header {
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 12px;
+	border-radius: 8px;
+	overflow: visible;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.lottery_info {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px 20px;
+	padding: 12px 16px;
+	min-height: 48px;
+	height: auto;
+	width: 100%;
+	box-sizing: border-box;
+	border-radius: 8px 8px 0 0;
+	flex-shrink: 0;
+	margin-bottom: 0;
+}
+
+.lottery_info_left {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px 14px;
+	height: auto;
+	line-height: 1.5;
+	min-width: 0;
+}
+
+.lottery_info_right {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: flex-end;
+	gap: 10px 18px;
+	height: auto;
+	line-height: 1.5;
+	margin: 0;
+	min-width: 0;
+}
+
+/* Period & countdown grouping */
+.lottery_info_right .thisqishu {
+	margin-right: 2px;
+}
+
+.cdContainer {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+}
+
+.cdContainer .time0,
+.kjstatus .kjtime {
+	display: inline-block;
+	min-width: 3em;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: rgba(0,0,0,0.06);
+}
+
+#cdRefresh {
+	width: auto;
+	min-width: 50px;
+}
+
+/* 覆盖 bet.css 固定尺寸，避免期数与预设金额行重叠 */
+#header .lottery_info {
+	height: auto;
+}
+#header .control.n_anniu {
+	width: 100%;
+}
+
+/* ----- Top control bar ----- */
+.control.n_anniu {
+	width: 100%;
+	height: auto;
+	min-height: 48px;
+	margin: 0;
+	padding: 12px 16px;
+	border-radius: 0 0 8px 8px;
+	background: #f8f9fa;
+	border: 1px solid #e9ecef;
+	border-top: 1px solid #dee2e6;
+	box-sizing: border-box;
+	flex-shrink: 0;
+}
+
+.control.n_anniu .buttons {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 12px 20px;
+	width: 100%;
+	max-width: 100%;
+}
+
+.control .checkdefault {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	cursor: pointer;
+}
+
+.control .quickAmount {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding-bottom: 0;
+}
+
+.control .quickAmount .color_lv {
+	white-space: nowrap;
+}
+
+.control .quickAmount input.zje {
+	width: 76px;
+	padding: 6px 8px;
+	height: 32px;
+	border-radius: 6px;
+	border: 1px solid #ced4da;
+	box-sizing: border-box;
+}
+
+/* 按钮：内容上下、左右居中 */
+.control .button,
+.control input[type="button"],
+.control .button.exe,
+.control .button.cancel {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	margin: 0;
+	padding: 6px 16px;
+	height: 32px;
+	line-height: 1.2;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: filter 0.2s, box-shadow 0.2s;
+	box-sizing: border-box;
+}
+
+.control .button:hover,
+.control input[type="button"]:hover {
+	filter: brightness(1.05);
+	box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+.control .button.cancel {
+	background: linear-gradient(to bottom, #6c757d 0%, #5a6268 100%);
+	border-color: #545b62;
+}
+
+/* ----- Bet panel ----- */
+#bet_panel.bet_panel {
+	margin-top: 12px;
+	padding: 12px 0;
+}
+
+#bet_panel .tab {
+	margin: 0 0 12px;
+}
+
+#bet_panel .tab .tab_title02.smenu {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	padding: 4px 0;
+}
+
+#bet_panel .tab .tab_title02.smenu .ab {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	float: none;
+	padding: 8px 16px;
+	min-height: 36px;
+	border-radius: 6px;
+	background: #e9ecef;
+	color: #495057;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+#bet_panel .tab .tab_title02.smenu .ab:hover {
+	background: #dee2e6;
+}
+
+/* Duo / ggmesstb control row */
+.duoexetb th,
+.duoexetb td,
+.ggmesstb th,
+.ggmesstb td {
+	padding: 8px 10px;
+	vertical-align: middle;
+}
+
+.duoexetb .control,
+.ggmesstb .control {
+	text-align: right;
+}
+
+/* ----- Bottom control ----- */
+.control.bcontrol {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 10px 16px;
+	margin: 16px auto;
+	padding: 12px 16px;
+	border-radius: 8px;
+	background: #f8f9fa;
+	border: 1px solid #e9ecef;
+}
+
+.bcontrol .buttons {
+	width: auto;
+	max-width: 100%;
+}
+
+/* ----- 所有按钮类：内容上下、左右居中 ----- */
+#main .button,
+#main input[type="button"],
+#main .control .button,
+#main .control input[type="button"],
+#main .exe.button,
+#main .cancel.button,
+#main .sendtext,
+#main .textclear,
+#main .textsm,
+#main .mode,
+#main .tab .ab {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	box-sizing: border-box;
+}
+
+/* ----- Quick order (快捷下单) ----- */
+table.kuaijue {
+	width: 100%;
+	margin: 16px 0;
+	border-collapse: collapse;
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+	border: 1px solid #e9ecef;
+	background: #fff;
+}
+
+table.kuaijue td {
+	padding: 12px 16px;
+	border: none;
+	text-align: left;
+	vertical-align: top;
+}
+
+table.kuaijue .control label,
+table.kuaijue .control .kuaijue-label {
+	display: block;
+	margin-bottom: 6px;
+	color: #495057;
+	font-weight: 600;
+}
+
+table.kuaijue .kuaijue-actions {
+	margin-bottom: 8px;
+}
+
+table.kuaijue .kuaijue-actions .button {
+	margin-right: 8px;
+	margin-bottom: 4px;
+}
+
+table.kuaijue textarea.textnr {
+	width: 100%;
+	max-width: 100%;
+	min-height: 100px;
+	padding: 10px 12px;
+	margin: 8px 0;
+	border: 1px solid #ced4da;
+	border-radius: 6px;
+	font-size: 13px;
+	line-height: 1.5;
+	box-sizing: border-box;
+}
+
+table.kuaijue .button {
+	margin-right: 8px;
+	margin-bottom: 4px;
+}
+
+table.kuaijue tr.smnr td {
+	background: #f8f9fa;
+	border-top: 1px solid #e9ecef;
+	font-size: 12px;
+	color: #6c757d;
+}
+
+/* ----- Fast table (快捷1/2) ----- */
+#quick_sec_table.fasttb {
+	margin: 16px 0;
+	border-radius: 8px;
+	overflow: hidden;
+	border: 1px solid #e9ecef;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+#quick_sec_table.fasttb .kz td {
+	padding: 8px 12px;
+}
+
+#quick_sec_table.fasttb .zje {
+	width: 70px;
+	margin: 0 6px;
+	padding: 6px 8px;
+	height: 32px;
+	border-radius: 6px;
+	border: 1px solid #ced4da;
+	box-sizing: border-box;
+}
+
+/* 快捷模块内确定/重置：保持原位置，只加间距和样式 */
+#quick_sec_table.fasttb .exe.button {
+	margin-left: 8px;
+	margin-right: 10px;
+}
+
+#quick_sec_table.fasttb .button.exe,
+#quick_sec_table.fasttb .button.cancel {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 72px;
+	height: 32px;
+	padding: 6px 16px;
+	font-size: 13px;
+	border-radius: 6px;
+	cursor: pointer;
+	box-sizing: border-box;
+	transition: filter 0.2s, box-shadow 0.2s;
+	vertical-align: middle;
+	border: 1px solid #c14250;
+	background: linear-gradient(to bottom, #f27a81 0%, #c14250 100%);
+	color: #fff;
+}
+
+#quick_sec_table.fasttb .button.cancel {
+	margin-left: 0;
+	margin-right: 0;
+	border-color: #545b62;
+	background: linear-gradient(to bottom, #6c757d 0%, #5a6268 100%);
+	color: #fff;
+}
+
+#quick_sec_table.fasttb .button.exe:hover,
+#quick_sec_table.fasttb .button.cancel:hover {
+	filter: brightness(1.05);
+	box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+/* ----- Result panel ----- */
+#resultPanel.tu {
+	margin-top: 16px;
+	border-radius: 8px;
+	border: 1px solid #e9ecef;
+	overflow: hidden;
+	background: #fff;
+}
+
+/* ----- Long table ----- */
+#changlong.longr {
+	margin-top: 12px;
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+/* ----- Fantan popup ----- */
+table.ftlutb.lists {
+	border-radius: 8px;
+	overflow: hidden;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* ----- 两面盘 百/十/个 具体数字下注(0-9) 样式 ----- */
+.digit-bet-block {
+	width: 100%;
+	margin-top: 12px;
+	margin-bottom: 12px;
+	border-collapse: collapse;
+	border-radius: 10px;
+	overflow: hidden;
+	box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+	border: 1px solid #e9ecef;
+	background: #fff;
+}
+.digit-bet-block .head th {
+	padding: 10px 14px;
+	text-align: left;
+	font-size: 14px;
+	font-weight: 600;
+	color: #333;
+	background: linear-gradient(180deg, #f8f9fa 0%, #f1f3f5 100%);
+	border-bottom: 1px solid #e9ecef;
+}
+.digit-bet-block tr:not(.head) td.digit-cell {
+	width: 20%;
+	padding: 12px 8px;
+	vertical-align: middle;
+	text-align: center;
+	background: #f8f9fa;
+	border: 1px solid #e9ecef;
+	box-sizing: border-box;
+	transition: background 0.2s, border-color 0.2s;
+}
+.digit-bet-block tr:not(.head) td.digit-cell:hover {
+	background: #fff;
+	border-color: #dee2e6;
+}
+.digit-bet-block .digit-cell .digit-num {
+	display: block;
+	margin-bottom: 6px;
+}
+.digit-bet-block .digit-cell .digit-num b {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	margin: 0 auto;
+	font-size: 16px;
+	font-weight: 600;
+	color: #fff;
+	background: linear-gradient(145deg, #495057 0%, #343a40 100%);
+	border-radius: 50%;
+	box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.digit-bet-block .digit-cell .digit-odds {
+	display: block;
+	margin-bottom: 6px;
+	font-size: 13px;
+	font-weight: 600;
+	color: #e65100;
+}
+.digit-bet-block .digit-cell .digit-odds .peilv1 {
+	font-weight: 600;
+}
+.digit-bet-block .digit-cell .digit-amount {
+	display: block;
+}
+.digit-bet-block .digit-cell .digit-amount input.ba {
+	width: 100%;
+	max-width: 80px;
+	margin: 0 auto;
+	padding: 6px 10px;
+	font-size: 13px;
+	text-align: center;
+	border: 1px solid #ced4da;
+	border-radius: 6px;
+	box-sizing: border-box;
+	background: #fff;
+	transition: border-color 0.2s;
+}
+.digit-bet-block .digit-cell .digit-amount input.ba:focus {
+	outline: none;
+	border-color: #0d6efd;
+	box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+.digit-bet-block .digit-cell .digit-amount input.ba:disabled {
+	background: #e9ecef;
+	color: #6c757d;
+	cursor: not-allowed;
+}
+
+/* ----- Inline style overrides (from template) ----- */
+.fantan td,
+.fantan th {
+	height: 30px;
+	line-height: 30px;
+}
+
+.fantansan td,
+.fantansan th {
+	height: 60px;
+	line-height: 30px;
+}
+
+/* ----- Clearfloat ----- */
+.clearfloat {
+	clear: both;
+	height: 0;
+	overflow: hidden;
+}

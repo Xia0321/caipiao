@@ -1,0 +1,165 @@
+
+<style type="text/css">
+/* 移动端注单列表优化 */
+.others.lib .container-report {
+    padding: 8px 8px 80px 8px;
+    box-sizing: border-box;
+}
+.others.lib .reportcontainer {
+    overflow-x: auto;
+}
+.others.lib .reporttbl {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    background-color: #fff;
+}
+.others.lib .reporttbl thead th {
+    white-space: nowrap;
+    padding: 8px 6px;
+    border-bottom: 1px solid #e6e6e6;
+}
+.others.lib .reporttbl tbody td {
+    padding: 6px 6px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.others.lib .reporttbl tbody td .text {
+    word-break: break-all;
+}
+/* 小屏改为卡片列表 */
+@media (max-width: 768px) {
+    .others.lib .reportcontainer {
+        overflow-x: visible;
+    }
+    .others.lib .reporttbl {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .others.lib .reporttbl thead {
+        display: none;
+    }
+    .others.lib .reporttbl,
+    .others.lib .reporttbl tbody,
+    .others.lib .reporttbl tr,
+    .others.lib .reporttbl td {
+        display: block;
+        width: 100%;
+    }
+    .others.lib .reporttbl tr {
+        margin-bottom: 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        box-sizing: border-box;
+    }
+    .others.lib .reporttbl tbody td {
+        border-bottom: none;
+        padding: 2px 0;
+    }
+    .others.lib .reporttbl tbody td:first-child {
+        font-weight: bold;
+        margin-bottom: 4px;
+    }
+    .others.lib .reporttbl tbody td:nth-child(2) {
+        color: #666;
+        margin-bottom: 2px;
+    }
+    .others.lib .reporttbl tbody td:nth-child(3) {
+        margin-bottom: 4px;
+    }
+    .others.lib .reporttbl tbody td:nth-child(4),
+    .others.lib .reporttbl tbody td:nth-child(5),
+    .others.lib .reporttbl tbody td:nth-child(6) {
+        font-size: 12px;
+    }
+    .others.lib .reporttbl tbody td:nth-child(4) .cnbig,
+    .others.lib .reporttbl tbody td:nth-child(6) .cnbig2 {
+        font-weight: bold;
+    }
+}
+</style>
+
+<div class="scrollable backgroundcolorlightpink ng-scope others lib">
+    <div class="scrollable-content overthrow">
+        <div class="container-report cnsmall2"> <!--container-->
+            <div class="reportcontainer">
+                <table width="851" cellpadding="10" class="reporttbl cn">
+                  <thead class="cnbig">
+                    <tr>
+                      <th  style="width:150px !important;">注单号</th>
+                      <th style="width:200px !important;">类型</th>
+                      <th>玩法</th>
+                      <th>下注金额</th>
+                      <th>退水</th>
+                      <th>可赢金额</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {+section name=i loop=$lib+}
+<tr>
+                      <td><span class="green cnbig">{+$lib[i].tid+}</span><br><span class="cn">{+$lib[i].date+}</span><br><span class="cnsmall">{+$lib[i].time+}</span></td>
+                      <td><span class="cnbig">{+$lib[i].gid+}</span><br><span class="cn green">第{+$lib[i].qishu+}期</span></td>
+                      <td><span class="cn blue">
+                        <span class="text">{+$lib[i].wf+}{+if $lib[i].content!=''+}:{+$lib[i].content+}{+/if+}</span><br><span class="cnbig">@</span><span class="cnbig2 red fontbold">{+$lib[i].peilv1+}{+if $lib[i].peilv2>1+}/{+$lib[i].peilv2+}{+/if+}<span class="cn blue">:{+$lib[i].abcd+}盘</span></span>
+                      </span></td>
+                      <td><span class="cnbig">{+$lib[i].je+}</span></td>
+                      <td><span class="cnbig">{+$lib[i].points+}%</span></td>
+                      <td><span class="cnbig2 blue fontbold sy">{+$lib[i].ky+}</span></td>
+                    </tr>        
+                    {+/section+}
+                    
+                    
+                    
+                              </tbody>
+                </table>
+
+            </div>
+            
+          <div class="row graylightbg borderbtmred darkred">
+            <div class="row darkredbg white cnbig">
+              <div class="padding20 clearfix marginleft20">
+                  <table width="377" border="0" cellpadding="10" class="reporttbl2">
+                      <tbody>
+                        <tr>
+                          <td width="176" class="textright">注数 : </td>
+                          <td width="155">{+$rcount+}</td>
+                        </tr>
+                        <tr>
+                          <td width="176" class="textright">金额 (计) : </td>
+                          <td width="155" class="sy">{+$zje+}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                </div>
+            </div>
+          </div>
+        </div><!--container-->
+
+          <div class="col-sm-12 pagination page_info" rcount='{+$rcount+}' psize='{+$psize+}' tpage='{+$tpage+}'>
+            <div class="col-sm-4">
+              <div class="previous pull-left previous-btn">
+                <span aria-hidden="true">&lt;&lt; </span>前一页
+                
+              </div>
+            </div>
+            <div class="col-sm-4 textcenter">
+              <div><input class="pageNum needsclick" type="number" max="1" min="1" value="{+$tpage+}" length="4" ></div>
+            </div>
+            <div class="col-sm-4">
+              <div class="next pull-right next-btn">
+                  后一页<span aria-hidden="true"> &gt;&gt;</span> 
+                
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-12 pagination textcenter pagestatus">
+              <div>共 {+$rcount+} 笔记录 共 {+$pcount+} 页</div>
+          </div>
+
+ <div class="gap100" style="height:200px;"></div>
+
+      </div>
+     
+    </div>

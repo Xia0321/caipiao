@@ -1,0 +1,1491 @@
+<?php /* Smarty version 2.6.18, created on 2026-02-13 01:40:17
+         compiled from home.html */ ?>
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport">
+    <title><?php echo $this->_tpl_vars['webname']; ?>
+</title>
+    <style data-styled-components="">
+        html, body {
+            height: 100%;
+            width: 100%;
+            position: fixed;
+            overflow: hidden;
+            -webkit-overflow-scrolling: touch;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+
+        body {
+            font-family: Tahoma, Helvetica, "Microsoft Yahei", sans-serif;
+            padding: 0;
+            margin: 0;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        a {
+            color: #666;
+            -webkit-text-decoration: none;
+            text-decoration: none;
+        }
+
+        #root {
+            width: 100%;
+            height: 100%;
+        }
+
+        .kvKbyZ {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-flex-direction: column;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            background: #fff;
+        }
+
+        /* ========== 大厅顶部（浅色） ========== */
+        .kvKbyZ .lobby-header {
+            background: #fff;
+            padding: 12px 12px 10px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #eee;
+        }
+
+        .kvKbyZ .lobby-header .lobby-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .kvKbyZ .lobby-header .lobby-greeting {
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .kvKbyZ .lobby-header .lobby-greeting .name {
+            color: #333;
+        }
+
+        .kvKbyZ .lobby-header .lobby-icons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .kvKbyZ .lobby-header .lobby-icons a {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .kvKbyZ .lobby-header .lobby-icons .icon-msg {
+            position: relative;
+        }
+
+        .kvKbyZ .lobby-header .lobby-icons .icon-msg .dot {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #f44336;
+        }
+
+        .kvKbyZ .lobby-banner {
+            height: 100px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #132e7b 0%, #00c9ca 100%);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-sizing: border-box;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .kvKbyZ .lobby-tabs {
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            height: 44px;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+        }
+
+        .kvKbyZ .lobby-tabs .tab {
+            padding: 0 16px;
+            height: 44px;
+            line-height: 44px;
+            font-size: 15px;
+            color: #666;
+            position: relative;
+            margin-right: 8px;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kvKbyZ .lobby-tabs .tab.active {
+            color: #333;
+            font-weight: bold;
+        }
+
+        .kvKbyZ .lobby-tabs .tab.active::after {
+            content: '';
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            bottom: 0;
+            height: 3px;
+            background: #2196f3;
+            border-radius: 2px 2px 0 0;
+        }
+
+        .kvKbyZ .lobby-tabs .tab-search {
+            margin-left: auto;
+            width: 28px;
+            height: 28px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E") center/contain no-repeat;
+            cursor: pointer;
+        }
+
+        /* ========== 左侧分类 + 右侧游戏列表 ========== */
+        .kvKbyZ .lobby-main {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        .kvKbyZ .lobby-sidebar {
+            width: 78px;
+            flex-shrink: 0;
+            min-height: 0;
+            height: 100%;
+            background: #f8f8f8;
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            border-right: 1px solid #eee;
+            touch-action: pan-y;
+        }
+
+        .kvKbyZ .lobby-sidebar .sidebar-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 6px;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+            border-left: 3px solid transparent;
+            min-height: 56px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .kvKbyZ .lobby-sidebar .sidebar-item.active {
+            background: #e3f2fd;
+            color: #2196f3;
+            border-left-color: #2196f3;
+            font-weight: bold;
+        }
+
+        .kvKbyZ .lobby-sidebar .sidebar-item .ico {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            margin-bottom: 4px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            flex-shrink: 0;
+        }
+
+        .kvKbyZ .scroll-wrapper-home {
+            flex: 1;
+            min-width: 0;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 70px;
+        }
+
+        /* 游戏卡片两列 + 卡片样式（参考图） */
+        .kvKbyZ .icon_lottery_type .ilt_div {
+            padding: 8px 8px 12px;
+            gap: 10px;
+        }
+
+        .kvKbyZ .icon_lottery_type .ilt_div a {
+            -webkit-box-flex: 0;
+            -ms-flex: 0 0 calc(50% - 5px);
+            -webkit-flex: 0 0 calc(50% - 5px);
+            flex: 0 0 calc(50% - 5px);
+            max-width: calc(50% - 5px);
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card {
+            background: #f5f5f5;
+            border-radius: 10px;
+            overflow: hidden;
+            padding: 10px;
+            box-sizing: border-box;
+            position: relative;
+            min-height: 100px;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card .card-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card .card-status {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 6px;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card .card-img {
+            width: 100%;
+            height: 70px;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin-bottom: 6px;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card .card-foot {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card .card-star {
+            width: 18px;
+            height: 18px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L6.18 21z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .kvKbyZ .icon_lottery_type .game-card .card-hot {
+            font-size: 11px;
+            color: #fff;
+            background: #f44336;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        /* ========== 全局底部导航 ========== */
+        .kvKbyZ .global-bottom-nav {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 56px;
+            background: #fff;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            z-index: 100;
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+
+        .kvKbyZ .global-bottom-nav a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 11px;
+            text-decoration: none;
+            flex: 1;
+            padding: 6px 0;
+        }
+
+        .kvKbyZ .global-bottom-nav a .nav-ico {
+            width: 24px;
+            height: 24px;
+            min-width: 24px;
+            min-height: 24px;
+            margin-bottom: 2px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .kvKbyZ .global-bottom-nav a.active {
+            color: #2196f3;
+            font-weight: bold;
+        }
+
+        .kvKbyZ .global-bottom-nav a.active .nav-ico {
+            filter: none;
+        }
+
+        /* 保留原导航（汉堡菜单） */
+        .kvKbyZ .Navigation {
+            position: relative;
+            background: rgb(19, 46, 123);
+            background: linear-gradient(135deg, rgba(19, 46, 123, 1) 0%, rgba(0, 201, 202, 1) 100%);
+        }
+
+        .kvKbyZ .Navigation .naviga2 {
+            margin: 0 auto;
+            width: calc(-150px + 100%);
+            height: 45px;
+        }
+
+        .kvKbyZ .Navigation .naviga2 .logo {
+            width: 100%;
+            height: 100%;
+            background-image: url("undefined");
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .kvKbyZ .Navigation .naviga3 {
+            cursor: pointer;
+            position: absolute;
+            background: url(/css/mobi/img/icon_count.png) -224px -131px / 307px 217px no-repeat;
+            width: 29px;
+            height: 35px;
+            border-radius: 50%;
+            top: 0;
+            bottom: 0;
+            right: 10px;
+            margin: auto;
+        }
+
+        .hWStWm {
+            position: relative;
+        }
+
+        .hWStWm .profile {
+            display: flex;
+            height: 48px;
+            width: 100%;
+            padding: 0 8px;
+            box-sizing: border-box;
+            align-items: center;
+        }
+
+        .hWStWm .profile .avatar {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid #888;
+            background: url(/css/mobi/img/ic_display_pic.png) center/cover no-repeat;
+        }
+
+        .hWStWm .profile .name {
+            color: #5f5f5f;
+            font-size: 16px;
+            font-weight: bold;
+            padding-left: 8px;
+        }
+
+        .hWStWm .profile .refresh {
+            margin-left: auto;
+            padding-left: 25px;
+            height: 20px;
+            border-radius: 6px;
+            color: #fff;
+            background-color: #888;
+            box-sizing: border-box;
+            padding-right: 5px;
+            font-size: 12px;
+            line-height: 20px;
+            position: relative;
+        }
+
+        .hWStWm .profile .refresh::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 20px;
+            width: 20px;
+            background: url(/css/mobi/img/ic_refresh.png) center/contain no-repeat;
+        }
+
+        .yCvxX {
+            display: flex;
+            padding: 0 8px;
+            flex-wrap: wrap;
+            margin: 0 -4px 4px -4px;
+            box-sizing: border-box;
+        }
+
+        .lbhiCE {
+            flex: 1 1 auto;
+            color: #5f5f5f;
+            font-size: 13px;
+            padding: 0 4px;
+            box-sizing: border-box;
+        }
+
+        .lbhiCE > div {
+            border-radius: 4px;
+            background-color: #fff;
+            padding: 4px;
+        }
+
+        .lbhiCE > div .balance_type {
+            flex: 0 0 auto;
+        }
+
+        .lbhiCE > div .balance_amount {
+            flex: 1 1 auto;
+            margin-top: 2px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        .kvKbyZ .scroll-wrapper-home .icon_lottery_type {
+            width: 100%;
+            margin: 0 0 0.5rem;
+        }
+
+        .kvKbyZ .scroll-wrapper-home .icon_lottery_type .ilt_div {
+            display: flex;
+            flex-flow: row wrap;
+            -webkit-flex-flow: row wrap;
+        }
+
+        .rough_lines {
+            width: 100%;
+            height: 10px;
+            background-color: #ebebeb;
+            -webkit-box-shadow: 0px 1px 1px #bbb inset;
+            box-shadow: inset 0px 1px 1px #bbb;
+        }
+
+        .kvKbyZ .scroll-wrapper-home .foot_font {
+            position: relative;
+            text-align: center;
+            width: 100%;
+        }
+
+        .OSUUp {
+            position: fixed;
+            background-color: rgba(55, 55, 55, 0.7);
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            -webkit-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .efUsXr {
+            position: fixed;
+            width: 80%;
+            height: 100%;
+            overflow: hidden;
+            top: 0px;
+            -webkit-transform: translate3d(0px, 0px, 0px);
+            -ms-transform: translate3d(0, 0, 0);
+            transform: translate3d(0px, 0px, 0px);
+            background-color: #fff !important;
+            z-index: 999;
+            -webkit-box-shadow: 0 0 16px rgba(55, 55, 55, 0.5);
+            box-shadow: 0px 0px 16px rgba(55, 55, 55, 0.5);
+            -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -o-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .efUsXr .menu_navigation {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            background: rgb(19, 46, 123);
+            background: -o-linear-gradient(315deg, rgba(19, 46, 123, 1) 0%, rgba(0, 201, 202, 1) 100%);
+            background: linear-gradient(135deg, rgba(19, 46, 123, 1) 0%, rgba(0, 201, 202, 1) 100%);
+            -webkit-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#132e7b', endColorstr='#00c9ca', GradientType=1);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#132e7b', endColorstr='#00c9ca', GradientType=1);
+        }
+
+        .efUsXr .menu_navigation .naviga2,
+        .efUsXr .menu_navigation.menu_nav_with_back .naviga2,
+        .iJamhB .menu_navigation .naviga2,
+        .iJamhB .menu_navigation.menu_nav_with_back .naviga2 {
+            margin: 0 auto;
+            width: 10rem;
+            height: 50px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 50px;
+            color: #fff;
+        }
+
+        .efUsXr .menu_navigation.menu_nav_with_back .naviga2,
+        .iJamhB .menu_navigation.menu_nav_with_back .naviga2 {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .efUsXr .menu_type {
+            position: relative;
+            width: 100%;
+            height: calc(-56px + 100%);
+            overflow: auto;
+            -webkit-tap-highlight-color: rgba(55, 55, 55, 0.3);
+        }
+
+        .efUsXr .menu_type .mt_div,
+        .iJamhB .menu_type .mt_div {
+            min-height: 50px;
+            height: auto;
+            display: block;
+            border-bottom: 1px solid #eee;
+            padding: 14px 12px;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon div,
+        .iJamhB .menu_type .mt_div .mtd_icon div {
+            width: 30px;
+            height: 30px;
+            margin: 11px auto 0;
+            background: url(/css/mobi/img/icon_menu.png);
+            background-size: 457px 30px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon {
+            float: left;
+            height: 100%;
+            width: 60px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_font .mtdf_1 {
+            float: left;
+            color: #999;
+            line-height: 50px;
+            font-size: 16px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon1 div {
+            background-position: 0px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon2 div {
+            background-position: -31px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon4 div {
+            background-position: -92px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon6 div {
+            background-position: -153px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon7 div {
+            background-position: -183px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon8 div {
+            background-position: -214px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon9 div {
+            background-position: -244px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon16 div {
+            background: url(/css/mobi/img/ic_navi_168result.png) center / contain no-repeat;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon10 div {
+            background-position: -275px 0px;
+        }
+
+        .efUsXr .menu_type .mt_div .mtd_icon15 div {
+            background-position: -427px 0px;
+        }
+
+        .ivfTfC {
+            position: fixed;
+            background-color: rgba(55, 55, 55, 0.7);
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            -webkit-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            -webkit-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .iJamhB {
+            position: fixed;
+            width: 80%;
+            height: 100%;
+            overflow: hidden;
+            top: 0px;
+            -webkit-transform: translate3d(-110%, 0px, 0px);
+            -ms-transform: translate3d(-110%, 0, 0);
+            transform: translate3d(-110%, 0px, 0px);
+            background-color: #fff !important;
+            z-index: 999;
+            -webkit-box-shadow: 0 0 16px rgba(55, 55, 55, 0.5);
+            box-shadow: 0px 0px 16px rgba(55, 55, 55, 0.5);
+            -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -o-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .iJamhB .menu_navigation {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            background: rgb(19, 46, 123);
+            background: -o-linear-gradient(315deg, rgba(19, 46, 123, 1) 0%, rgba(0, 201, 202, 1) 100%);
+            background: linear-gradient(135deg, rgba(19, 46, 123, 1) 0%, rgba(0, 201, 202, 1) 100%);
+            -webkit-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#132e7b', endColorstr='#00c9ca', GradientType=1);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#132e7b', endColorstr='#00c9ca', GradientType=1);
+        }
+
+        .iJamhB .menu_navigation .naviga2 {
+            margin: 0 auto;
+            width: 10rem;
+            height: 50px;
+            text-align: center;
+            font-weight: bold;
+            line-height: 50px;
+            color: #fff;
+        }
+
+        .iJamhB .menu_type {
+            position: relative;
+            width: 100%;
+            height: calc(-56px + 100%);
+            overflow: auto;
+            -webkit-tap-highlight-color: rgba(55, 55, 55, 0.3);
+        }
+
+        .iJamhB .menu_type .mt_div {
+            height: 50px;
+            display: block;
+            border-bottom: 1px solid #ccc;
+        }
+
+
+        .ReactModal__Overlay.ReactModal__Overlay--after-open {
+            background-color: rgba(55, 55, 55, 0.7) !important;
+        }
+
+        .ReactModal__Overlay {
+            -webkit-animation: fadeIn 0.4s linear forwards;
+            animation: fadeIn 0.4s linear forwards;
+        }
+
+        .announcement-modal {
+            position: fixed;
+            width: 18rem;
+            height: auto;
+            max-height: 70vh;
+            margin: auto;
+            background-color: #fff;
+            top: 0px;
+            right: 0px;
+            bottom: 0px;
+            left: 0px;
+            border-radius: 8px;
+        }
+
+        .ReactModal__Content {
+            -webkit-animation: bounceIn 0.75s forwards;
+            animation: bounceIn 0.75s forwards;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        .announcement-modal button.prev-btn {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            z-index: 1;
+            font-size: 0px;
+            background-color: transparent;
+            outline: none;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: 1px solid #000;
+        }
+
+        .announcement-modal button.prev-btn::before {
+            content: "‹";
+            color: #000;
+            font-size: 2rem;
+            line-height: 1rem;
+        }
+
+
+        .announcement-modal .total {
+            position: absolute;
+            width: 100%;
+            left: 0px;
+            top: 1rem;
+            display: block;
+            right: 0px;
+            text-align: center;
+        }
+
+        .announcement-modal button.next-btn {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            z-index: 1;
+            font-size: 0px;
+            background-color: transparent;
+            outline: none;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            border: 1px solid #000;
+        }
+
+        .announcement-modal button.next-btn::before {
+            content: "›";
+            color: #000;
+            font-size: 2rem;
+            line-height: 1rem;
+        }
+
+
+        .announcement-modal .content {
+            width: 80%;
+            margin: 3rem auto;
+            max-height: calc(-60px + -3rem + 100%);
+            overflow: auto;
+            text-align: center;
+        }
+
+        .iijcms {
+            width: 100%;
+            font-family: inherit;
+            white-space: pre-wrap;
+        }
+
+        .announcement-modal .close-btn {
+            background-color: transparent;
+            color: #000;
+            height: 45px;
+            width: 80%;
+            margin: auto;
+            text-align: center;
+            line-height: 39px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            position: absolute;
+            bottom: 1rem;
+            left: 0px;
+            right: 0px;
+        }
+
+
+    </style>
+    <script language="javascript" src="/js/jquery-1.8.3.js"></script>
+    <script language="javascript" src="/js/md5.js"></script>
+    <script type="text/javascript">
+        var cnews = <?php echo $this->_tpl_vars['cnews']; ?>
+;
+        var index = 1;
+        $(function () {
+            $(".naviga3").click(function () {
+                $(".zhao").removeClass("ivfTfC").addClass("OSUUp");
+                $(".menu").removeClass("iJamhB").addClass("efUsXr");
+            });
+            $(".zhao").click(function () {
+                $(".zhao").removeClass("OSUUp").addClass("ivfTfC");
+                $(".menu").removeClass("efUsXr").addClass("iJamhB");
+            });
+            $("a.refresh").click(function () {
+                window.location.href = window.location.href;
+            });
+            if (cnews > 0) {
+                $(".prev-btn").click(function () {
+                    index--;
+                    if (index < 1) index = 1;
+                    $("pre").hide();
+                    $("#r" + index).show();
+                    $(".total").html(index + "/" + cnews);
+                });
+                $(".next-btn").click(function () {
+                    index++;
+                    if (index > cnews) {
+                        $(".ReactModalPortal").html('');
+                        return false;
+                    }
+                    $("pre").hide();
+                    $("#r" + index).show();
+                    $(".total").html(index + "/" + cnews);
+                });
+                $(".close-btn").click(function () {
+                    $(".ReactModalPortal").html('');
+                });
+                $("#r" + index).show();
+                $(".total").html(index + "/" + cnews);
+                //$(".newscon").animate({height:'-=25px',width:'-=25px'},250).animate({height:'+=25px',width:'+=25px'},250).animate({height:'-=25px',width:'-=25px'},250).animate({height:'+=25px',width:'+=25px'},250);
+            }
+            $(".statuswarn button").click(function () {
+                $(".statuswarn").hide();
+            })
+            $(".menu_type a").click(function () {
+                var type = $(this).attr("type");
+                if (type == 'home') {
+                    $(".menu").hide();
+                    $(".zhao").hide();
+                } else if (type == "logout") {
+                    window.location.href = mulu + "home.php?logout=yes";
+                } else if (type != "") {
+                    window.location.href = type;
+                } else {
+                    return false;
+                }
+            });
+            $(".game a").click(function () {
+                if (ustatus == 2) {
+                    $(".statuswarn").show();
+                    return;
+                }
+                window.location.href = "/creditmobile/load?xtype=show&type=lib&gids=" + $(this).attr("gid");
+            });
+            /* 公共底部菜单：游戏/开奖/未结 点击跳转 */
+            $(document).on("click", ".menulist .betting_shortcut,.menulist .result_shortcut,.menulist .not_settlement_shortcut", function () {
+                var type = $(this).attr("type");
+                if (type) window.location.href = type;
+            });
+            /* 大厅：左侧分类选中 + 切换右侧游戏列表 */
+            var CAT_GIDS = {
+                all: [],
+                pk10: [161, 162, 107],
+                ssc: [163, 164, 165, 166, 167],
+                lhc: [151, 152],
+                "11x5": [107, 121, 103],
+                k3: [151, 152, 153, 251],
+                "3d": [163, 251],
+                kl8: [135],
+                ssq: [100],
+                xy28: [168]
+            };
+
+            function filterGamesByCat(cat) {
+                var gids = CAT_GIDS[cat];
+                $(".ilt_div.game a.game").each(function () {
+                    var gidStr = $(this).attr("gid");
+                    var gid = parseInt(gidStr, 10);
+                    if (isNaN(gid)) gid = gidStr;
+                    var show = (cat === "all") || (gids && gids.indexOf(gid) !== -1);
+                    $(this).toggle(show);
+                });
+            }
+
+            $(".lobby-sidebar .sidebar-item").on("click", function () {
+                $(".lobby-sidebar .sidebar-item").removeClass("active");
+                $(this).addClass("active");
+                var cat = $(this).attr("data-cat");
+                filterGamesByCat(cat || "all");
+            });
+            filterGamesByCat("all");
+            /* 大厅：经典彩票/特色游戏 标签 */
+            $(".lobby-tabs .tab[data-tab]").on("click", function () {
+                $(".lobby-tabs .tab").removeClass("active");
+                $(this).addClass("active");
+            });
+            /* 游戏卡片图片：按布局顺序使用 /imgs/games/ 下 DM_20260212211009_007.png 起 */
+            var gamesBase = "/imgs/games/";
+            var gamesPrefix = "DM_20260212211009_";
+            $(".ilt_div.game a.game").each(function (idx) {
+                var num = ("00" + (idx + 7)).slice(-3);
+                $(this).find(".card-img").css("background-image", "url(" + gamesBase + gamesPrefix + num + ".png)");
+            });
+        });
+        var ustatus = <?php echo $this->_tpl_vars['status']; ?>
+;
+    </script>
+</head>
+<body class="">
+<script id=myjs language="javascript">var mulu = "<?php echo $this->_tpl_vars['mulu']; ?>
+";
+var js = 0;
+var sss = 'home';
+</script>
+<div id="root">
+    <div class="sc-8mbiqr-0 kvKbyZ">
+        <!-- 大厅顶部：问候语 + 右侧图标 -->
+        <div class="lobby-header">
+            <div class="lobby-top">
+                <div class="lobby-greeting">您好, <span class="name"><?php echo $this->_tpl_vars['username']; ?>
+</span></div>
+                <div class="lobby-icons">
+                    <a href="javascript:void(0)" class="icon-dark" title="深色模式">🌙</a>
+                    <a href="javascript:void(0)" class="icon-msg" title="消息"><span class="dot"></span>💬</a>
+                    <a href="javascript:void(0)" class="naviga3" title="菜单"
+                       style="background:url(/css/mobi/img/icon_count.png) -224px -131px / 307px 217px no-repeat center center #f0f0f0;"></a>
+                </div>
+            </div>
+            <div class="lobby-banner">高频投注 极速体验</div>
+        </div>
+        <!-- 经典彩票 / 特色游戏 标签 -->
+        <div class="lobby-tabs">
+            <span class="tab active" data-tab="classic">经典彩票</span>
+            <span class="tab" data-tab="feature">特色游戏</span>
+            <span class="tab-search" title="搜索"></span>
+        </div>
+        <!-- 主体：左侧分类 + 右侧游戏列表 -->
+        <div class="lobby-main">
+            <div class="lobby-sidebar">
+                <div class="sidebar-item active" data-cat="all"><span class="ico"
+                                                                      style="background-image:url('/imgs/games/DM_20260212211009_007.png');"></span>即开彩
+                </div>
+                <div class="sidebar-item" data-cat="pk10"><span class="ico"
+                                                                style="background-image:url('/imgs/games/DM_20260212211009_008.png');"></span>PK10
+                </div>
+                <div class="sidebar-item" data-cat="ssc"><span class="ico"
+                                                               style="background-image:url('/imgs/games/DM_20260212211009_009.png');"></span>时时彩
+                </div>
+                <div class="sidebar-item" data-cat="lhc"><span class="ico"
+                                                               style="background-image:url('/imgs/games/DM_20260212211009_010.png');"></span>六合彩
+                </div>
+                <div class="sidebar-item" data-cat="11x5"><span class="ico"
+                                                                style="background-image:url('/imgs/games/DM_20260212211009_011.png');"></span>11选5
+                </div>
+                <div class="sidebar-item" data-cat="k3"><span class="ico"
+                                                              style="background-image:url('/imgs/games/DM_20260212211009_012.png');"></span>快三
+                </div>
+                <div class="sidebar-item" data-cat="3d"><span class="ico"
+                                                              style="background-image:url('/imgs/games/DM_20260212211009_013.png');"></span>3D
+                </div>
+                <div class="sidebar-item" data-cat="kl8"><span class="ico"
+                                                               style="background-image:url('/imgs/games/DM_20260212211009_014.png');"></span>快乐8
+                </div>
+                <div class="sidebar-item" data-cat="ssq"><span class="ico"
+                                                               style="background-image:url('/imgs/games/DM_20260212211009_015.png');"></span>双色球
+                </div>
+                <div class="sidebar-item" data-cat="xy28"><span class="ico"
+                                                                style="background-image:url('/imgs/games/DM_20260212211009_016.png');"></span>幸运28
+                </div>
+            </div>
+            <div class="scroll-wrapper-home after-login">
+                <div class="icon_lottery_type">
+                    <div class="ilt_div game">
+                        <?php unset($this->_sections['i']);
+$this->_sections['i']['name'] = 'i';
+$this->_sections['i']['loop'] = is_array($_loop=$this->_tpl_vars['gamecs']) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
+$this->_sections['i']['show'] = true;
+$this->_sections['i']['max'] = $this->_sections['i']['loop'];
+$this->_sections['i']['step'] = 1;
+$this->_sections['i']['start'] = $this->_sections['i']['step'] > 0 ? 0 : $this->_sections['i']['loop']-1;
+if ($this->_sections['i']['show']) {
+    $this->_sections['i']['total'] = $this->_sections['i']['loop'];
+    if ($this->_sections['i']['total'] == 0)
+        $this->_sections['i']['show'] = false;
+} else
+    $this->_sections['i']['total'] = 0;
+if ($this->_sections['i']['show']):
+
+            for ($this->_sections['i']['index'] = $this->_sections['i']['start'], $this->_sections['i']['iteration'] = 1;
+                 $this->_sections['i']['iteration'] <= $this->_sections['i']['total'];
+                 $this->_sections['i']['index'] += $this->_sections['i']['step'], $this->_sections['i']['iteration']++):
+$this->_sections['i']['rownum'] = $this->_sections['i']['iteration'];
+$this->_sections['i']['index_prev'] = $this->_sections['i']['index'] - $this->_sections['i']['step'];
+$this->_sections['i']['index_next'] = $this->_sections['i']['index'] + $this->_sections['i']['step'];
+$this->_sections['i']['first']      = ($this->_sections['i']['iteration'] == 1);
+$this->_sections['i']['last']       = ($this->_sections['i']['iteration'] == $this->_sections['i']['total']);
+?>
+                        <?php if (( $this->_tpl_vars['gamecs'][$this->_sections['i']['index']]['isimg'] == 1 )): ?>
+                        <a href="javascript:void(0)" gid='<?php echo $this->_tpl_vars['gamecs'][$this->_sections['i']['index']]['gid']; ?>
+' alt="<?php echo $this->_tpl_vars['gamecs'][$this->_sections['i']['index']]['gname']; ?>
+"
+                           title="<?php echo $this->_tpl_vars['gamecs'][$this->_sections['i']['index']]['gname']; ?>
+" class="game">
+                            <div class="game-card">
+                                <div class="card-name"><?php echo $this->_tpl_vars['gamecs'][$this->_sections['i']['index']]['gname']; ?>
+</div>
+                                <div class="card-status">投注即开</div>
+                                <div class="card-img"></div>
+                                <div class="card-foot">
+                                    <span class="card-star"></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </a>
+                        <?php endif; ?>
+                        <?php endfor; endif; ?>
+                    </div>
+                </div>
+                <div class="rough_lines"></div>
+                <div class="foot_font">
+                    <p>版权2011-2025 <?php echo $this->_tpl_vars['webname']; ?>
+正网系统</p>
+                </div>
+            </div>
+        </div>
+        <!-- 公共底部导航：游戏 / 开奖 / 未结 -->
+        <?php $_smarty_tpl_vars = $this->_tpl_vars;
+$this->_smarty_include(array('smarty_include_tpl_file' => 'bottom_menu.html', 'smarty_include_vars' => array()));
+$this->_tpl_vars = $_smarty_tpl_vars;
+unset($_smarty_tpl_vars);
+ ?>
+    </div>
+    <div class="slevm5-0 ivfTfC zhao" data-show="true">
+    </div>
+    <div class="slevm5-1 iJamhB menu" data-show="true">
+        <div class="menu_navigation menu_nav_with_back">
+            <a class="menu_back_lobby" href="/creditmobile/home"
+               style="display:block;padding:12px 16px;color:#fff;text-decoration:none;font-size:15px;border-bottom:1px solid rgba(255,255,255,0.2);">
+                <span style="display:inline-block;width:20px;height:20px;margin-right:8px;vertical-align:middle;background:url(/css/mobi/img/icon_count.png) -224px -131px / 307px 217px no-repeat;"></span>返回大厅
+            </a>
+            <div class="naviga2">
+                <?php echo $this->_tpl_vars['username']; ?>
+
+            </div>
+        </div>
+        <div class="rough_lines">
+        </div>
+        <div class="menu_type">
+            <a class="mt_div" type="/creditmobile/home" href="javascript:void(0)">
+                <div class="mtd_icon mtd_icon1">
+                    <div>
+                    </div>
+                </div>
+                <div class="mtd_font">
+                    <div class="mtdf_1">
+                        主页
+                    </div>
+                </div>
+            </a><a class="mt_div" type="/creditmobile/userinfo" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon2">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    个人资讯
+                </div>
+            </div>
+        </a><a class="mt_div" type="/creditmobile/password" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon4">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    修改密码
+                </div>
+            </div>
+        </a><a class="mt_div" type="/creditmobile/report" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon6">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    未结明细
+                </div>
+            </div>
+        </a><a class="mt_div" type="/creditmobile/todayreport" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon7">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    今天已结
+                </div>
+            </div>
+        </a><a class="mt_div" type="/creditmobile/history" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon8">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    两周报表
+                </div>
+            </div>
+        </a><a class="mt_div" type="/creditmobile/dresult" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon9">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    开奖结果
+                </div>
+            </div>
+        </a><a class="mt_div" type="/creditmobile/rule" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon10">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    规则
+                </div>
+            </div>
+        </a><a class="mt_div" type="logout" href="javascript:void(0)">
+            <div class="mtd_icon mtd_icon15">
+                <div>
+                </div>
+            </div>
+            <div class="mtd_font">
+                <div class="mtdf_1">
+                    退出
+                </div>
+            </div>
+        </a>
+        </div>
+    </div>
+</div>
+<div id="modal">
+</div>
+<div class="ReactModalPortal">
+    <?php if ($this->_tpl_vars['cnews'] > 0): ?>
+    <div class="ReactModal__Overlay ReactModal__Overlay--after-open"
+         style="position: fixed; top: 0px; left: 0px; right: 0px; bottom: 0px; background-color: rgba(255, 255, 255, 0.75);">
+        <div class="ReactModal__Content ReactModal__Content--after-open announcement-modal newscon" tabindex="-1"
+             role="dialog" aria-label="alerts">
+            <button class="prev-btn">上一页</button>
+            <div class="total">
+                1/3
+            </div>
+            <button class="next-btn next">下一页</button>
+            <div class="content">
+                <?php unset($this->_sections['i']);
+$this->_sections['i']['name'] = 'i';
+$this->_sections['i']['loop'] = is_array($_loop=$this->_tpl_vars['news']) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
+$this->_sections['i']['show'] = true;
+$this->_sections['i']['max'] = $this->_sections['i']['loop'];
+$this->_sections['i']['step'] = 1;
+$this->_sections['i']['start'] = $this->_sections['i']['step'] > 0 ? 0 : $this->_sections['i']['loop']-1;
+if ($this->_sections['i']['show']) {
+    $this->_sections['i']['total'] = $this->_sections['i']['loop'];
+    if ($this->_sections['i']['total'] == 0)
+        $this->_sections['i']['show'] = false;
+} else
+    $this->_sections['i']['total'] = 0;
+if ($this->_sections['i']['show']):
+
+            for ($this->_sections['i']['index'] = $this->_sections['i']['start'], $this->_sections['i']['iteration'] = 1;
+                 $this->_sections['i']['iteration'] <= $this->_sections['i']['total'];
+                 $this->_sections['i']['index'] += $this->_sections['i']['step'], $this->_sections['i']['iteration']++):
+$this->_sections['i']['rownum'] = $this->_sections['i']['iteration'];
+$this->_sections['i']['index_prev'] = $this->_sections['i']['index'] - $this->_sections['i']['step'];
+$this->_sections['i']['index_next'] = $this->_sections['i']['index'] + $this->_sections['i']['step'];
+$this->_sections['i']['first']      = ($this->_sections['i']['iteration'] == 1);
+$this->_sections['i']['last']       = ($this->_sections['i']['iteration'] == $this->_sections['i']['total']);
+?>
+                <pre class="sc-1x0uvdd-0 iijcms" id="r<?php echo $this->_tpl_vars['news'][$this->_sections['i']['index']]['id']; ?>
+" style="display: none;">
+          公告：<?php echo $this->_tpl_vars['news'][$this->_sections['i']['index']]['content']; ?>
+
+        </pre>
+                <?php endfor; endif; ?>
+            </div>
+            <button class="close-btn">关闭</button>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+
+
+<style type="text/css">
+    .swal-overlay--show-modal {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .swal-overlay {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0;
+        overflow-y: auto;
+        background-color: rgba(0, 0, 0, .4);
+        z-index: 10000;
+        pointer-events: none;
+        opacity: 1;
+        transition: opacity .3s;
+    }
+
+    .swal-overlay--show-modal .swal-modal {
+        opacity: 1;
+        pointer-events: auto;
+        box-sizing: border-box;
+        -webkit-animation: showSweetAlert .3s;
+        animation: showSweetAlert .3s;
+        will-change: transform;
+    }
+
+    .swal-modal {
+        width: calc(100% - 20px);
+    }
+
+    .swal-modal {
+        opacity: 1;
+        pointer-events: none;
+        background-color: #fff;
+        text-align: center;
+        border-radius: 5px;
+        position: static;
+        margin: 20px auto;
+        margin-top: calc(50%);
+        display: inline-block;
+        vertical-align: middle;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        -webkit-transform-origin: 50% 50%;
+        transform-origin: 50% 50%;
+        z-index: 10001;
+        transition: opacity .2s, -webkit-transform .3s;
+        transition: transform .3s, opacity .2s;
+        transition: transform .3s, opacity .2s, -webkit-transform .3s;
+    }
+
+    .swal-icon:first-child {
+        margin-top: 32px;
+    }
+
+    .swal-icon {
+        width: 80px;
+        height: 80px;
+        border-width: 4px;
+        border-style: solid;
+        border-radius: 50%;
+        padding: 0;
+        position: relative;
+        box-sizing: content-box;
+        margin: 20px auto;
+    }
+
+    .swal-icon--warning {
+        border-color: #f8bb86;
+        -webkit-animation: pulseWarning .75s infinite alternate;
+        animation: pulseWarning .75s infinite alternate;
+    }
+
+    .swal-icon--warning__body, .swal-icon--warning__dot {
+        position: absolute;
+        left: 50%;
+        background-color: #f8bb86;
+    }
+
+    .swal-icon--warning__body {
+        width: 5px;
+        height: 47px;
+        top: 10px;
+        border-radius: 2px;
+        margin-left: -2px;
+    }
+
+    .swal-icon--warning__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-left: -4px;
+        bottom: -11px;
+    }
+
+    .swal-icon--warning__body, .swal-icon--warning__dot {
+        position: absolute;
+        left: 50%;
+        background-color: #f8bb86;
+    }
+
+    .swal-overlay--show-modal .swal-modal {
+        opacity: 1;
+        pointer-events: auto;
+        box-sizing: border-box;
+        -webkit-animation: showSweetAlert .3s;
+        animation: showSweetAlert .3s;
+        will-change: transform;
+    }
+
+    .swal-title:not(:last-child) {
+        margin-bottom: 13px;
+    }
+
+    .swal-title:not(:first-child) {
+        padding-bottom: 0;
+    }
+
+    .swal-title {
+        color: rgba(0, 0, 0, .65);
+        font-weight: 600;
+        text-transform: none;
+        position: relative;
+        display: block;
+        padding: 13px 16px;
+        font-size: 27px;
+        line-height: normal;
+        text-align: center;
+        margin-bottom: 0;
+    }
+
+    .swal-text {
+        font-size: 16px;
+        position: relative;
+        float: none;
+        line-height: normal;
+        vertical-align: top;
+        text-align: left;
+        display: inline-block;
+        margin: 0;
+        padding: 0 10px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, .64);
+        max-width: calc(100% - 20px);
+        overflow-wrap: break-word;
+        box-sizing: border-box;
+    }
+
+    .swal-footer {
+        text-align: right;
+        padding-top: 13px;
+        margin-top: 13px;
+        padding: 13px 16px;
+        border-radius: inherit;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
+
+    .swal-button-container {
+        margin: 5px;
+        display: inline-block;
+        position: relative;
+    }
+
+    .swal-button {
+        background-color: #7cd1f9;
+        color: #fff;
+        border: none;
+        box-shadow: none;
+        border-radius: 5px;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 10px 24px;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .swal-button__loader {
+        position: absolute;
+        height: auto;
+        width: 43px;
+        z-index: 2;
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        pointer-events: none;
+        opacity: 0;
+    }
+
+    .swal-button__loader div {
+        display: inline-block;
+        float: none;
+        vertical-align: baseline;
+        width: 9px;
+        height: 9px;
+        padding: 0;
+        border: none;
+        margin: 2px;
+        opacity: .4;
+        border-radius: 7px;
+        background-color: hsla(0, 0%, 100%, .9);
+        transition: background .2s;
+        -webkit-animation: swal-loading-anim 1s infinite;
+        animation: swal-loading-anim 1s infinite;
+    }
+
+    .swal-button__loader div:nth-child(3n+2) {
+        -webkit-animation-delay: .15s;
+        animation-delay: .15s;
+    }
+
+    .swal-button__loader div:nth-child(3n+3) {
+        -webkit-animation-delay: .3s;
+        animation-delay: .3s;
+    }
+</style>
+<div class="swal-overlay swal-overlay--show-modal statuswarn" style="display: none;">
+    <div class="swal-modal" role="dialog" aria-modal="true">
+        <div class="swal-icon swal-icon--warning">
+    <span class="swal-icon--warning__body">
+      <span class="swal-icon--warning__dot"></span>
+    </span>
+        </div>
+        <div class="swal-title" style="">注意</div>
+        <div class="swal-text" style="">你的账户已经冻结，你将无法投注</div>
+        <div class="swal-footer">
+            <div class="swal-button-container">
+
+                <button class="swal-button swal-button--confirm sweet-alert-btn-undefined">确定</button>
+
+                <div class="swal-button__loader">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
