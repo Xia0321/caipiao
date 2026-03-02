@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>修改会员</title>
+<script type="text/javascript" src="/js/jquery.js"></script>
+<style type="text/css">
+body { font-size: 13px; margin: 0; padding: 0; background: #f5f5f5; }
+.main { max-width: 600px; margin: 20px auto; background: #fff; border: 1px solid #ddd; border-radius: 4px; }
+.top_info { background: #c00; color: #fff; padding: 10px 15px; display: -webkit-box; display: flex; -webkit-box-pack: justify; justify-content: space-between; -webkit-box-align: center; align-items: center; border-radius: 4px 4px 0 0; }
+.top_info .title { font-size: 15px; font-weight: bold; }
+.top_info .back { color: #fff; text-decoration: none; border: 1px solid #fff; padding: 3px 10px; border-radius: 3px; font-size: 12px; }
+.form-table { width: 100%; border-collapse: collapse; margin: 0; }
+.form-table th, .form-table td { padding: 10px 15px; border-bottom: 1px solid #eee; text-align: left; }
+.form-table th { background: #f9f9f9; width: 120px; color: #555; font-weight: normal; }
+.form-table input[type=text], .form-table input[type=password], .form-table select { padding: 5px 8px; border: 1px solid #ccc; border-radius: 3px; width: 200px; font-size: 13px; }
+.footer { padding: 15px; text-align: center; }
+.btn-save { background: #c00; color: #fff; border: none; padding: 8px 25px; border-radius: 3px; cursor: pointer; font-size: 13px; }
+.btn-save:hover { background: #a00; }
+.btn-cancel { color: #333; text-decoration: none; margin-left: 15px; font-size: 13px; }
+.hint { color: #999; font-size: 11px; margin-left: 5px; }
+.readonly { color: #333; font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="main">
+  <div class="top_info">
+    <span class="title">修改会员: {+$eu.username+}</span>
+    <a class="back" href="/agent/user/list?page={+$page+}">返回列表</a>
+  </div>
+  <form method="post" action="">
+    <input type="hidden" name="action" value="save" />
+    <table class="form-table">
+      <tr>
+        <th>会员账号</th>
+        <td class="readonly">{+$eu.username+}</td>
+      </tr>
+      <tr>
+        <th>真实姓名</th>
+        <td><input type="text" name="name" value="{+$eu.name+}" /></td>
+      </tr>
+      <tr>
+        <th>账号状态</th>
+        <td>
+          <select name="status">
+            <option value="0"{+if $eu.status==0+} selected="selected"{+/if+}>启用</option>
+            <option value="1"{+if $eu.status==1+} selected="selected"{+/if+}>冻结</option>
+            <option value="2"{+if $eu.status==2+} selected="selected"{+/if+}>停用</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>默认盘口</th>
+        <td>
+          <select name="defaultpan">
+            <option value="A"{+if $eu.defaultpan=='A'+} selected="selected"{+/if+}>A盘</option>
+            <option value="B"{+if $eu.defaultpan=='B'+} selected="selected"{+/if+}>B盘</option>
+            <option value="C"{+if $eu.defaultpan=='C'+} selected="selected"{+/if+}>C盘</option>
+            <option value="D"{+if $eu.defaultpan=='D'+} selected="selected"{+/if+}>D盘</option>
+            <option value="E"{+if $eu.defaultpan=='E'+} selected="selected"{+/if+}>E盘</option>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th>快开彩额度</th>
+        <td><input type="text" name="kmaxmoney" value="{+$eu.kmaxmoney+}" /></td>
+      </tr>
+      <tr>
+        <th>登录密码</th>
+        <td>
+          <input type="password" name="newpass" value="" />
+          <span class="hint">（留空则不修改）</span>
+        </td>
+      </tr>
+    </table>
+    <div class="footer">
+      <button type="submit" class="btn-save">保存修改</button>
+      <a href="/agent/user/list?page={+$page+}" class="btn-cancel">取消</a>
+    </div>
+  </form>
+</div>
+</body>
+</html>

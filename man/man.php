@@ -15,6 +15,9 @@ switch ($_GET['t']) {
     case "agent/user/list":
         require("agent_user.php");
     break;
+    case "agent/user/edit":
+        require("agent_user_edit.php");
+    break;
     case "agent/report/bets":
 
         require("agent_bao.php");

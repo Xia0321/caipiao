@@ -1,4 +1,4 @@
-var gatt, time0, time1, settime0, settime1, gntime;
+var gatt, time0, time1, settime0, settime1, gntime, openPending = false;
 var fastobj;
 
 function myready() {
@@ -1570,13 +1570,15 @@ function getnowtime() {
 		data: 'xtype=getopen',
 		cache: false,
 		success: function(m) {
-			clearTimeout(settime0);
-			m = m.split('|');
-			time0 = Number(m[0]);
-			time0x()
+			if (!openPending) {
+				clearTimeout(settime0);
+				m = m.split('|');
+				time0 = Number(m[0]);
+				time0x();
+				gntime = setTimeout(getnowtime, 10000)
+			}
 		}
 	});
-	gntime = setTimeout(getnowtime, 10000)
 }
 function time0x() {
 	time0--;
@@ -1631,6 +1633,7 @@ function time1x() {
 	settime1 = setTimeout(time1x, 1000)
 }
 function getopen() {
+	openPending = true;
 	$.ajax({
 		type: 'POST',
 		url: 'makelib.php',
@@ -1639,6 +1642,7 @@ function getopen() {
 		cache: false,
 		success: function(m) {
 			if ((Number(m[0]) != Number($(".panstatus").attr('s')) | Number(m[1]) != Number($(".otherstatus").attr('s'))) & (Number(m[0]) == 0 | Number(m[0]) == 1)) {
+				openPending = false;
 				$(".panstatus").attr('s', m[0]);
 				$(".otherstatus").attr('s', m[1]);
 				if (Number(m[0]) == 0) {

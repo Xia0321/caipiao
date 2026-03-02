@@ -781,7 +781,7 @@ function insertgame($gamecs, $uid)
             $gamecs[$j]['flytype'] = 0;
         if ($psql->f('flytype') == 2 & ($gamecs[$j]['flytype'] == 1 | $gamecs[$j]['flytype'] == 3))
             $gamecs[$j]['flytype'] = 0;
-        // $psql->query("insert into `$tb_gamecs` set userid='$uid',zcmin='" . $gamecs[$j]['zcmin'] . "',ifok='" . $gamecs[$j]['ifok'] . "',flyzc='" . $gamecs[$j]['flyzc'] . "',zc='" . $gamecs[$j]['zc'] . "',upzc='" . $gamecs[$j]['upzc'] . "',xsort='$j',gid='" . $gamecs[$j]['gid'] . "',flytype='" . $gamecs[$j]['flytype'] . "'");
+        $psql->query("insert into `$tb_gamecs` set userid='$uid',zcmin='" . $gamecs[$j]['zcmin'] . "',ifok='" . $gamecs[$j]['ifok'] . "',flyzc='" . $gamecs[$j]['flyzc'] . "',zc='" . $gamecs[$j]['zc'] . "',upzc='" . $gamecs[$j]['upzc'] . "',xsort='$j',gid='" . $gamecs[$j]['gid'] . "',flytype='" . $gamecs[$j]['flytype'] . "'");
     }
     $psql->query("insert into `$tb_gamezc` select NULL,$uid,typeid,typename,0,0,0,0,0 from `$tb_gamezc` where userid='$fid'");
 }

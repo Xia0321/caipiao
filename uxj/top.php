@@ -41,13 +41,18 @@ include('./checklogin.php');
                 $fsql->query("select gid from `$tb_gamecs` where userid='$userid' and ifok=1");
                 $fsql->next_record();
                 $gid = $fsql->f('gid');
-                $fsql->query("update `$tb_user` set gid='$gid' where userid='$userid'");
+                // 仅当找到有效 gid 时才更新，避免 gid 为空导致 MySQL 严格模式报错崩溃
+                if(!empty($gid)){
+                    $fsql->query("update `$tb_user` set gid='$gid' where userid='$userid'");
+                }
             }
         }else if(is_array($garr)){
             $gid= $garr[0]['gid'];
         }else{
-            $gid = $gamecs[0]['gid'];
+            $gid = isset($gamecs[0]['gid']) ? $gamecs[0]['gid'] : 0;
         }
+        // 若 gid 仍为空（用户无任何游戏记录），使用 0 作为安全默认值
+        if(empty($gid)) $gid = 0;
         $_SESSION['gid'] = $gid;
         $vgame=0;
         if(is_array($garr) && count($garr)>0){
