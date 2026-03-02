@@ -277,6 +277,15 @@ switch ($_REQUEST['xtype']) {
       $tpl->assign("status", $msql->f('status'));
 	  $tpl->assign("mgid", $msql->f('gid'));
 	  $tpl->assign("cssz", $msql->f('cssz'));
+      $tpl->assign("is_api", (int)@$msql->f('is_api'));
+      $tpl->assign("mch_code", $msql->f('mch_code') !== null ? $msql->f('mch_code') : '');
+      $tpl->assign("mch_secret", $msql->f('mch_secret') !== null ? $msql->f('mch_secret') : '');
+      $cb_url = '';
+      if (trim($msql->f('mch_code')) !== '') {
+         $fsql->query("SELECT callback_url FROM `x_mchs` WHERE mch_code='" . addslashes($msql->f('mch_code')) . "' LIMIT 1");
+         if ($fsql->next_record()) $cb_url = $fsql->f('callback_url') ? $fsql->f('callback_url') : '';
+      }
+      $tpl->assign("callback_url", $cb_url);
       $tpl->assign("action", 'edit');
       
  
@@ -513,6 +522,20 @@ switch ($_REQUEST['xtype']) {
       $fdc        = $_POST['fdc'];
       $fudong     = $_POST['fudong'];
 	  $mgid      = $_POST['mgid'];
+      $is_api     = isset($_POST['is_api']) ? (int)$_POST['is_api'] : 0;
+      $mch_code   = '';
+      $mch_secret = '';
+      $callback_url = '';
+      if ($is_api == 1) {
+         $mch_code   = trim($_POST['mch_code']);
+         $mch_secret = trim($_POST['mch_secret']);
+         $callback_url = trim($_POST['callback_url']);
+         if ($mch_code === '') $mch_code = strtoupper(bin2hex(random_bytes(8)));
+         if ($mch_secret === '') $mch_secret = bin2hex(random_bytes(16));
+      }
+      $mch_code_sql = addslashes($mch_code);
+      $mch_secret_sql = addslashes($mch_secret);
+      $callback_url_sql = addslashes($callback_url);
       if ($ifexe == 0)
          $pself = 0;
       if (transuser($msql->f('fid'), 'fdc') == 0)
@@ -660,8 +683,21 @@ switch ($_REQUEST['xtype']) {
 		 }
       }
 	  $sql .= ",tel='$tel',qq='$qq',email='$email',bz='$bz',bank='$bank',bankname='$bankname',banknum='$banknum',moneypass='$moneypass'";
+	  $old_mch_code = $msql->f('mch_code');
+	  $sql .= ",is_api='$is_api',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql'";
 	  $sql .= " where userid='$uid' ";
 	  $msql->query($sql);
+      if ($is_api == 1 && $mch_code !== '') {
+         $fsql->query("SELECT id FROM `x_mchs` WHERE mch_code='$mch_code_sql' LIMIT 1");
+         if ($fsql->next_record()) {
+            $msql->query("UPDATE `x_mchs` SET callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1 WHERE mch_code='$mch_code_sql'");
+         } else {
+            $msql->query("INSERT INTO `x_mchs` SET mch_code='$mch_code_sql', callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1");
+         }
+      } else if ($is_api == 0 && trim($old_mch_code) !== '') {
+         $old_mch = addslashes($old_mch_code);
+         $msql->query("UPDATE `x_mchs` SET status=0 WHERE mch_code='$old_mch'");
+      }
       userchange("修改资料", $uid);
       $layer = transuser($uid, 'layer');
       if ($layer == 1) {

@@ -798,18 +798,10 @@ switch ($_REQUEST['xtype']) {
         }
         break;
     case "getbalance":
-        // 规则三：实时无刷新获取余额。先尝试向运营商 API 查询最新余额并同步，再返回给前端。
-        if (!function_exists('mch_get_balance_from_api')) {
-            require_once __DIR__ . '/../task_notify_mch.php';
-        }
-        $bal = mch_get_balance_from_api($userid);
-        if ($bal !== null) {
-            echo json_encode(array('code' => 0, 'kmoney' => $bal['kmoney'], 'money' => $bal['money']));
-        } else {
-            $msql->query("SELECT kmoney, money FROM `$tb_user` WHERE userid='$userid'");
-            $msql->next_record();
-            echo json_encode(array('code' => 0, 'kmoney' => (float)$msql->f('kmoney'), 'money' => (float)$msql->f('money')));
-        }
+        // 余额由登录时 getBalance、下注 changeBalance 响应实时同步，此处直接返回本地最新值，不再轮询商户
+        $msql->query("SELECT kmoney, money FROM `$tb_user` WHERE userid='$userid'");
+        $msql->next_record();
+        echo json_encode(array('code' => 0, 'kmoney' => (float)$msql->f('kmoney'), 'money' => (float)$msql->f('money')));
         break;
 }
 function low1($v)

@@ -32,6 +32,21 @@ if (!isset($tb_user)) $tb_user = 'x_user';
 if (!isset($tb_mchs)) $tb_mchs = 'x_mchs';
 if (!isset($tb_lib))  $tb_lib  = 'x_lib';
 
+/** 商户回调请求专用日志，写入 logs/mch_notify.log */
+function mch_log($tag, $ctx = array()) {
+    static $dir_ok = false;
+    $log_dir = __DIR__ . '/logs';
+    if (!$dir_ok) {
+        if (!is_dir($log_dir)) @mkdir($log_dir, 0755, true);
+        $dir_ok = true;
+    }
+    $line = '[' . date('Y-m-d H:i:s') . '] [' . $tag . ']';
+    if (!empty($ctx)) {
+        $line .= ' ' . json_encode($ctx, JSON_UNESCAPED_UNICODE);
+    }
+    @file_put_contents($log_dir . '/mch_notify.log', $line . "\n", FILE_APPEND | LOCK_EX);
+}
+
 /** 根据商户回调根地址 + 方法名拼出请求 URL，如 https://www.baidu.com -> https://www.baidu.com/getBalance */
 function task_mch_method_url($callback_url, $method) {
     $callback_url = trim($callback_url);
@@ -45,15 +60,35 @@ function task_mch_http_post($url, $payload, $mch_secret = '') {
         $payload['sign'] = md5($mch_secret . $json_for_sign);
     }
     $json = json_encode($payload, JSON_UNESCAPED_UNICODE);
+    mch_log('http_req', array(
+        'url'      => $url,
+        'body_len' => strlen($json),
+        'preview'  => substr($json, 0, 300),
+    ));
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);   // 连接超时
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);          // 总超时
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // 跟随 301/302 跳转
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json; charset=utf-8'));
-    $res = curl_exec($ch);
-    $err = curl_error($ch);
+    $res       = curl_exec($ch);
+    $err       = curl_error($ch);
+    $errno     = curl_errno($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $real_url  = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
     curl_close($ch);
+    mch_log('http_resp', array(
+        'url'        => $url,
+        'real_url'   => $real_url !== $url ? $real_url : null,
+        'http_code'  => $http_code,
+        'curl_errno' => $errno,
+        'err'        => $err,
+        'body_len'   => is_string($res) ? strlen($res) : 0,
+        'preview'    => is_string($res) ? substr($res, 0, 300) : '',
+    ));
     return array('body' => $res, 'err' => $err);
 }
 
@@ -67,6 +102,7 @@ function mch_get_top_api_agent($userid) {
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
     if ($userid === '') return null;
+    mch_log('get_agent_start', array('userid' => $userid));
 
     // 通过 fid（直接上级）逐级向上轮询，收集完整祖先链（从近到远）
     $ancestors = array();
@@ -104,6 +140,7 @@ function mch_get_top_api_agent($userid) {
         $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
         $mch_secret   = ($sec !== null) ? $sec : '';
         if ($callback_url === '') continue;
+        mch_log('get_agent_found', array('userid' => $userid, 'agent' => $anc_username, 'mch_code' => $mch_code, 'callback_url' => $callback_url));
         return array(
             'agent_userid'   => $anc_userid,
             'agent_username' => $anc_username,
@@ -127,6 +164,7 @@ function mch_get_top_api_agent($userid) {
         $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
         $mch_secret   = ($sec !== null) ? $sec : '';
         if ($callback_url !== '') {
+            mch_log('get_agent_found_self', array('userid' => $userid, 'agent' => $self_uname, 'mch_code' => $mch_code, 'callback_url' => $callback_url));
             return array(
                 'agent_userid'   => $self_id,
                 'agent_username' => $self_uname,
@@ -137,6 +175,7 @@ function mch_get_top_api_agent($userid) {
         }
     }
 
+    mch_log('get_agent_notfound', array('userid' => $userid, 'ancestors_count' => count($ancestors)));
     return null;
 }
 
@@ -150,11 +189,15 @@ function mch_get_balance_from_api($userid, $agent_info = null) {
     global $msql, $tb_user;
     $userid = trim($userid);
     if ($userid === '') return null;
+    mch_log('get_balance_start', array('userid' => $userid));
 
     if ($agent_info === null) {
         $agent_info = mch_get_top_api_agent($userid);
     }
-    if ($agent_info === null) return null;
+    if ($agent_info === null) {
+        mch_log('get_balance_no_agent', array('userid' => $userid));
+        return null;
+    }
 
     $msql->query("SELECT username FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
     $msql->next_record();
@@ -168,28 +211,33 @@ function mch_get_balance_from_api($userid, $agent_info = null) {
         'notify_time' => date('Y-m-d H:i:s'),
     );
     $ret = task_mch_http_post($url, $payload, $agent_info['mch_secret']);
-    if ($ret['err'] !== '' || $ret['body'] === '') return null;
+    if ($ret['err'] !== '' || $ret['body'] === '') {
+        mch_log('get_balance_fail', array('userid' => $userid, 'err' => $ret['err'], 'body_empty' => ($ret['body'] === '')));
+        return null;
+    }
 
     $data = @json_decode($ret['body'], true);
-    if (!is_array($data)) return null;
+    if (!is_array($data)) {
+        mch_log('get_balance_invalid_json', array('userid' => $userid, 'body' => substr($ret['body'], 0, 200)));
+        return null;
+    }
 
-    $money  = isset($data['money'])   ? (float)$data['money']   : (isset($data['balance']) ? (float)$data['balance'] : null);
-    $kmoney = isset($data['kmoney'])  ? (float)$data['kmoney']  : null;
+    // 商户以单一 balance/money 字段表示余额；其 kmoney 字段若为 0 只是占位符，不能覆盖本地余额
+    // 规则：有 money/balance 时，同时更新 money 和 kmoney；忽略商户返回的 kmoney 字段
+    $money = isset($data['money'])   ? (float)$data['money']
+           : (isset($data['balance']) ? (float)$data['balance'] : null);
 
     // 合理性校验，防止恶意值篡改
     $max_balance = 1000000000;
-    if ($money  !== null && ($money  < 0 || $money  > $max_balance)) $money  = null;
-    if ($kmoney !== null && ($kmoney < 0 || $kmoney > $max_balance)) $kmoney = null;
+    if ($money !== null && ($money < 0 || $money > $max_balance)) $money = null;
 
-    if ($money !== null || $kmoney !== null) {
+    if ($money !== null) {
         $uid = addslashes($userid);
-        if ($money !== null && $kmoney !== null) {
-            $msql->query("UPDATE `$tb_user` SET money='$money', kmoney='$kmoney' WHERE userid='$uid'");
-        } elseif ($money !== null) {
-            $msql->query("UPDATE `$tb_user` SET money='$money' WHERE userid='$uid'");
-        } else {
-            $msql->query("UPDATE `$tb_user` SET kmoney='$kmoney' WHERE userid='$uid'");
-        }
+        // 同步 money 和 kmoney（游戏余额），商户只维护单一余额字段
+        $msql->query("UPDATE `$tb_user` SET money='$money', kmoney='$money' WHERE userid='$uid'");
+        mch_log('get_balance_updated', array('userid' => $userid, 'money' => $money));
+    } else {
+        mch_log('get_balance_no_money_field', array('userid' => $userid, 'data_keys' => array_keys($data)));
     }
 
     // 返回数据库最新值
@@ -271,11 +319,18 @@ function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders =
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
     $amount = (float) $amount;
-    if ($userid === '' || $amount <= 0) return false;
+    mch_log('change_balance_start', array('userid' => $userid, 'amount' => $amount, 'type' => $type, 'orders_count' => count($orders)));
+    if ($userid === '' || $amount <= 0) {
+        mch_log('change_balance_skip', array('userid' => $userid, 'amount' => $amount));
+        return false;
+    }
 
     // 遍历层级找到最顶级 API 代理（规则三/四核心逻辑）
     $agent = mch_get_top_api_agent($userid);
-    if ($agent === null) return false;
+    if ($agent === null) {
+        mch_log('change_balance_no_agent', array('userid' => $userid));
+        return false;
+    }
 
     // 读取当前本地 kmoney 作为期望值（此时已完成扣款）
     $msql->query("SELECT username, kmoney FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
@@ -296,7 +351,11 @@ function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders =
         $payload['orders'] = $orders;
     }
     $ret = task_mch_http_post($url, $payload, $agent['mch_secret']);
-    if ($ret['err'] !== '') return false;
+    if ($ret['err'] !== '') {
+        mch_log('change_balance_curl_err', array('userid' => $userid, 'err' => $ret['err']));
+        return false;
+    }
+    mch_log('change_balance_done', array('userid' => $userid, 'amount' => $amount, 'type' => $type));
 
     // 规则七：核对运营商反馈余额
     mch_verify_and_update_balance($userid, $ret['body'], $expected_kmoney);
@@ -313,11 +372,18 @@ function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders =
 function mch_notify_settle_orders($userid, $orders) {
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
-    if ($userid === '' || empty($orders)) return false;
+    mch_log('settle_orders_start', array('userid' => $userid, 'orders_count' => count($orders)));
+    if ($userid === '' || empty($orders)) {
+        mch_log('settle_orders_skip', array('userid' => $userid));
+        return false;
+    }
 
     // 遍历层级找到最顶级 API 代理（规则五核心逻辑）
     $agent = mch_get_top_api_agent($userid);
-    if ($agent === null) return false;
+    if ($agent === null) {
+        mch_log('settle_orders_no_agent', array('userid' => $userid));
+        return false;
+    }
 
     // 结算前读取本地 kmoney + 计算本批奖金总额，作为运营商反馈余额的期望值
     // 运营商结算后余额 = 本地 kmoney（未含奖金）+ 本期奖金总和
@@ -340,7 +406,11 @@ function mch_notify_settle_orders($userid, $orders) {
         'notify_time' => date('Y-m-d H:i:s'),
     );
     $ret = task_mch_http_post($url, $payload, $agent['mch_secret']);
-    if ($ret['err'] !== '') return false;
+    if ($ret['err'] !== '') {
+        mch_log('settle_orders_curl_err', array('userid' => $userid, 'err' => $ret['err']));
+        return false;
+    }
+    mch_log('settle_orders_done', array('userid' => $userid, 'orders_count' => count($orders), 'total_prize' => $total_prize));
 
     // 规则七：核对运营商反馈余额（期望 = 结算前本地余额 + 本期奖金总额）
     mch_verify_and_update_balance($userid, $ret['body'], $settle_expected);
@@ -357,11 +427,18 @@ function mch_notify_settle_orders($userid, $orders) {
 function mch_notify_cancel_orders($userid, $orders) {
     global $msql, $tb_user, $tb_mchs;
     $userid = trim($userid);
-    if ($userid === '' || empty($orders)) return false;
+    mch_log('cancel_orders_start', array('userid' => $userid, 'orders_count' => count($orders)));
+    if ($userid === '' || empty($orders)) {
+        mch_log('cancel_orders_skip', array('userid' => $userid));
+        return false;
+    }
 
     // 遍历层级找到最顶级 API 代理（规则六核心逻辑）
     $agent = mch_get_top_api_agent($userid);
-    if ($agent === null) return false;
+    if ($agent === null) {
+        mch_log('cancel_orders_no_agent', array('userid' => $userid));
+        return false;
+    }
 
     // 取消前读取本地 kmoney 并计算退款总额，作为核对期望值
     // cancelOrder 通知时本地余额尚未退回，运营商收到通知后会加回，其反馈余额 = 本地 kmoney + 退款总额
@@ -384,7 +461,11 @@ function mch_notify_cancel_orders($userid, $orders) {
         'notify_time' => date('Y-m-d H:i:s'),
     );
     $ret = task_mch_http_post($url, $payload, $agent['mch_secret']);
-    if ($ret['err'] !== '') return false;
+    if ($ret['err'] !== '') {
+        mch_log('cancel_orders_curl_err', array('userid' => $userid, 'err' => $ret['err']));
+        return false;
+    }
+    mch_log('cancel_orders_done', array('userid' => $userid, 'orders_count' => count($orders), 'total_refund' => $total_refund));
 
     // 规则七：核对运营商反馈余额（期望 = 本地原余额 + 退款总额）
     mch_verify_and_update_balance($userid, $ret['body'], $expected_after);
@@ -625,4 +706,94 @@ switch ($action) {
             task_mch_http_post($callback_url, $payload, $mch_secret);
         }
         break;
+
+    case 'diagnose':
+        // 诊断工具：检查指定用户的回调链路是否配置正确，可传 userid 或不传（列出所有 API 用户）
+        header('Content-Type: application/json; charset=utf-8');
+        $diag_userid = isset($_REQUEST['userid']) ? trim($_REQUEST['userid']) : '';
+        $result = array();
+
+        if ($diag_userid !== '') {
+            // 检查单个用户
+            $msql->query("SELECT userid, username, is_api, status, mch_code FROM `$tb_user` WHERE userid='" . addslashes($diag_userid) . "'");
+            $msql->next_record();
+            $u_userid   = $msql->f('userid');
+            $u_username = $msql->f('username');
+            $u_is_api   = $msql->f('is_api');
+            $u_status   = $msql->f('status');
+            $u_mch_code = $msql->f('mch_code');
+
+            if ($u_userid === '' || $u_userid === null) {
+                echo json_encode(array('code' => 1, 'msg' => 'user not found', 'userid' => $diag_userid), JSON_UNESCAPED_UNICODE);
+                exit;
+            }
+
+            $agent = mch_get_top_api_agent($diag_userid);
+
+            $ping = null;
+            if ($agent !== null) {
+                // 简单连通性测试：curl HEAD 到 callback_url
+                $test_url = rtrim($agent['callback_url'], '/');
+                $ch2 = curl_init($test_url);
+                curl_setopt($ch2, CURLOPT_NOBODY, true);
+                curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch2, CURLOPT_CONNECTTIMEOUT, 5);
+                curl_setopt($ch2, CURLOPT_TIMEOUT, 8);
+                curl_setopt($ch2, CURLOPT_FOLLOWLOCATION, true);
+                curl_exec($ch2);
+                $ping_code = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+                $ping_err  = curl_error($ch2);
+                curl_close($ch2);
+                $ping = array('http_code' => $ping_code, 'err' => $ping_err);
+            }
+
+            echo json_encode(array(
+                'code'     => 0,
+                'user'     => array(
+                    'userid'   => $u_userid,
+                    'username' => $u_username,
+                    'is_api'   => $u_is_api,
+                    'status'   => $u_status,
+                    'mch_code' => $u_mch_code,
+                ),
+                'agent'    => $agent !== null ? array(
+                    'agent_userid'   => $agent['agent_userid'],
+                    'agent_username' => $agent['agent_username'],
+                    'mch_code'       => $agent['mch_code'],
+                    'callback_url'   => $agent['callback_url'],
+                    'has_secret'     => ($agent['mch_secret'] !== ''),
+                ) : null,
+                'ping'     => $ping,
+                'log_file' => __DIR__ . '/logs/mch_notify.log',
+            ), JSON_UNESCAPED_UNICODE);
+        } else {
+            // 列出所有 API 用户及其代理配置状态
+            $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE is_api=1 AND status=1");
+            $api_users = array();
+            while ($msql->next_record()) {
+                $api_users[] = array(
+                    'userid'   => $msql->f('userid'),
+                    'username' => $msql->f('username'),
+                    'mch_code' => $msql->f('mch_code'),
+                );
+            }
+            // 检查 x_mchs 配置
+            $mch_list = array();
+            $msql->query("SELECT mch_code, callback_url, mch_secret, status FROM `$tb_mchs`");
+            while ($msql->next_record()) {
+                $mch_list[] = array(
+                    'mch_code'     => $msql->f('mch_code'),
+                    'callback_url' => $msql->f('callback_url'),
+                    'has_secret'   => ($msql->f('mch_secret') !== ''),
+                    'status'       => $msql->f('status'),
+                );
+            }
+            echo json_encode(array(
+                'code'      => 0,
+                'api_users' => $api_users,
+                'mch_list'  => $mch_list,
+                'log_file'  => __DIR__ . '/logs/mch_notify.log',
+            ), JSON_UNESCAPED_UNICODE);
+        }
+        exit;
 }

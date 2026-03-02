@@ -653,11 +653,11 @@ switch ($_REQUEST['xtype']) {
                 'gname'   => isset($play[$mi]['gname']) ? $play[$mi]['gname'] : '',
             );
         }
-        if (function_exists('mch_notify_change_balance')) {
-            mch_notify_change_balance($userid, $jex, 'deduct', $mch_orders);
-        } else {
-            @include_once __DIR__ . '/../task_notify_mch.php';
-            if (function_exists('mch_notify_change_balance')) {
+        if ($jex > 0) {
+            if (!function_exists('mch_notify_change_balance')) {
+                require_once __DIR__ . '/../task_notify_mch.php';
+            }
+            if (!empty($mch_orders)) {
                 mch_notify_change_balance($userid, $jex, 'deduct', $mch_orders);
             }
         }

@@ -422,6 +422,11 @@ function entry()
     $_SESSION['wid'] = $wid;
     $_SESSION['sv'] = '2';
     session_write_close();
+    // 登录时主动向商户拉取一次最新余额并同步
+    if (!function_exists('mch_get_balance_from_api')) {
+        require_once __DIR__ . '/task_notify_mch.php';
+    }
+    mch_get_balance_from_api($userid);
     // Bug7 fix: 使用 $use_mobile（来自 token 或实时检测）而不是重新调用 is_mobile_device()
     $device = $use_mobile ? "m" : "u";
     exit(header("Location: /{$device}xj/xy.php"));

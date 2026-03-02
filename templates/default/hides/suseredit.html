@@ -207,6 +207,20 @@
      </select></td>
     </TR>
     
+   <TR>
+    <th>API代理：</th>
+    <TD><label><input type="checkbox" name="is_api" id="is_api" value="1" {+if $is_api==1+}checked{+/if+} /> 勾选后可设置验签编码与回调地址（仅代理可用）</label></td>
+   </TR>
+   <TR id="tr_api_fields" style="display:none;">
+    <th>API代理设置</th>
+    <TD>
+     <div class="api_fields_box">
+       <div><label>代理验签编码(mch_code)：</label><input type="text" name="mch_code" id="mch_code" class="input" value="{+$mch_code+}" maxlength="64" placeholder="留空则随机生成" /> <input type="button" class="btn1 btn_random_mch_code" value="随机生成" /></div>
+       <div style="margin-top:8px;"><label>回调地址：</label><input type="text" name="callback_url" id="callback_url" class="input" style="width:320px;" value="{+$callback_url+}" maxlength="512" placeholder="http(s)://..." /></div>
+       <div style="margin-top:8px;"><label>验签密钥(mch_secret)：</label><input type="text" name="mch_secret" id="mch_secret" class="input" value="{+$mch_secret+}" maxlength="128" placeholder="留空则随机生成" /> <input type="button" class="btn1 btn_random_mch_secret" value="随机生成" /></div>
+     </div>
+    </TD>
+   </TR>
     <tr  class='hides'><Td></Td>
     <TD><input type="button" class="btn1 btnf"  id='edit' value="修改{+$layername+}" style="margin-right:20px;" /><input type="button" class="btn1 btnf close"  value="关闭窗口" /></td>
    </tr>
@@ -359,3 +373,15 @@
   </table>
 {+/if+}
   <div class="data_footer control"><input type="button" value="确定" class="button edit" /> <input type="button" value="取消"  class="close button"></div>
+  <script>
+  (function(){
+    function toggleApiFields(){ var c=$("#is_api").prop("checked"); $("#tr_api_fields").toggle(c); }
+    function randomStr(len){ var s=""; var h="0123456789ABCDEF"; for(var i=0;i<len;i++) s+=h[Math.floor(Math.random()*16)]; return s; }
+    $(function(){
+      $("#is_api").on("change", toggleApiFields);
+      if($("#is_api").prop("checked")) $("#tr_api_fields").show();
+      $(".btn_random_mch_code").on("click", function(){ $("#mch_code").val(randomStr(16)); });
+      $(".btn_random_mch_secret").on("click", function(){ $("#mch_secret").val(randomStr(32)); });
+    });
+  })();
+  </script>
