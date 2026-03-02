@@ -23,7 +23,7 @@ while(1){
 	//file_put_contents("liml.log",$_SESSION['login_check_number'] ,FILE_APPEND|LOCK_EX);
     $n->getdir("./code/".$code);
     $n->img2data();
-    if($n->imgform=="image/jpeg" && is_numeric($_SESSION['login_check_number'])){
+    if(($n->imgform=="image/jpeg" || $n->imgform=="image/png") && is_numeric($_SESSION['login_check_number'])){
     	$n->data2img();
     	break;
     }    
