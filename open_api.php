@@ -425,7 +425,9 @@ function entry()
     session_write_close();
     // 登录时主动向商户拉取一次最新余额并同步
     mch_get_balance_from_api($userid);
-    // Bug7 fix: 使用 $use_mobile（来自 token 或实时检测）而不是重新调用 is_mobile_device()
+    // 来访设备判断：以当前打开链接的浏览器 UA 为准，手机访问跳 mxj，电脑访问跳 uxj。
+    // 不再使用 token 中的 device（接口登录时多为服务端请求，UA 非真实访客设备），避免手机来访被错误跳转到电脑端。
+    $use_mobile = is_mobile_device();
     $device = $use_mobile ? "m" : "u";
-    exit(header("Location: /{$device}xj/xy.php"));
+    exit(header("Location: /{$device}xj"));
 }

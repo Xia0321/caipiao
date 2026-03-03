@@ -93,9 +93,9 @@ function task_mch_http_post($url, $payload, $mch_secret = '') {
 }
 
 /**
- * 向上遍历用户层级，找到最顶级的 API 代理，并获取其商户回调信息。
- * 逐级通过 fid（直接上级）轮询直到最顶层，再从中找出开启了 API 模式的代理。
- * @param string $userid 会员 userid
+ * 从注单用户向上遍历 fid 直到最顶级代理，判断该代理是否开启 API（is_api=1），是则返回其商户回调信息。
+ * 流程：注单 userid -> 循环 fid 直到最顶层 -> 判断该顶层是否为代理且 is_api=1 -> 取 callback_url 组合 settleOrder/cancelOrder 等。
+ * @param string $userid 会员 userid（注单所属用户）
  * @return array|null 含 agent_userid, agent_username, mch_code, callback_url, mch_secret，无则 null
  */
 function mch_get_top_api_agent($userid) {
@@ -104,53 +104,49 @@ function mch_get_top_api_agent($userid) {
     if ($userid === '') return null;
     mch_log('get_agent_start', array('userid' => $userid));
 
-    // 通过 fid（直接上级）逐级向上轮询，收集完整祖先链（从近到远）
-    $ancestors = array();
-    $current   = $userid;
-    $visited   = array($userid => true);
-    for ($i = 0; $i < 10; $i++) {
+    // 通过 fid 逐级向上直到最顶层（无上级或 layer<=1）
+    $current = $userid;
+    $visited = array($userid => true);
+    for ($i = 0; $i < 20; $i++) {
         $msql->query("SELECT fid, layer FROM `$tb_user` WHERE userid='" . addslashes($current) . "'");
-        $msql->next_record();
+        if (!$msql->next_record()) break;
         $layer = (int)$msql->f('layer');
         $fid   = $msql->f('fid');
         if ($layer <= 1 || $fid === '' || $fid === null || $fid === '0') break;
-        if (isset($visited[$fid])) break; // 防止循环
-        $visited[$fid]  = true;
-        $ancestors[]    = $fid;
-        $current        = $fid;
+        if (isset($visited[$fid])) break;
+        $visited[$fid] = true;
+        $current       = $fid;
     }
+    $top_id = $current;
 
-    // 反转：最顶级排在最前，优先匹配
-    $chain = array_reverse($ancestors);
-
-    foreach ($chain as $anc_id) {
-        $safe = addslashes($anc_id);
-        $msql->query("SELECT userid, username, ifagent, is_api, mch_code, status FROM `$tb_user` WHERE userid='$safe' AND ifagent='1' AND is_api='1' AND status='1'");
-        $msql->next_record();
-        $anc_userid = $msql->f('userid');
-        if ($anc_userid === '' || $anc_userid === null) continue;
-        $mch_code = $msql->f('mch_code');
-        if ($mch_code === '' || $mch_code === null) continue;
+    // 判断最顶级是否为代理且开启 API（is_api=1）
+    $msql->query("SELECT userid, username, ifagent, is_api, mch_code, status FROM `$tb_user` WHERE userid='" . addslashes($top_id) . "' AND ifagent='1' AND is_api='1' AND status='1'");
+    $msql->next_record();
+    $anc_userid = $msql->f('userid');
+    if ($anc_userid !== '' && $anc_userid !== null) {
+        $mch_code     = $msql->f('mch_code');
         $anc_username = $msql->f('username');
-        // 查商户回调配置
-        $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-        $msql->next_record();
-        $cb  = $msql->f('callback_url');
-        $sec = $msql->f('mch_secret');
-        $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
-        $mch_secret   = ($sec !== null) ? $sec : '';
-        if ($callback_url === '') continue;
-        mch_log('get_agent_found', array('userid' => $userid, 'agent' => $anc_username, 'mch_code' => $mch_code, 'callback_url' => $callback_url));
-        return array(
-            'agent_userid'   => $anc_userid,
-            'agent_username' => $anc_username,
-            'mch_code'       => $mch_code,
-            'callback_url'   => $callback_url,
-            'mch_secret'     => $mch_secret,
-        );
+        if ($mch_code !== '' && $mch_code !== null) {
+            $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
+            $msql->next_record();
+            $cb  = $msql->f('callback_url');
+            $sec = $msql->f('mch_secret');
+            $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
+            $mch_secret   = ($sec !== null) ? $sec : '';
+            if ($callback_url !== '') {
+                mch_log('get_agent_found', array('userid' => $userid, 'top_agent' => $anc_username, 'mch_code' => $mch_code, 'callback_url' => $callback_url));
+                return array(
+                    'agent_userid'   => $anc_userid,
+                    'agent_username' => $anc_username,
+                    'mch_code'       => $mch_code,
+                    'callback_url'   => $callback_url,
+                    'mch_secret'     => $mch_secret,
+                );
+            }
+        }
     }
 
-    // 兼容旧逻辑：用户自身直接打标 is_api=1（API 注册时写入）
+    // 兼容：用户自身即为 API 代理（is_api=1，如 API 注册）
     $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND is_api='1' AND status='1' AND mch_code!=''");
     $msql->next_record();
     $self_id  = $msql->f('userid');
@@ -180,7 +176,8 @@ function mch_get_top_api_agent($userid) {
 }
 
 /**
- * 向运营商请求最新余额（getBalance），更新本地数据库并返回最新余额。
+ * 重新获取余额：按用户向上找最顶级代理，若该代理 is_api=1 则用其 callback_url+getBalance 向运营商拉取该用户最新余额，
+ * 并更新本系统该用户的 money/kmoney，再返回。电脑端/手机端「重新获取余额」均走此逻辑。
  * @param string     $userid     会员 userid
  * @param array|null $agent_info 可选，mch_get_top_api_agent 的返回值；null 则内部查询
  * @return array|null 含 money, kmoney；无 API 代理或请求失败时返回 null
@@ -320,12 +317,12 @@ function mch_verify_and_update_balance($userid, $response_body, $expected_kmoney
 }
 
 /**
- * 下注时变更余额通知：遍历层级找到最顶级 API 代理，向其 changeBalance 地址发起请求，带上本次下注详情。
- * 通知后自动核对运营商反馈余额（规则七）。
+ * 下注时变更余额通知：从注单用户向上找到最顶级 API 代理，用 callback_url + changeBalance 推送扣款及注单详情。
+ * 注单列表含 id、code（注单号），便于运营商同步注单。通知后根据运营商返回余额更新用户并继续流程。
  * @param string $userid 会员 userid
  * @param float  $amount 变动金额（正数）
  * @param string $type   deduct=扣款（下注）, add=加款（如退款、派奖）
- * @param array  $orders 本次下注的注单列表，每项含 tid,gid,qishu,bid,sid,cid,pid,content,je,gname 等
+ * @param array  $orders 本次下注的注单列表，每项含 id,code,tid,gid,qishu,bid,sid,cid,pid,content,je,gname 等
  * @return bool 是否成功请求到商户
  */
 function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders = array()) {
@@ -376,9 +373,9 @@ function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders =
 }
 
 /**
- * 注单结算通知：遍历层级找到最顶级 API 代理，向其 settleOrder 地址推送已结算注单。
- * 通知后自动核对运营商反馈余额（规则七）。
- * @param string $userid 会员 userid
+ * 注单结算通知：从注单用户向上找到最顶级代理，若 is_api=1 则用其 callback_url + settleOrder 推送已结算注单及结算信息。
+ * 通知后根据运营商返回的余额更新当前用户 money/kmoney，并继续后续流程。
+ * @param string $userid 会员 userid（注单所属用户）
  * @param array  $orders 已结算注单列表，每项含 id,tid,code,userid,qishu,dates,gid,bid,sid,cid,pid,content,je,prize,z,valid_je,win_loss,time 等
  * @return bool 是否成功请求到商户
  */
@@ -431,8 +428,8 @@ function mch_notify_settle_orders($userid, $orders) {
 }
 
 /**
- * 取消注单通知：遍历层级找到最顶级 API 代理，向其 cancelOrder 地址推送被取消的注单。
- * 通知后自动核对运营商反馈余额（规则七）。
+ * 取消注单通知：从注单用户向上找到最顶级 API 代理，用 callback_url + cancelOrder 推送被取消的注单。
+ * 每条注单附带注单号 id、code，方便运营商更新注单状态。通知后根据运营商返回余额更新用户并继续流程。
  * @param string $userid 会员 userid
  * @param array  $orders 被取消的注单列表，每项含 id,tid,code,qishu,gid,bid,sid,cid,pid,content,je,time 等
  * @return bool 是否成功请求到商户

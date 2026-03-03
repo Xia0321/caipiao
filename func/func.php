@@ -1255,25 +1255,59 @@ function getzcs8($class, $uid, $gid)
 
 function getjes($class, $uid)
 {
-    global $tb_points, $psql, $gid;
-    //$gids = transgame($gid,'fenlei');
+    global $tb_points, $tb_user, $psql, $gid;
     $psql->query("select cmaxje,maxje,minje from `$tb_points` where userid='$uid' and gid='$gid' and class='$class'");
-    $psql->next_record();
-    $arr['cmaxje'] = pr0($psql->f('cmaxje'));
-    $arr['maxje'] = pr0($psql->f('maxje'));
-    $arr['minje'] = pr0($psql->f('minje'));
+    $arr = array('cmaxje' => 0, 'maxje' => 0, 'minje' => 0);
+    if ($psql->next_record()) {
+        $arr['cmaxje'] = pr0($psql->f('cmaxje'));
+        $arr['maxje']  = pr0($psql->f('maxje'));
+        $arr['minje']  = pr0($psql->f('minje'));
+    }
+    if ($arr['maxje'] <= 0) {
+        $fid = transuser($uid, 'fid');
+        if ($fid !== '' && $fid !== null) {
+            $psql->query("select cmaxje,maxje,minje from `$tb_points` where userid='" . addslashes($fid) . "' and gid='$gid' and class='$class'");
+            if ($psql->next_record()) {
+                $arr['cmaxje'] = pr0($psql->f('cmaxje'));
+                $arr['maxje']  = pr0($psql->f('maxje'));
+                $arr['minje']  = pr0($psql->f('minje'));
+            }
+        }
+        if ($arr['maxje'] <= 0) {
+            $arr['maxje']  = 10000;
+            $arr['minje']  = 1;
+            $arr['cmaxje'] = 100000;
+        }
+    }
     return $arr;
 }
 
 function getjes8($class, $uid, $gid)
 {
-    global $tb_points, $psql;
-    //$gids = transgame($gids,'fenlei');
+    global $tb_points, $tb_user, $psql;
     $psql->query("select cmaxje,maxje,minje from `$tb_points` where userid='$uid' and gid='$gid' and class='$class'");
-    $psql->next_record();
-    $arr['cmaxje'] = pr0($psql->f('cmaxje'));
-    $arr['maxje'] = pr0($psql->f('maxje'));
-    $arr['minje'] = pr0($psql->f('minje'));
+    $arr = array('cmaxje' => 0, 'maxje' => 0, 'minje' => 0);
+    if ($psql->next_record()) {
+        $arr['cmaxje'] = pr0($psql->f('cmaxje'));
+        $arr['maxje']  = pr0($psql->f('maxje'));
+        $arr['minje']  = pr0($psql->f('minje'));
+    }
+    if ($arr['maxje'] <= 0) {
+        $fid = transuser($uid, 'fid');
+        if ($fid !== '' && $fid !== null) {
+            $psql->query("select cmaxje,maxje,minje from `$tb_points` where userid='" . addslashes($fid) . "' and gid='$gid' and class='$class'");
+            if ($psql->next_record()) {
+                $arr['cmaxje'] = pr0($psql->f('cmaxje'));
+                $arr['maxje']  = pr0($psql->f('maxje'));
+                $arr['minje']  = pr0($psql->f('minje'));
+            }
+        }
+        if ($arr['maxje'] <= 0) {
+            $arr['maxje']  = 10000;
+            $arr['minje']  = 1;
+            $arr['cmaxje'] = 100000;
+        }
+    }
     return $arr;
 }
 

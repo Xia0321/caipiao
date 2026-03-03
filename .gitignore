@@ -2,3 +2,18 @@
 .idea/
 node_modules/
 package-lock.json
+
+# 日志、备份、临时文件
+logs/
+*.bak
+*.bak2
+*.bak3
+2.zip
+beifen/
+caipiao-master/
+*time_debug.log
+*trace.log
+*test_write.txt
+uxj/top_debug.php
+uxjs/time.php.bak
+tools/_project_pull.tar.gz

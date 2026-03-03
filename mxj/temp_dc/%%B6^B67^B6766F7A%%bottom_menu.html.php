@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2026-02-12 23:15:36
+<?php /* Smarty version 2.6.18, created on 2026-03-04 01:10:03
          compiled from bottom_menu.html */ ?>
 <!-- 公共底部导航：游戏 / 开奖 / 未结，保持原 class/type 以兼容现有点击事件。可选变量 bottom_menu_active：game|result|report 控制当前高亮 -->
 <style type="text/css">

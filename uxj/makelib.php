@@ -626,6 +626,8 @@ switch ($_REQUEST['xtype']) {
             
             if ($msql->query($sql)) {
                 $play[$i]['cg'] = 1;
+                $play[$i]['id'] = $msql->last_id();
+                $play[$i]['code'] = $key;
                 $play[$i]['bid'] = $bid;
                 $play[$i]['sid'] = $sid;
                 $play[$i]['cid'] = $cid;
@@ -660,6 +662,8 @@ switch ($_REQUEST['xtype']) {
             foreach ($play as $p) {
                 if (!empty($p['cg']) && $p['cg'] == 1) {
                     $orders[] = array(
+                        'id'      => isset($p['id']) ? $p['id'] : '',
+                        'code'    => isset($p['code']) ? $p['code'] : '',
                         'tid'     => isset($p['tid']) ? $p['tid'] : $tid,
                         'gid'     => isset($p['gid']) ? $p['gid'] : $gid,
                         'qishu'   => isset($p['qishu']) ? $p['qishu'] : $config['thisqishu'],
@@ -798,10 +802,18 @@ switch ($_REQUEST['xtype']) {
         }
         break;
     case "getbalance":
-        // 余额由登录时 getBalance、下注 changeBalance 响应实时同步，此处直接返回本地最新值，不再轮询商户
-        $msql->query("SELECT kmoney, money FROM `$tb_user` WHERE userid='$userid'");
-        $msql->next_record();
-        echo json_encode(array('code' => 0, 'kmoney' => (float)$msql->f('kmoney'), 'money' => (float)$msql->f('money')));
+        // 重新获取余额：先按用户找最顶级代理，若 is_api=1 则用 callback_url+getBalance 向运营商拉取最新余额并更新本系统，再返回
+        if (!function_exists('mch_get_balance_from_api')) {
+            require_once __DIR__ . '/../task_notify_mch.php';
+        }
+        $bal = mch_get_balance_from_api($userid);
+        if (is_array($bal)) {
+            echo json_encode(array('code' => 0, 'kmoney' => (float)$bal['kmoney'], 'money' => (float)$bal['money']));
+        } else {
+            $msql->query("SELECT kmoney, money FROM `$tb_user` WHERE userid='$userid'");
+            $msql->next_record();
+            echo json_encode(array('code' => 0, 'kmoney' => (float)$msql->f('kmoney'), 'money' => (float)$msql->f('money')));
+        }
         break;
 }
 function low1($v)

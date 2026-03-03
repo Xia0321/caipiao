@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2024-12-23 16:03:59
+<?php /* Smarty version 2.6.18, created on 2026-03-03 16:01:50
          compiled from longr.html */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('modifier', 'substr', 'longr.html', 33, false),)), $this); ?>

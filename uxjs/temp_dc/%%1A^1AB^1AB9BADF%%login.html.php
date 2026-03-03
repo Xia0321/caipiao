@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2024-12-23 16:03:38
+<?php /* Smarty version 2.6.18, created on 2026-03-02 12:11:42
          compiled from login.html */ ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -30,7 +30,7 @@ input {
 
 .header a {
 	display: block;
-	background: url("../css/login/sgwin-y.png") no-repeat;
+	background: url("/css/login/sgwin-y.png") no-repeat;
 	width: 300px;
 	height: 72px;
 	float: right;
@@ -38,12 +38,12 @@ input {
 }
 
 .main {
-	background: #b63a42 url("../css/login/bg.png") no-repeat center;
+	background: #b63a42 url("/css/login/bg.png") no-repeat center;
 	height: 475px;
 }
 
 .panel {
-	background: url("../css/login/year_banner.png") no-repeat left;
+	background: url("/css/login/year_banner.png") no-repeat left;
 	width: 950px;
 	height: 475px;
 	margin: 0 auto;
@@ -59,14 +59,14 @@ input {
 }
 
 .login .info {
-	background: url("../css/login/input_bg.png") no-repeat left top;
+	background: url("/css/login/input_bg.png") no-repeat left top;
 	height: 50px;
 	width: 220px;
 	margin: 10px auto;
 }
 
 .login .info label {
-	background: url("../css/login/login_ico.png") no-repeat top;
+	background: url("/css/login/login_ico.png") no-repeat top;
 	display: block;
 	font-size: 0;
 	text-indent: -99999px;
@@ -85,7 +85,7 @@ input {
 }
 
 .login .facode label {
-	background: url("../css/login/login_ico2.png") no-repeat bottom;
+	background: url("/css/login/login_ico2.png") no-repeat bottom;
 }
 
 .login .info input {
@@ -111,7 +111,7 @@ input {
 }
 
 .login .control input {
-	background: url("../css/login/submit.png");
+	background: url("/css/login/submit.png");
 	display: block;
 	height: 36px;
 	margin: 15px auto 15px auto;
@@ -140,7 +140,7 @@ span.user_t {
 }
 
 span.user_f {
-	background: url("../css/login/google_auth_icon.png") top center no-repeat;
+	background: url("/css/login/google_auth_icon.png") top center no-repeat;
 	text-indent: 40px;
 	margin-top: 5px;
 	cursor: pointer;
@@ -165,7 +165,7 @@ span.user_f {
 $(function(){
 
 	$("#imgcode").click(function(){
-		$(this).attr('src',"../imgcode.php?act=init&"+Math.random());
+		$(this).attr('src',"/imgcode.php?act=init&"+Math.random());
 	});
 	$("input:password").click(function(){
 	     $(this).attr("placeholder","");
@@ -239,7 +239,7 @@ document.onmousemove=hideinfo;
     </div>
 	<div class="info username"><label>账号</label><input type="text" name="username" id="username" placeholder="请输入您的账号" title="请输入您的账号"></div>
 	<div class="info password"><label>密码</label><input type="password" name="password"  id="password" placeholder="您的密码" title="您的密码"></div>
-	<div class="info code"><label>验证码</label><input type="text" name="code" id='code' autocomplete="off" placeholder="验证码" title="验证码"><img src="../imgcode.php?act=init" alt="none" id="imgcode" title="看不清？点击更换一张验证图片" /></div>
+	<div class="info code"><label>验证码</label><input type="text" name="code" id='code' autocomplete="off" placeholder="验证码" title="验证码"><img src="/imgcode.php?act=init" alt="none" id="imgcode" title="看不清？点击更换一张验证图片" /></div>
 	<div class="info facode"><label>验证码</label><input type="text" name="facode" autocomplete="off" placeholder="二次验证码" maxlength="10" /></div>
 	<div class="control"><input type="submit" value="登录" ></div>
 </form>
