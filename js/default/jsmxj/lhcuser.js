@@ -381,7 +381,13 @@ for (i = 0; i < ml; i++) {
 				$(".sendtb input:button").attr("disabled", false);
 				play=new Array();psend=null;
 				getlast15();
-				getusermoney()
+				// 下注响应中携带商户同步后的最新余额，直接更新显示
+				if (m[0] && m[0]['_b'] !== undefined) {
+					$(".money").html(m[0]['_b']);
+					$(".kmoney").html(m[0]['_b']);
+				} else {
+					getusermoney()
+				}
 			}
 		});
 		return false

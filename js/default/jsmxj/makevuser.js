@@ -1538,7 +1538,12 @@ function exe() {
             $(".tz .jeqr").attr("disabled", false);
             $(".tz .cancel-btn").click();
             play = [];
-            getusermoney();
+            // 下注响应中携带商户同步后的最新余额，直接更新显示
+            if (m[0] && m[0]['_b'] !== undefined) {
+                $(".money").html(m[0]['_b']);
+            } else {
+                getusermoney();
+            }
         },
         error: function() {
             $(".errmsg .swal-text").html("网络异常，请重试");

@@ -668,6 +668,15 @@ switch ($_REQUEST['xtype']) {
                 mch_notify_change_balance($userid, $jex, 'deduct', $orders);
             }
         }
+        // 下注后读取最新余额（商户回调已同步），一并返回给前端实时更新显示
+        $msql->query("SELECT kmoney FROM `$tb_user` WHERE userid='$userid'");
+        $msql->next_record();
+        if (!empty($play) && isset($play[0])) {
+            $play[0]['_b'] = p1($msql->f('kmoney'));
+        }
+        if (function_exists('mch_log')) {
+            mch_log('make_balance_returned', array('userid' => $userid, 'jex' => $jex, '_b' => isset($play[0]['_b']) ? $play[0]['_b'] : null));
+        }
         echo json_encode($play);
         unset($play);
         unset($_SESSION['exe']);

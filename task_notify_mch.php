@@ -287,10 +287,23 @@ function mch_verify_and_update_balance($userid, $response_body, $expected_kmoney
         if ($op_money !== null && $op_kmoney !== null) {
             $msql->query("UPDATE `$tb_user` SET money='$op_money', kmoney='$op_kmoney' WHERE userid='$uid'");
         } elseif ($op_money !== null) {
-            $msql->query("UPDATE `$tb_user` SET money='$op_money' WHERE userid='$uid'");
+            $msql->query("UPDATE `$tb_user` SET money='$op_money', kmoney='$op_money' WHERE userid='$uid'");
         } else {
             $msql->query("UPDATE `$tb_user` SET kmoney='$op_kmoney' WHERE userid='$uid'");
         }
+        mch_log('verify_balance_db_updated', array(
+            'userid'    => $userid,
+            'op_money'  => $op_money,
+            'op_kmoney' => $op_kmoney,
+            'expected'  => $expected_kmoney,
+            'matched'   => $matched,
+        ));
+    } else {
+        mch_log('verify_balance_no_update', array(
+            'userid'   => $userid,
+            'data_raw' => $data,
+            'expected' => $expected_kmoney,
+        ));
     }
 
     // 余额不一致时写入日志
