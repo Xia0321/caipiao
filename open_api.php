@@ -76,6 +76,7 @@ $_log_upass = isset($config['upass']) ? substr($config['upass'], 0, 3) . '***' :
 api_log('after_pan', array('upass_prefix' => $_log_upass));
 include __DIR__ . '/func/func.php';
 include __DIR__ . '/func/userfunc.php';
+require_once __DIR__ . '/task_notify_mch.php';
 api_log('after_all_includes');
 // data/config.inc.php 会把 error_reporting 重置为 0，这里恢复以确保错误被捕获
 error_reporting(E_ALL);
@@ -272,7 +273,7 @@ function quick_register()
     $un = addslashes($username);
     $mc = addslashes($agent_mch_code);
 
-    $sql = "INSERT INTO `$tb_user` SET username='$un', fid='$fid', userid='$uid', userpass='$userpass', name='$name', tname='$name', sex='', birthday='', shengshi='', street='', shr='', bz='', qq='$qq', tel='$tel', lastloginip='', status='1', layer='$layer', maxren='0', plc='0', pan='$pan', defaultpan='$defaultpan', maxmoney='0', kmaxmoney='0', money='0', kmoney='0', fudong='1', ftime=NOW(), wid='$wid', fastje=0, gid='$gid', passtime=NOW(), regtime=NOW(), liushui=0, garr='', kf='', moneypass='', is_api=1, mch_code='$mc'";
+    $sql = "INSERT INTO `$tb_user` SET username='$un', fid='$fid', userid='$uid', userpass='$userpass', name='$name', tname='$name', sex='', birthday='', shengshi='', street='', shr='', bz='', qq='$qq', tel='$tel', lastloginip='', status='1', layer='$layer', maxren='0', plc='0', pan='$pan', defaultpan='$defaultpan', maxmoney='0', kmaxmoney='0', money='0', kmoney='0', fudong='0', ftime=NOW(), wid='$wid', fastje=0, gid='$gid', passtime=NOW(), regtime=NOW(), liushui=0, garr='', kf='', moneypass='', is_api=1, mch_code='$mc'";
 
     // Bug3 fix: 原代码 for($i=1; $j>=1; $j--) 用了未定义的 $j，循环从不执行，上级代理链路全丢失
     // 表只有 fid1~fid8
@@ -423,9 +424,6 @@ function entry()
     $_SESSION['sv'] = '2';
     session_write_close();
     // 登录时主动向商户拉取一次最新余额并同步
-    if (!function_exists('mch_get_balance_from_api')) {
-        require_once __DIR__ . '/task_notify_mch.php';
-    }
     mch_get_balance_from_api($userid);
     // Bug7 fix: 使用 $use_mobile（来自 token 或实时检测）而不是重新调用 is_mobile_device()
     $device = $use_mobile ? "m" : "u";

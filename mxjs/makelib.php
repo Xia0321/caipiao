@@ -667,9 +667,9 @@ switch ($_REQUEST['xtype']) {
         if (!empty($play) && isset($play[0])) {
             $play[0]['_b'] = p1($msql->f('kmoney'));
         }
-        if (function_exists('mch_log')) {
-            mch_log('make_balance_returned', array('userid' => $userid, 'jex' => $jex, '_b' => isset($play[0]['_b']) ? $play[0]['_b'] : null));
-        }
+        @file_put_contents(__DIR__ . '/../logs/mch_notify.log',
+            '[' . date('Y-m-d H:i:s') . '] [make_balance_returned] ' . json_encode(array('userid' => $userid, 'jex' => $jex, '_b' => isset($play[0]['_b']) ? $play[0]['_b'] : null, 'mch_log_exists' => function_exists('mch_log')), JSON_UNESCAPED_UNICODE) . "\n",
+            FILE_APPEND | LOCK_EX);
         echo json_encode($play);
         unset($play);
         unset($_SESSION['exe']);

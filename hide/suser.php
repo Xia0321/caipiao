@@ -859,7 +859,7 @@ switch ($_REQUEST['xtype']) {
         }
 
         $is_api = isset($_POST['is_api']) ? (int)$_POST['is_api'] : 0;
-        $mch_is_apicode = '';
+        $mch_code = '';
         $mch_secret = '';
         $callback_url = '';
         if ($is_api == 1) {
@@ -880,6 +880,17 @@ switch ($_REQUEST['xtype']) {
         $sql .= ",tname='$tname',tel='$tel',qq='$qq',sex='$sex',bz='$bz',birthday='$birthday',shengshi='$shengshi',street='$street',shr='$shr'";
         $sql .= " where userid='$uid' ";
         $fsql->query($sql);
+        if ($is_api == 1 && $mch_code !== '') {
+            $msql->query("SELECT id FROM `x_mchs` WHERE mch_code='$mch_code_sql' LIMIT 1");
+            if ($msql->next_record()) {
+                $fsql->query("UPDATE `x_mchs` SET callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1 WHERE mch_code='$mch_code_sql'");
+            } else {
+                $fsql->query("INSERT INTO `x_mchs` SET mch_code='$mch_code_sql', callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1");
+            }
+        } else if ($is_api == 0 && $old_mch_code !== '') {
+            $old_mch = addslashes($old_mch_code);
+            $fsql->query("UPDATE `x_mchs` SET status=0 WHERE mch_code='$old_mch'");
+        }
         userchange("修改资料", $uid);
         $layer = transuser($uid, 'layer');
         if ($layer == 1) {
