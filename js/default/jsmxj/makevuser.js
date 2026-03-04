@@ -1,5 +1,5 @@
 var gatt, time0, time1, settime0, settime1, timek, settimek, gntime = 8,
-    setgntime, upl, fastobj,tuvar, wanfaarr = [], _waitingForResult = false;
+    setgntime, upl, fastobj,tuvar, wanfaarr = [];
 
 function myready() {
     if(fenlei==107){
@@ -227,7 +227,10 @@ function myready() {
         $(".pg.isSelected").removeClass("isSelected");
         tzstatus(0);
     });
-    $(".tz .jeqr").click(function(){
+    $(".tz .jeqr").off("click.makevConfirm").on("click.makevConfirm", function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          if (window._makevSubmitting) return false;
           var je = Number($(".tz .je").val()); 
           var minje=0;
           if($(".plays.qiuselect").length>0){
@@ -247,8 +250,8 @@ function myready() {
              $(".errmsg").show();
              return false;
           }
-        exe(); 
-
+          exe();
+          return false;
     }); 
 
     $(".yushei").change(function(){        
@@ -1166,6 +1169,8 @@ function totalje(){
     
 
 function exe() {
+    if (window._makevSubmitting) return;
+    window._makevSubmitting = true;
     var je = Number($(".tz .je").val());
     var i = 0,
     bname, sname, cname;
@@ -1270,6 +1275,7 @@ function exe() {
             var al = aall.length;
             if (al > 512) {
                 alert("您选择的号码太多!");
+                window._makevSubmitting = false;
                 return false;
             }
             i = al;
@@ -1300,6 +1306,7 @@ function exe() {
             }
             if ($(".dds.d1.qiuselect").length < znum) {
                 alert("您选的项目不足，最少选择" + znum + "个");
+                window._makevSubmitting = false;
                 return false;
             }
             $(".dds.d1.qiuselect").each(function(i) {
@@ -1450,11 +1457,13 @@ function exe() {
         if (Number(play[i]['je']) > maxje) {
             $(".errmsg .swal-text").html("[" + play[i]['name'] + "]单注最大金额" + maxje);
             $(".errmsg").show();
+            window._makevSubmitting = false;
             return false;
         }
         if (Number(play[i]['je']) < minje) {
             $(".errmsg .swal-text").html("[" + play[i]['name'] + "]单注最小金额" + minje);
             $(".errmsg").show();
+            window._makevSubmitting = false;
             return false;
         }
 
@@ -1486,6 +1495,7 @@ function exe() {
                 $(".errmsg .swal-text").html("服务器返回异常，请重试");
                 $(".errmsg").show();
                 $(".tz .jeqr").attr("disabled", false);
+                setTimeout(function(){ window._makevSubmitting = false; }, 450);
                 $(".tz .cancel-btn").click();
                 play = [];
                 return;
@@ -1523,19 +1533,16 @@ function exe() {
             }
             
             $(".tz .jeqr").attr("disabled", false);
+            setTimeout(function(){ window._makevSubmitting = false; }, 450);
             $(".tz .cancel-btn").click();
             play = [];
-            // 下注响应中携带商户同步后的最新余额，直接更新显示
-            if (m[0] && m[0]['_b'] !== undefined) {
-                $(".money").html(m[0]['_b']);
-            } else {
-                getusermoney();
-            }
+            getusermoney();
         },
         error: function() {
             $(".errmsg .swal-text").html("网络异常，请重试");
             $(".errmsg").show();
             $(".tz .jeqr").attr("disabled", false);
+            setTimeout(function(){ window._makevSubmitting = false; }, 450);
             play = [];
         }
     });
@@ -1839,7 +1846,6 @@ function updatel() {
             getusermoney();
             //console.log(m);
             if (m[0] != 'A') {
-                _waitingForResult = false;
                 if(m[10]!=""){
                  alert("\r\n\r\n\r\n\r\n"+m[10]+"\r\n\r\n\r\n\r\n");
                }
@@ -1900,7 +1906,7 @@ function updatel() {
             }
         }
     });
-    upl = setTimeout(updatel, _waitingForResult ? 1000 : 4000)
+    upl = setTimeout(updatel, 4000)
 }
 function setlong(ma){
     var ml = ma.length;
@@ -2021,6 +2027,7 @@ function getusermoney() {
         cache: false,
         data: 'xtype=getusermoney',
         success: function(m) {
+            // console.log(m);
             //if (ngid != 100 || fudong == 1) {
                 $(".money").html(m[4]);
                 $(".wjs").html(m[5]);
@@ -2048,10 +2055,7 @@ function getnowtime() {
                 return false;
             }
             if (fenlei == 100) {
-                var _curQishu = Number($(".thisqishu").html());
-                var _serverQishu = Number(m[2]);
-                var _panChanged = Number(m[3]) != Number($(".close").attr('s')) | Number(m[4]) != Number($(".close").attr('os'));
-                if (_serverQishu > _curQishu | _panChanged) {
+                if (Number(m[2]) != Number($(".thisqishu").html()) | Number(m[3]) != Number($(".close").attr('s')) | Number(m[4]) != Number($(".close").attr('os'))) {
                     $(".close").attr('s', m[3]);
                     $(".close").attr('os', m[4]);
                     if ($(".menuplay a.lrm_back").attr("bid") == "") {
@@ -2067,9 +2071,7 @@ function getnowtime() {
                             $(".close").html($(".close").html().replace("开", "封"))
                         }
                     }
-                    if (_serverQishu > _curQishu) {
-                        $(".thisqishu").html(m[2]);
-                    }
+                    $(".thisqishu").html(m[2]);
                     if (Number(m[5]) < 2100 | Number(m[5]) > 2128) {
                         if($(".clmake:visible").length==0 && $(".ylmake:visible").length==0){
                             lib();
@@ -2082,19 +2084,14 @@ function getnowtime() {
                 time1 = Number(m[1]);
                 time1x();
             } else {
-                var _curQishu = Number($(".thisqishu").html());
-                var _serverQishu = Number(m[2]);
-                var _panChanged = Number(m[3]) != Number($(".close").attr('s'));
-                if (_serverQishu > _curQishu | _panChanged) {
+                if (Number(m[2]) != Number($(".thisqishu").html()) | Number(m[3]) != Number($(".close").attr('s'))) {
                     $(".close").attr('s', m[3]);
                     if (Number(m[3]) == 0) {
                         $(".close").html($(".close").html().replace("封", "开"))
                     } else {
                         $(".close").html($(".close").html().replace("开", "封"))
                     }
-                    if (_serverQishu > _curQishu) {
-                        $(".thisqishu").html(m[2]);
-                    }
+                    $(".thisqishu").html(m[2]);
                         if($(".clmake:visible").length==0 && $(".ylmake:visible").length==0){
                             lib();
                         }
@@ -2229,11 +2226,6 @@ function time1x() {
 
 function timekx() {
     timek--;
-    if (timek == 0 && !_waitingForResult) {
-        _waitingForResult = true;
-        clearTimeout(upl);
-        updatel();
-    }
     if (timek < 0) timek = 0;
     var str = '';
     var d = 0,

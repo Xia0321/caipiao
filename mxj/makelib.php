@@ -101,19 +101,41 @@ switch ($_REQUEST['xtype']) {
         break;
     
     case "make":
+        header('Content-Type: application/json; charset=utf-8');
         if (transuser($userid, 'status') != 1) {
-            die;
+            echo json_encode(array(array('cg' => 0, 'err' => '无法投注，请检查状态')));
+            exit;
         }
-        $ab   = strtoupper($_POST['ab']);
-        $abcd = strtoupper($_POST['abcd']);
-        $bid  = $_POST['bid'];
-		$play = str_replace('\\u', 'uuu', $_POST['pstr']);
-        $play = str_replace('\\', '', $play);
-		$play = str_replace('uuu', '\\u', $play);
-        $play = json_decode($play, true);
+        if (!isset($_POST['pstr']) || trim($_POST['pstr']) === '') {
+            echo json_encode(array(array('cg' => 0, 'err' => '提交数据为空，请重试')));
+            exit;
+        }
+        $ab   = strtoupper(isset($_POST['ab']) ? $_POST['ab'] : 'A');
+        $abcd = strtoupper(isset($_POST['abcd']) ? $_POST['abcd'] : 'A');
+        $bid  = isset($_POST['bid']) ? $_POST['bid'] : '';
+        $raw  = $_POST['pstr'];
+        $play = json_decode($raw, true);
+        if (!is_array($play) || empty($play)) {
+            $raw2 = str_replace('\\u', 'uuu', $raw);
+            $raw2 = str_replace('\\', '', $raw2);
+            $raw2 = str_replace('uuu', '\\u', $raw2);
+            $play = json_decode($raw2, true);
+        }
+        if (!is_array($play) || empty($play)) {
+            echo json_encode(array(array('cg' => 0, 'err' => '提交数据无效，请重试')));
+            exit;
+        }
+        for ($i = 0; $i < count($play); $i++) {
+            if (!isset($play[$i]['je'])) $play[$i]['je'] = 0;
+            $play[$i]['je'] = floatval($play[$i]['je']);
+            if (!isset($play[$i]['gid'])) $play[$i]['gid'] = 0;
+            $play[$i]['gid'] = intval($play[$i]['gid']);
+            if (!isset($play[$i]['con'])) $play[$i]['con'] = '';
+            if (!isset($play[$i]['sc'])) $play[$i]['sc'] = 0;
+        }
+        $cp = count($play);
         $ip = getip();
-        $msql->query("insert into `$tb_log` set ip='$ip',userid='$userid',gid='$gid',time=NOW(),type='mobi',content='".json_encode($play,JSON_UNESCAPED_UNICODE)."'");
-        $cp   = count($play);
+        $msql->query("insert into `$tb_log` set ip='$ip',userid='$userid',gid='$gid',time=NOW(),type='mobi',content='".addslashes(json_encode($play, JSON_UNESCAPED_UNICODE))."'");
         if ($_SESSION['exe'] == 1 & (time() - $_SESSION['exetime']) < 10) {
             foreach ($play as $key => $val) {
                 $play[$key]['err'] = "系统忙,请重试!";
@@ -228,11 +250,18 @@ switch ($_REQUEST['xtype']) {
 		     $dates = sqldate(time());
 		}
         $tmp=[];
+        $tmpcid = '';
         for ($i = 0; $i < $cp; $i++) {
 			if($play[$i]['je']<=0 | $play[$i]['je']%1!=0) continue;
             $gid = intval($play[$i]['gid']);
             if(!is_array($tmp["g".$gid])){
                 $gg = $msql->arr("select fenlei,patt".$pattnum." as patt,panstatus,otherstatus,userclosetime,thisqishu,pan,gname from `$tb_game` where gid='$gid'",1);
+                if (empty($gg) || !isset($gg[0])) {
+                    $play[$i]['err'] = "游戏不存在或已关闭";
+                    $play[$i]['cg']  = 0;
+                    $play[$i]['goon'] = 0;
+                    continue;
+                }
                 $tmp["g".$gid]['gname'] = $gg[0]['gname'];
                 $tmp["g".$gid]['fenlei'] = $gg[0]['fenlei'];
                 $tmp["g".$gid]['panstatus'] = $gg[0]['panstatus'];
@@ -243,8 +272,11 @@ switch ($_REQUEST['xtype']) {
                 $tmp["g".$gid]["thisqishu"] = $gg[0]['thisqishu'];
                 $tmp["g".$gid]['zc'] = getzcnew($userid, $u, $thelayer, $gid,$config['zcmode']);
                 $msql->query("select closetime from `$tb_kj` where gid='$gid' and qishu='{$gg[0]['thisqishu']}'"); 
-                $msql->next_record();
-                $tmp["g".$gid]["closetime"] = strtotime($msql->f("closetime"));
+                if ($msql->next_record()) {
+                    $tmp["g".$gid]["closetime"] = strtotime($msql->f("closetime"));
+                } else {
+                    $tmp["g".$gid]["closetime"] = 0;
+                }
             }
             $play[$i]['gname'] = $tmp["g".$gid]['gname'];
             $g=$tmp["g".$gid];
@@ -265,7 +297,12 @@ switch ($_REQUEST['xtype']) {
             }
 			$ytparr[] = $play[$i]['pid'];
             $msql->query("select bid,sid,cid,peilv1,peilv2,ifok,name,pl,yautocs,ystart,ztype from `$tb_play` where gid='$gid' and pid='" . $play[$i]['pid'] . "'");
-            $msql->next_record();
+            if (!$msql->next_record()) {
+                $play[$i]['err'] = "玩法不存在或已关闭";
+                $play[$i]['cg']  = 0;
+                $play[$i]['goon'] = 0;
+                continue;
+            }
             $bid     = $msql->f('bid');
             $sid     = $msql->f('sid');
             $cid     = $msql->f('cid');
@@ -278,7 +315,32 @@ switch ($_REQUEST['xtype']) {
             $peilv2  = 0;
             $peilv1s = 0;
             $peilv2s = 0;
-             if (($g["fenlei"]!=103 && $msql->f('pl') != '') || ($g["fenlei"]==103 && $msql->f("ztype")==8)) {
+            if ($pname == '過關' || $pname == '过关') {
+                if (!isset($play[$i]['arr']) || !is_array($play[$i]['arr'])) {
+                    $play[$i]['err'] = "过关数据无效";
+                    $play[$i]['cg']  = 0;
+                    $play[$i]['goon'] = 0;
+                    continue;
+                }
+                $play[$i]['bz'] = json_encode($play[$i]['arr']);
+                $arr            = $play[$i]['arr'];
+                if ($thelayer > 1 & $ifexe == 1 & $pself == 1) {
+                    $tb   = $tb_play_user;
+                    $uwhi = " and userid='$fid1' ";
+                } else {
+                    $tb   = $tb_play;
+                    $uwhi = "";
+                }
+                $peilv1 = 1;
+                foreach ($arr as $key => $val) {
+                    $sql = "select peilv1,ystart,yautocs from `$tb` where gid='$gid' $uwhi and sid='" . $val['sid'] . "' and cid='" . $val['cid'] . "' and pid='" . $val['pid'] . "'";
+                    $fsql->query($sql);
+                    $fsql->next_record();
+                    $peilv1 *= ($fsql->f('peilv1') - (isset($config['cs']['ggpeilv']) ? $config['cs']['ggpeilv'] : 0));
+                    $yautocs = $msql->f('yautocs');
+                    $ystart  = $msql->f('ystart');
+                }
+            } else if (($g["fenlei"]!=103 && $msql->f('pl') != '') || ($g["fenlei"]==103 && $msql->f("ztype")==8)) {
                 if ($g["fenlei"] == 100) {
                     $duo = getduoarr($pname);
                 } else {
@@ -294,6 +356,12 @@ switch ($_REQUEST['xtype']) {
                 }
                 
                 if (strpos($pname, '字组合')) {
+                    if (!is_array($play[$i]['con'])) {
+                        $play[$i]['err'] = "字组合请提交号码内容";
+                        $play[$i]['cg']  = 0;
+                        $play[$i]['goon'] = 0;
+                        continue;
+                    }
                     $pcl  = count($play[$i]['con']);
                     
                     if ($pcl == 2) {
@@ -310,7 +378,10 @@ switch ($_REQUEST['xtype']) {
 							$pkey = 1;
 						}
                     } else {
-                        exit;
+                        $play[$i]['err'] = "字组合数量不正确";
+                        $play[$i]['cg']  = 0;
+                        $play[$i]['goon'] = 0;
+                        continue;
                     }
                     $key    = rduokey($duo, $play[$i]['con'][0]);
                     $peilv1 = $pl[$pkey][$key];
@@ -330,7 +401,13 @@ switch ($_REQUEST['xtype']) {
                             }
                         }
                     }
-                } else if (strpos($pname, '字定位') |  $pname == '选前三直选' | $pname == '选三前直' | $pname == '选前二直选') {
+                } else if (strpos($pname, '字定位') || $pname == '选前三直选' || $pname == '选三前直' || $pname == '选前二直选') {
+                    if (!is_array($play[$i]['con'])) {
+                        $play[$i]['err'] = "请提交号码内容";
+                        $play[$i]['cg']  = 0;
+                        $play[$i]['goon'] = 0;
+                        continue;
+                    }
 					if($pname == '选前二直选' | $pname == '选前三直选' ){
 					    $keyfunc = "rduokeysyxw";
 					}else if($pname == '选三前直'){
@@ -416,7 +493,12 @@ switch ($_REQUEST['xtype']) {
             }
             if ($tmpcid != $gid.$cid) {
 				$fsql->query("select ftype,dftype from `$tb_class` where gid='$gid' and cid='$cid'");
-				$fsql->next_record();
+				if (!$fsql->next_record()) {
+                    $play[$i]['err'] = "盘口分类不存在";
+                    $play[$i]['cg']  = 0;
+                    $play[$i]['goon'] = 0;
+                    continue;
+                }
                 $ftype = $fsql->f('ftype');
 				$dftype = $fsql->f('dftype');
                 if ($ifexe == 1 & $pself == 1) {
@@ -424,7 +506,11 @@ switch ($_REQUEST['xtype']) {
                 } else {
                     $autopl = $fsql->arr("select * from `$tb_auto` where userid='99999999' and gid='$gid' and class='$ftype'", 1);
                 }
-				$autopl =$autopl[0] ;
+                if (empty($autopl) || !isset($autopl[0])) {
+                    $autopl = array('yj' => 0, 'ifzc' => 0, 'startje' => 0, 'addje' => 0, 'stopje' => 0, 'startpeilv' => 0, 'attpeilv' => 0, 'lowpeilv' => 0);
+                } else {
+                    $autopl = $autopl[0];
+                }
                 $abcha   = 0;
                 $abcdcha = 0;
                 $tmpabcd = 0;
@@ -621,8 +707,6 @@ switch ($_REQUEST['xtype']) {
             else $sql .= ",bz='" . $play[$i]['bz'] . "'";
             if ($msql->query($sql)) {
                 $play[$i]['cg'] = 1;
-                $play[$i]['id'] = $msql->last_id();
-                $play[$i]['code'] = $key;
                 $play[$i]['bid'] = $bid;
                 $play[$i]['sid'] = $sid;
                 $play[$i]['cid'] = $cid;
@@ -653,8 +737,6 @@ switch ($_REQUEST['xtype']) {
             foreach ($play as $p) {
                 if (!empty($p['cg']) && $p['cg'] == 1) {
                     $orders[] = array(
-                        'id'      => isset($p['id']) ? $p['id'] : '',
-                        'code'    => isset($p['code']) ? $p['code'] : '',
                         'tid'     => isset($p['tid']) ? $p['tid'] : $tid,
                         'gid'     => isset($p['gid']) ? $p['gid'] : $gid,
                         'qishu'   => isset($p['qishu']) ? $p['qishu'] : $g['thisqishu'],
@@ -672,15 +754,6 @@ switch ($_REQUEST['xtype']) {
                 mch_notify_change_balance($userid, $jex, 'deduct', $orders);
             }
         }
-        // 下注后读取最新余额（商户回调已同步），一并返回给前端实时更新显示
-        $msql->query("SELECT kmoney FROM `$tb_user` WHERE userid='$userid'");
-        $msql->next_record();
-        if (!empty($play) && isset($play[0])) {
-            $play[0]['_b'] = p1($msql->f('kmoney'));
-        }
-        @file_put_contents(__DIR__ . '/../logs/mch_notify.log',
-            '[' . date('Y-m-d H:i:s') . '] [make_balance_returned] ' . json_encode(array('userid' => $userid, 'jex' => $jex, '_b' => isset($play[0]['_b']) ? $play[0]['_b'] : null, 'mch_log_exists' => function_exists('mch_log')), JSON_UNESCAPED_UNICODE) . "\n",
-            FILE_APPEND | LOCK_EX);
         echo json_encode($play);
         unset($play);
         unset($_SESSION['exe']);
@@ -787,20 +860,6 @@ switch ($_REQUEST['xtype']) {
         if (in_array($gid, $garr)) {
             $_SESSION['gid'] = $gid;
             echo 1;
-        }
-        break;
-    case "getbalance":
-        // 重新获取余额：先按用户找最顶级代理，若 is_api=1 则用 callback_url+getBalance 向运营商拉取最新余额并更新本系统，再返回
-        if (!function_exists('mch_get_balance_from_api')) {
-            require_once __DIR__ . '/../task_notify_mch.php';
-        }
-        $bal = mch_get_balance_from_api($userid);
-        if (is_array($bal)) {
-            echo json_encode(array('code' => 0, 'kmoney' => (float)$bal['kmoney'], 'money' => (float)$bal['money']));
-        } else {
-            $msql->query("SELECT kmoney, money FROM `$tb_user` WHERE userid='$userid'");
-            $msql->next_record();
-            echo json_encode(array('code' => 0, 'kmoney' => (float)$msql->f('kmoney'), 'money' => (float)$msql->f('money')));
         }
         break;
 }
