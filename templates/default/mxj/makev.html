@@ -2622,8 +2622,8 @@ input[type="checkbox" i] {
     left: 0;
     right: 0;
     z-index: 999;
-    background: linear-gradient(180deg, #fafafa 0%, #fff 100%);
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
+    box-shadow: 0 -6px 24px rgba(0,0,0,0.1);
     padding-bottom: env(safe-area-inset-bottom, 0);
     margin: 0;
 }
@@ -2635,8 +2635,9 @@ input[type="checkbox" i] {
 }
 .dvoVQg.tz .jNzwRs > .payment-footer {
     box-shadow: none;
-    padding: 14px 12px 14px;
-    min-height: 100px;
+    padding: 18px 16px 20px;
+    min-height: 128px;
+    border-top: 1px solid #e5e5e5;
 }
 .ivfTfC {
     position: fixed;
@@ -4541,37 +4542,41 @@ svg:not(:root) {
 }
 .dvoVQg.tz .jNzwRs > .payment-footer {
     background: #fff;
-    border-top: 1px solid #e8e8e8;
+    border-top: 1px solid #e5e5e5;
     box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
-    padding: 10px 12px 14px;
+    padding: 18px 16px 20px;
     height: auto;
-    min-height: 88px;
+    min-height: 128px;
 }
+/* 金额选择与输入区之间只保留一条分隔：移除 hr 的边框，仅保留底部菜单顶部的 border-top */
 .dvoVQg.tz .payment-footer .sperate-line {
-    border-color: #eee;
-    margin: 8px 0 10px;
+    border: none;
+    margin: 12px 0 10px;
+    padding: 0;
+    height: 0;
+    overflow: hidden;
 }
 .dvoVQg.tz .payment-footer .eoLeHJ {
-    padding: 4px 0 6px;
+    padding: 6px 0 8px;
 }
 .dvoVQg.tz .payment-footer .jelist {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 .dvoVQg.tz .payment-footer .jelist .btn,
 .dvoVQg.tz .payment-footer .jelist .btn-edit {
     margin: 0;
-    min-width: 42px;
-    height: 32px;
-    line-height: 30px;
-    padding: 0 12px;
+    min-width: 48px;
+    height: 38px;
+    line-height: 36px;
+    padding: 0 14px;
     border: 1px solid #e0e0e0;
-    border-radius: 16px;
+    border-radius: 19px;
     background: #fff;
     color: #333;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     text-align: center;
     transition: border-color .2s, background .2s, color .2s;
@@ -4593,20 +4598,20 @@ svg:not(:root) {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 12px;
     height: auto;
-    min-height: 40px;
-    padding: 10px 0 0;
+    min-height: 48px;
+    padding: 12px 0 0;
 }
 .dvoVQg.tz .payment-footer .bets .bets-input-value {
     flex: 1;
     min-width: 88px;
     max-width: 130px;
-    height: 38px;
+    height: 42px;
     border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 0 14px;
-    font-size: 15px;
+    font-size: 16px;
     background: #fff;
     color: #111;
     transition: border-color .2s, box-shadow .2s;
@@ -4617,14 +4622,14 @@ svg:not(:root) {
     box-shadow: 0 0 0 3px rgba(25,118,210,0.12);
 }
 .dvoVQg.tz .payment-footer .bets .cancel-btn {
-    padding: 0 14px;
-    height: 38px;
-    line-height: 38px;
+    padding: 0 16px;
+    height: 42px;
+    line-height: 42px;
     border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #fff;
     color: #c62828;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     transition: background .2s, color .2s;
 }
@@ -4633,17 +4638,17 @@ svg:not(:root) {
 }
 .dvoVQg.tz .payment-footer .bets .result-btn {
     flex: 1;
-    min-width: 110px;
-    height: 46px;
-    line-height: 46px;
-    border-radius: 12px;
+    min-width: 120px;
+    height: 50px;
+    line-height: 50px;
+    border-radius: 14px;
     background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
     border: none;
     color: #fff;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 600;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(13,71,161,0.3);
+    box-shadow: 0 4px 14px rgba(13,71,161,0.35);
     transition: transform .15s, box-shadow .15s;
 }
 .dvoVQg.tz .payment-footer .bets .result-btn:active {
