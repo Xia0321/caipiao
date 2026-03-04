@@ -21,7 +21,7 @@ function myready() {
         $(".gamelist").removeClass("hTJmgb").addClass("iULZxB");
         $(".gamemenu div").removeClass("gfEgAp").addClass("epExtR");
     });
-    $(document).off("click.gamemenu", ".gamemenu").on("click.gamemenu", ".gamemenu", function(e) {
+    $(document).off("click.gamemenu", ".gamemenu, .mxj-top-left").on("click.gamemenu", ".gamemenu, .mxj-top-left", function(e) {
         e.preventDefault();
         e.stopPropagation();
         if ($(".gamelist").hasClass("iULZxB")) {
