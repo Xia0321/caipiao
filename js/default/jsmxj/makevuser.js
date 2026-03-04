@@ -1459,19 +1459,6 @@ function exe() {
         }
 
     }
-    if(zje<1){
-        $(".errmsg .swal-text").html("投注金额最低为2");
-        $(".errmsg").show();
-        return false;
-    }
-    var moneyStr = ($(".money").html() || '').toString().replace(/,/g, '');
-    var moneyNum = parseFloat(moneyStr);
-    if (isNaN(moneyNum)) moneyNum = 0;
-    if (zje > moneyNum) {
-        $(".errmsg .swal-text").html("您的可用余额不足!");
-        $(".errmsg").show();
-        return false;
-    }
     $(".tz .jeqr").attr("disabled",true);
     var pstr = '[';
     for (i = 0; i < play.length; i++) {
@@ -2034,7 +2021,6 @@ function getusermoney() {
         cache: false,
         data: 'xtype=getusermoney',
         success: function(m) {
-            // console.log(m);
             //if (ngid != 100 || fudong == 1) {
                 $(".money").html(m[4]);
                 $(".wjs").html(m[5]);
