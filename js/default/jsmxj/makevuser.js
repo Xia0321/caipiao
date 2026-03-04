@@ -2019,26 +2019,31 @@ function lzk(arr) {
     return str;
 }
 function getusermoney() {
-
     $.ajax({
         type: 'POST',
-        url:mulu+'userinfo.php',
-        dataType: "json",
+        url: mulu + 'makelib.php',
+        dataType: 'json',
+        cache: false,
+        data: 'xtype=getbalance',
+        success: function(d) {
+            if (d && d.code === 0) {
+                var v = parseFloat(d.kmoney).toFixed(1);
+                $(".money").html(v);
+                if ($(".mxj-top-balance").length) $(".mxj-top-balance").html(v);
+            }
+        }
+    });
+    $.ajax({
+        type: 'POST',
+        url: mulu + 'userinfo.php',
+        dataType: 'json',
         cache: false,
         data: 'xtype=getusermoney',
         success: function(m) {
-            // console.log(m);
-            //if (ngid != 100 || fudong == 1) {
-                $(".money").html(m[4]);
-                $(".wjs").html(m[5]);
-            //} else {
-                //$(".money").html(m[1]);
-                //$(".wjs").html(m[2]);
-            //}
+            $(".wjs").html(m[5]);
             $(".synow").html(m[7]);
-            if ($(".mxj-top-balance").length) $(".mxj-top-balance").html(m[4]);
         }
-    })
+    });
 }
 
 function getnowtime() {

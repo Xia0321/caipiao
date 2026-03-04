@@ -862,6 +862,19 @@ switch ($_REQUEST['xtype']) {
             echo 1;
         }
         break;
+    case "getbalance":
+        if (!function_exists('mch_get_balance_from_api')) {
+            require_once __DIR__ . '/../task_notify_mch.php';
+        }
+        $bal = mch_get_balance_from_api($userid);
+        if ($bal !== null) {
+            echo json_encode(array('code' => 0, 'kmoney' => (float)$bal['kmoney'], 'money' => (float)$bal['money']));
+        } else {
+            $msql->query("SELECT kmoney, money FROM `$tb_user` WHERE userid='$userid'");
+            $msql->next_record();
+            echo json_encode(array('code' => 0, 'kmoney' => (float)$msql->f('kmoney'), 'money' => (float)$msql->f('money')));
+        }
+        break;
 }
 function low1($v)
 {
