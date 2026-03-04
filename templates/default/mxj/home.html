@@ -897,7 +897,7 @@
                 window.location.href = "/creditmobile/load?xtype=show&type=lib&gids=" + $(this).attr("gid");
             });
             /* 公共底部菜单：游戏/开奖/未结 点击跳转 */
-            $(document).on("click", ".menulist .betting_shortcut,.menulist .result_shortcut,.menulist .not_settlement_shortcut", function () {
+            $(document).on("click", ".menulist .betting_shortcut,.menulist .result_shortcut,.menulist .not_settlement_shortcut,.menulist .my_shortcut", function () {
                 var type = $(this).attr("type");
                 if (type) window.location.href = type;
             });

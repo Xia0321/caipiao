@@ -737,6 +737,11 @@ ul {
     font-size: 15px;
     color: #1378bd;
 }
+/* 参考图：上期开奖区期号+期，号码为彩色圆角块 */
+.mxj-last-result .draw .mxj-period-suffix { margin-left: 2px; color: #333; }
+.mxj-last-result .hDSAeE .qiu100 { border-radius: 6px; margin-right: 4px; }
+.mxj-last-result .hDSAeE .qiu100 > div { border-radius: 6px; min-width: 26px; font-weight: bold; }
+.mxj-last-result .hDSAeE .qiu100 > span { font-size: 12px; color: #666; margin-left: 2px; }
 @media (max-width: 570px) .result161 {
     padding-left: 10px;
     padding-right: 10px;
@@ -1508,11 +1513,15 @@ ul {
     -webkit-flex-grow: 1;
     -ms-flex-positive: 1;
     flex-grow: 1;
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }
 
 .jvJTfN .timer-info > div {
-    margin-right: 4px;
+    margin-right: 10px;
 }
+.mxj-timer-row .timer-info .close { margin-right: 6px; }
+.mxj-timer-row .timer-info .open { margin-right: 0; }
 
 .jvJTfN .close, .jvJTfN .open {
     display: -webkit-box;
@@ -1526,17 +1535,18 @@ ul {
     color: #666;
     font-size: 15px;
 }
-.jvJTfN .close span {
+.jvJTfN .close .mxj-timer-value {
     margin-left: 3px;
-    color: rgb(255, 91, 38);
+    color: #e53935;
+    font-weight: 600;
 }
-.jvJTfN .open span {
+.jvJTfN .open .mxj-timer-value {
     margin-left: 3px;
-    color: #00cd22;
+    color: #666;
 }
 
 .jvJTfN .refresh {
-    width: 50px;
+    width: 36px;
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -1545,10 +1555,10 @@ ul {
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
-    -webkit-box-pack: space-around;
-    -webkit-justify-content: space-around;
-    -ms-flex-pack: space-around;
-    justify-content: space-around;
+    -webkit-box-pack: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
 }
 
 .jvJTfN .refresh div {
@@ -1567,6 +1577,16 @@ ul {
     width: 20px;
     text-align: center;
 }
+/* 参考图：期号+期，封盘红字，开奖灰字，右侧铃铛 */
+.mxj-timer-row .mxj-period-suffix { margin-left: 2px; color: #333; }
+.mxj-timer-row .mxj-timer-label { color: #666; font-weight: normal; }
+.mxj-timer-row .mxj-timer-bell .mxj-bell-icon {
+    width: 22px; height: 22px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9'/%3E%3Cpath d='M13.73 21a2 2 0 0 1-3.46 0'/%3E%3C/svg%3E") center/contain no-repeat;
+    cursor: pointer;
+}
+.mxj-timer-row .mxj-timer-bell .mxj-bell-icon:before { content: ''; }
+.mxj-timer-row .mxj-timer-bell span { min-width: 18px; text-align: center; font-size: 12px; color: #999; }
 
 
 .rough_lines {
@@ -1998,6 +2018,61 @@ margin-top: 5px;
     position: relative;
     width: 100%;
 }
+/* 手机端顶部栏：浅蓝→白渐变，深色字保证可读 */
+.mxj-top-bar.ilDBjU {
+    background: linear-gradient(90deg, #81d4fa 0%, #b3e5fc 40%, #e3f2fd 80%, #fff 100%);
+    -webkit-filter: none;
+    filter: none;
+}
+.mxj-top-bar .mxj-top-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    color: #1a1a1a;
+    font-size: 15px;
+    min-width: 0;
+}
+.mxj-top-bar .mxj-top-left {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+.mxj-top-bar .mxj-top-gname {
+    font-weight: 600;
+    color: #111;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+}
+.mxj-top-bar .mxj-top-center {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+    flex-shrink: 0;
+}
+.mxj-top-bar .mxj-top-right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 0 0 auto;
+    flex-shrink: 0;
+}
+.mxj-top-bar .mxj-top-chevron { font-size: 10px; color: #424242; flex-shrink: 0; }
+.mxj-top-bar .mxj-top-stat, .mxj-top-bar .mxj-top-yen, .mxj-top-bar .mxj-top-balance { color: #1a1a1a; }
+.mxj-top-bar .mxj-top-center .mxj-top-stat { margin-right: 2px; white-space: nowrap; }
+.mxj-top-bar .mxj-top-chart {
+    width: 18px; height: 18px;
+    flex-shrink: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpolyline points='22 6 13.5 14.5 8.5 9.5 2 18'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+.mxj-top-bar .mxj-top-right .menu { position: static; margin-left: 2px; width: 20px; height: 20px; background-size: 280px 160px; flex-shrink: 0; }
 .ilDBjU .pn_title {
     text-align: center;
     line-height: 45px;
@@ -2613,16 +2688,16 @@ input[type="checkbox" i] {
     position: relative;
     margin: 0px auto;
 }
-/* 手机端：下注金额区+确认按钮固定底部，始终可见可点，避免被键盘或屏幕裁掉 */
+/* 手机端：下注金额区+确认按钮固定底部，位于底部导航之上，避免被遮挡 */
 .dvoVQg.tz .jNzwRs {
     position: fixed;
-    bottom: 0;
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
     left: 0;
     right: 0;
     z-index: 999;
-    background: linear-gradient(180deg, #f8f9fa 0%, #fff 100%);
-    box-shadow: 0 -6px 24px rgba(0,0,0,0.1);
-    padding-bottom: env(safe-area-inset-bottom, 0);
+    background: #fff;
+    box-shadow: 0 -4px 20px rgba(3,169,244,0.12);
+    padding-bottom: 12px;
     margin: 0;
 }
 .jNzwRs > .payment-footer {
@@ -2635,7 +2710,8 @@ input[type="checkbox" i] {
     box-shadow: none;
     padding: 18px 16px 20px;
     min-height: 128px;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e0e0e0;
+    background: #fff;
 }
 .ivfTfC {
     position: fixed;
@@ -2663,18 +2739,11 @@ var js=1;var sss='makev';
 </script>    
 <div id="root">
 	<div class="home">
-		<div class="oc2pj9-1 ilDBjU tops">
-			<div class="pn_title">
-				<div style="flex:1 1 0%;">
-				</div>
-				<div style="flex:1 1 0%;">
-					<div style="color: white;">
-					</div>
-				</div>
-				<div style="flex:1 1 0%;">
-					<div class="menu">
-					</div>
-				</div>
+		<div class="oc2pj9-1 ilDBjU tops mxj-top-bar">
+			<div class="pn_title mxj-top-inner">
+				<div class="mxj-top-left"><span class="mxj-top-gname">{+$gname+}</span><span class="mxj-top-chevron">▼</span></div>
+				<div class="mxj-top-center"><span class="mxj-top-stat">统计</span><span class="mxj-top-chart"></span></div>
+				<div class="mxj-top-right"><span class="mxj-top-yen">¥</span><span class="mxj-top-balance">{+$kmoney+}</span><span class="mxj-top-chevron">▼</span><div class="menu"></div></div>
 			</div>
 		</div>
         <div class="backtz" style='display: none;'><div class="sc-1rpj7be-0 dlrSez"><div class="sc-1rpj7be-1 bdqtbC back"></div></div></div>
@@ -3684,30 +3753,16 @@ svg:not(:root) {
 					<div class="uq_icon">
 					</div>
 				</div>
-				<div class="jv7r91-0 resultother">
-					<div class="draw">
-						<span class="upqishu">{+$upqishu+}</span>
-					</div>
-					<div class="id4sei-1 hDSAeE kjresult">
-
-					</div>
+				<div class="jv7r91-0 resultother mxj-last-result">
+					<div class="draw"><span class="upqishu">{+$upqishu+}</span><span class="mxj-period-suffix">期</span></div>
+					<div class="id4sei-1 hDSAeE kjresult"></div>
 				</div>
-				<div class="id4sei-0 jvJTfN">
-					<div class="draw">
-						<span class="thisqishu" v='{+$thisqishu+}'>{+$thisqishu+}</span>
-					</div>
+				<div class="id4sei-0 jvJTfN mxj-timer-row">
+					<div class="draw mxj-period"><span class="thisqishu" v='{+$thisqishu+}'>{+$thisqishu+}</span><span class="mxj-period-suffix">期</span></div>
 					<div class="timer-info">
-						<div class="close" s='{+$panstatus+}' time0='{+$pantime+}' time1='{+$othertime+}' os='{+$otherstatus+}'>
-							{+if $panstatus==1+}封盘:{+else+}开盘:{+/if+} <span>00:00</span>
-						</div>
-						<div class="open" timek='{+$kjtime+}'>
-							开奖: <span>00:00</span>
-						</div>
-						<div class="refresh">
-							<div>
-							</div>
-							<span>10</span>
-						</div>
+						<div class="close mxj-timer-close" s='{+$panstatus+}' time0='{+$pantime+}' time1='{+$othertime+}' os='{+$otherstatus+}'><span class="mxj-timer-label">{+if $panstatus==1+}封盘{+else+}开盘{+/if+}</span> <span class="mxj-timer-value">00:00</span></div>
+						<div class="open mxj-timer-open" timek='{+$kjtime+}'><span class="mxj-timer-label">开奖</span> <span class="mxj-timer-value">00:00</span></div>
+						<div class="refresh mxj-timer-bell" title="刷新"><div class="mxj-bell-icon"></div><span>10</span></div>
 					</div>
 				</div>
 				<div class="rough_lines">
@@ -3913,27 +3968,6 @@ svg:not(:root) {
 				</div>
 			</div>
 		</div>
-		<div class="sc-1ng8zp5-0 iBBuud menulist">
-			<a class="betting_shortcut" type="/creditmobile/load" href="javascript:void(0)">
-			<div>
-				<div>
-				</div>
-				游戏
-			</div>
-			</a><a class="result_shortcut" type="/creditmobile/dresult" href="javascript:void(0)">
-			<div>
-				<div>
-				</div>
-				开奖
-			</div>
-			</a><a class="not_settlement_shortcut" type="/creditmobile/report" href="javascript:void(0)">
-			<div>
-				<div>
-				</div>
-				未结
-			</div>
-			</a>
-		</div>
 	</div>
 	<div class="slevm5-0 ivfTfC zhao" data-show="false">
 	</div>
@@ -4042,6 +4076,7 @@ svg:not(:root) {
       </a>
     </div>
 	</div>
+	{+include file='bottom_menu.html'+}
 </div>
 <div id="modal">
 </div>
@@ -4540,13 +4575,13 @@ svg:not(:root) {
 }
 .dvoVQg.tz .jNzwRs > .payment-footer {
     background: #fff;
-    border-top: 1px solid #e5e5e5;
+    border-top: 1px solid #e0e0e0;
     box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
     padding: 18px 16px 20px;
     height: auto;
     min-height: 128px;
 }
-/* 金额选择与输入区之间只保留一条分隔：移除 hr 的边框，仅保留底部菜单顶部的 border-top */
+/* 参考图：浅蓝+白配色，金额与输入区仅一条分隔 */
 .dvoVQg.tz .payment-footer .sperate-line {
     border: none;
     margin: 12px 0 10px;
@@ -4570,10 +4605,10 @@ svg:not(:root) {
     height: 38px;
     line-height: 36px;
     padding: 0 14px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #4fc3f7;
     border-radius: 19px;
     background: #fff;
-    color: #333;
+    color: #0288d1;
     font-size: 15px;
     font-weight: 500;
     text-align: center;
@@ -4583,9 +4618,9 @@ svg:not(:root) {
 .dvoVQg.tz .payment-footer .jelist .btn:active,
 .dvoVQg.tz .payment-footer .jelist .btn-edit:hover,
 .dvoVQg.tz .payment-footer .jelist .btn-edit:active {
-    border-color: #1976d2;
-    background: rgba(25,118,210,0.08);
-    color: #1565c0;
+    border-color: #03a9f4;
+    background: rgba(3,169,244,0.08);
+    color: #0277bd;
 }
 .dvoVQg.tz .payment-footer .jelist .btn a,
 .dvoVQg.tz .payment-footer .jelist .btn-edit a {
@@ -4601,13 +4636,15 @@ svg:not(:root) {
     min-height: 48px;
     padding: 12px 0 0;
 }
+/* 输入金额+预设：统一圆角容器、浅灰边框，中间竖线分隔（参考图） */
 .dvoVQg.tz .payment-footer .bets .bets-input-value {
     flex: 1;
     min-width: 88px;
     max-width: 130px;
     height: 42px;
     border: 1px solid #e0e0e0;
-    border-radius: 12px;
+    border-right: none;
+    border-radius: 12px 0 0 12px;
     padding: 0 14px;
     font-size: 16px;
     background: #fff;
@@ -4615,24 +4652,27 @@ svg:not(:root) {
     transition: border-color .2s, box-shadow .2s;
 }
 .dvoVQg.tz .payment-footer .bets .bets-input-value:focus {
-    border-color: #1976d2;
+    border-color: #4fc3f7;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(25,118,210,0.12);
+    box-shadow: 0 0 0 2px rgba(79,195,247,0.2);
+}
+.dvoVQg.tz .payment-footer .bets .bets-input-value:focus + .fhCqRY {
+    border-color: #4fc3f7;
 }
 .dvoVQg.tz .payment-footer .bets .cancel-btn {
     padding: 0 16px;
     height: 42px;
     line-height: 42px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #4fc3f7;
     border-radius: 12px;
     background: #fff;
-    color: #c62828;
+    color: #0288d1;
     font-size: 15px;
     font-weight: 500;
     transition: background .2s, color .2s;
 }
 .dvoVQg.tz .payment-footer .bets .cancel-btn:active {
-    background: #ffebee;
+    background: rgba(3,169,244,0.08);
 }
 .dvoVQg.tz .payment-footer .bets .result-btn {
     flex: 1;
@@ -4640,18 +4680,18 @@ svg:not(:root) {
     height: 50px;
     line-height: 50px;
     border-radius: 14px;
-    background: linear-gradient(135deg, #1976d2 0%, #0d47a1 100%);
+    background: linear-gradient(135deg, #29b6f6 0%, #03a9f4 100%);
     border: none;
     color: #fff;
     font-size: 16px;
     font-weight: 600;
     text-align: center;
-    box-shadow: 0 4px 14px rgba(13,71,161,0.35);
+    box-shadow: 0 3px 12px rgba(3,169,244,0.35);
     transition: transform .15s, box-shadow .15s;
 }
 .dvoVQg.tz .payment-footer .bets .result-btn:active {
     transform: scale(0.98);
-    box-shadow: 0 2px 8px rgba(13,71,161,0.25);
+    box-shadow: 0 2px 8px rgba(3,169,244,0.3);
 }
 /* 手机端下注金额区域可点击：确保触摸有效、确认/取消可点 */
 .dvoVQg.tz .payment-footer {
@@ -4666,16 +4706,30 @@ svg:not(:root) {
     min-height: 36px;
     -webkit-tap-highlight-color: rgba(0,0,0,0.1);
 }
+/* 预设金额区：与输入框组成统一圆角框，左侧竖线分隔 */
 .dvoVQg.tz .payment-footer .fhCqRY {
     display: inline-flex;
     align-items: center;
-    height: 34px;
-    margin-right: 6px;
+    height: 42px;
+    margin-right: 0;
+    padding: 0 12px 0 10px;
+    border: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+    border-radius: 0 12px 12px 0;
+    background: #fff;
+    box-sizing: border-box;
 }
 .dvoVQg.tz .payment-footer .fhCqRY > ul {
     margin: 0 0 0 4px;
-    font-size: 12px;
-    color: #666;
+    font-size: 13px;
+    color: #616161;
+}
+.dvoVQg.tz .payment-footer .fhCqRY .styled-checkbox + label::before {
+    border-color: #b0bec5;
+}
+.dvoVQg.tz .payment-footer .fhCqRY .styled-checkbox:checked + label::after,
+.dvoVQg.tz .payment-footer .fhCqRY .styled-checkbox:checked + label::before {
+    border-color: #03a9f4;
 }
 .btIRSJ .bet_content {
     background: #f5f5f5;
@@ -4708,9 +4762,23 @@ svg:not(:root) {
     font-weight: 500;
     box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
+/* 参考图：已选N注 为浅蓝药丸形、白字 */
+.dvoVQg.tz .gioHal .bets-showList-btn {
+    padding: 0 20px;
+    min-width: 100px;
+    height: 36px;
+    line-height: 36px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #29b6f6 0%, #03a9f4 100%);
+    border: none;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 10px rgba(3,169,244,0.4);
+}
 .dvoVQg.tz .gioHal {
     background: #fff;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e8e8e8;
 }
 
 </style>

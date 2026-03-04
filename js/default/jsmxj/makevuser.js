@@ -65,9 +65,9 @@ function myready() {
         gntime = 8;
         gntimex();
     });
-    time0 = Number($(".close").attr("time0"));
-    time1 = Number($(".close").attr("time1"));
-    timek = Number($(".open").attr("timek"));
+    time0 = Number($(".jvJTfN .close").attr("time0"));
+    time1 = Number($(".jvJTfN .close").attr("time1"));
+    timek = Number($(".jvJTfN .open").attr("timek"));
     if (time0 < 0) time0 = 0 - time0;
     if (time1 < 0) time1 = 0 - time1;
     if (timek < 0) timek = 0;
@@ -2035,7 +2035,8 @@ function getusermoney() {
                 //$(".money").html(m[1]);
                 //$(".wjs").html(m[2]);
             //}
-            $(".synow").html(m[7])
+            $(".synow").html(m[7]);
+            if ($(".mxj-top-balance").length) $(".mxj-top-balance").html(m[4]);
         }
     })
 }
@@ -2055,23 +2056,23 @@ function getnowtime() {
                 return false;
             }
             if (fenlei == 100) {
-                if (Number(m[2]) != Number($(".thisqishu").html()) | Number(m[3]) != Number($(".close").attr('s')) | Number(m[4]) != Number($(".close").attr('os'))) {
-                    $(".close").attr('s', m[3]);
-                    $(".close").attr('os', m[4]);
+                if (Number(m[2]) != Number($(".jvJTfN .thisqishu").html()) | Number(m[3]) != Number($(".jvJTfN .close").attr('s')) | Number(m[4]) != Number($(".jvJTfN .close").attr('os'))) {
+                    $(".jvJTfN .close").attr('s', m[3]);
+                    $(".jvJTfN .close").attr('os', m[4]);
                     if ($(".menuplay a.lrm_back").attr("bid") == "") {
                         if (Number(m[3]) == 0) {
-                            $(".close").html($(".close").html().replace("封", "开"))
+                            $(".jvJTfN .close").html($(".jvJTfN .close").html().replace("封", "开"))
                         } else {
-                            $(".close").html($(".close").html().replace("开", "封"))
+                            $(".jvJTfN .close").html($(".jvJTfN .close").html().replace("开", "封"))
                         }
                     } else {
                         if (Number(m[4]) == 0) {
-                            $(".close").html($(".close").html().replace("封", "开"))
+                            $(".jvJTfN .close").html($(".jvJTfN .close").html().replace("封", "开"))
                         } else {
-                            $(".close").html($(".close").html().replace("开", "封"))
+                            $(".jvJTfN .close").html($(".jvJTfN .close").html().replace("开", "封"))
                         }
                     }
-                    $(".thisqishu").html(m[2]);
+                    $(".jvJTfN .thisqishu").html(m[2]);
                     if (Number(m[5]) < 2100 | Number(m[5]) > 2128) {
                         if($(".clmake:visible").length==0 && $(".ylmake:visible").length==0){
                             lib();
@@ -2084,14 +2085,14 @@ function getnowtime() {
                 time1 = Number(m[1]);
                 time1x();
             } else {
-                if (Number(m[2]) != Number($(".thisqishu").html()) | Number(m[3]) != Number($(".close").attr('s'))) {
-                    $(".close").attr('s', m[3]);
+                if (Number(m[2]) != Number($(".jvJTfN .thisqishu").html()) | Number(m[3]) != Number($(".jvJTfN .close").attr('s'))) {
+                    $(".jvJTfN .close").attr('s', m[3]);
                     if (Number(m[3]) == 0) {
-                        $(".close").html($(".close").html().replace("封", "开"))
+                        $(".jvJTfN .close").html($(".jvJTfN .close").html().replace("封", "开"))
                     } else {
-                        $(".close").html($(".close").html().replace("开", "封"))
+                        $(".jvJTfN .close").html($(".jvJTfN .close").html().replace("开", "封"))
                     }
-                    $(".thisqishu").html(m[2]);
+                    $(".jvJTfN .thisqishu").html(m[2]);
                         if($(".clmake:visible").length==0 && $(".ylmake:visible").length==0){
                             lib();
                         }
@@ -2146,7 +2147,7 @@ function time0x() {
     str += m + ":";
     str += s;
     if (fenlei != 100 || $(".menuplay a.lrm_back").attr("bid") == "") {
-        $(".close span").html(str);
+        $(".jvJTfN .close .mxj-timer-value").html(str);
     }
     if($(".clmake:visible").length==1){
          var t=0;
@@ -2219,7 +2220,7 @@ function time1x() {
     str += m + ":";
     str += s;
     if (fenlei == 100 && $(".menuplay a.lrm_back").attr("bid") != "") {
-        $(".close span").html(str);
+        $(".jvJTfN .close .mxj-timer-value").html(str);
     }
     settime1 = setTimeout(time1x, 1000)
 }
@@ -2240,10 +2241,10 @@ function timekx() {
     if (s < 10) s = '0' + s;
     str += m + ":";
     str += s;
-    if(Number($(".thisqishu").html())-Number($(".upqishu").html())==1){
-        $(".open span").html(str);
+    if(Number($(".jvJTfN .thisqishu").html())-Number($(".upqishu").html())==1){
+        $(".jvJTfN .open .mxj-timer-value").html(str);
     }else{
-        $(".open span").html("00:00");
+        $(".jvJTfN .open .mxj-timer-value").html("00:00");
     }
     
     settimek = setTimeout(timekx, 1000)

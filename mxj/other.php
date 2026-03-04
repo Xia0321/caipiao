@@ -60,5 +60,12 @@ switch ($_REQUEST['t']) {
         $dates = date("Y-m-d");
         $tpl->assign("dates",$dates);
         $tpl->assign("app",$_SESSION['app']);
-        $tpl->assign('bottom_menu_active', ($type === 'wjs' ? 'report' : ($type === 'kj' ? 'result' : '')));
+        $tpl->assign('bottom_menu_active', ($type === 'wjs' ? 'report' : ($type === 'kj' ? 'result' : ($type === 'userinfo' ? 'me' : ''))));
+        if ($type === 'userinfo') {
+            $msql->query("select kmoney from `$tb_user` where userid='$userid'");
+            $msql->next_record();
+            $tpl->assign('kmoney', $msql->f('kmoney') ? p1($msql->f('kmoney')) : '0.00');
+        } else {
+            $tpl->assign('kmoney', '');
+        }
         $tpl->display('other.html');

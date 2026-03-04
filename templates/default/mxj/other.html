@@ -1873,6 +1873,192 @@ ul {
 .home .ettwvL .table-footer.center-row .footer-row:first-child span { font-size: 12px; font-weight: normal; color: rgba(255,255,255,0.9); }
 .home .ettwvL .table-content > .no_date { color: #999; font-size: 14px; }
 
+/* ========== 记录页现代化样式（未结明细 / 今日已结） ========== */
+.mxj-record-page {
+    min-height: 100%;
+    background: #f5f7fa;
+    padding: 12px 14px 24px;
+    box-sizing: border-box;
+    padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
+}
+.mxj-record-page .ettwvL {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 12px;
+    overflow: visible;
+}
+.mxj-record-page .ettwvL .table-header {
+    display: none;
+}
+.mxj-record-page .ettwvL .table-content {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+.mxj-record-page .ettwvL .table-content.wjslist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.mxj-record-page .ettwvL .wjslist .table-row {
+    background: #fff;
+    border-radius: 12px;
+    padding: 14px 16px;
+    min-height: auto;
+    margin: 0;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    border: 1px solid rgba(0,0,0,0.04);
+    display: block;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    text-align: left;
+    transition: box-shadow 0.2s ease;
+}
+.mxj-record-page .ettwvL .wjslist .table-row:active {
+    box-shadow: 0 4px 16px rgba(3,169,244,0.12);
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col {
+    width: auto !important;
+    display: inline-block !important;
+    padding: 3px 0;
+    font-size: 13px;
+    line-height: 1.45;
+    border: none;
+    text-align: left;
+    vertical-align: top;
+    box-sizing: border-box;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(1) {
+    width: 58% !important;
+    color: #666;
+    font-size: 12px;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(1) .green_color {
+    color: #1565c0;
+    font-weight: 600;
+    font-size: 13px;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(2) {
+    width: 40% !important;
+    text-align: right;
+    font-size: 12px;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(2) .green_color {
+    color: #1565c0;
+    font-weight: 600;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(3) {
+    display: block !important;
+    width: 100% !important;
+    font-size: 13px;
+    margin-top: 4px;
+    padding-top: 6px;
+    border-top: 1px dashed #eee;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(4) {
+    width: 50% !important;
+    color: #1976d2;
+    font-weight: 500;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(5) {
+    width: 48% !important;
+    text-align: right;
+    padding-right: 0;
+}
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(5)::after {
+    display: none;
+}
+.mxj-record-page .ettwvL .wjslist .table-row .blue_color { color: #1976d2 !important; }
+.mxj-record-page .ettwvL .wjslist .table-row .red_color { color: #f57c00 !important; }
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(5).blue_color,
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(5) .blue_color { color: #2e7d32 !important; font-weight: 600; }
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(5).red_color,
+.mxj-record-page .ettwvL .wjslist .table-row > .col:nth-child(5) .red_color { color: #666 !important; font-weight: 500; }
+.mxj-record-page .ettwvL .table-content > .no_date,
+.mxj-record-page .ettwvL .table-content > .no_date.no_date {
+    background: #fff;
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    color: #9e9e9e;
+    font-size: 15px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    border: 1px dashed #e0e0e0;
+}
+.mxj-record-page .ettwvL .table-footer.center-row {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    color: #fff;
+    min-height: auto;
+    padding: 16px 18px;
+    border-radius: 12px;
+    margin-top: 14px;
+    box-shadow: 0 4px 16px rgba(21,101,192,0.25);
+    border: none;
+}
+.mxj-record-page .ettwvL .table-footer.center-row .footer-row {
+    color: rgba(255,255,255,0.95);
+    line-height: 1.6;
+    padding: 6px 0;
+}
+.mxj-record-page .ettwvL .table-footer.center-row .footer-row > div {
+    color: #fff;
+    text-align: right;
+    font-size: 13px;
+}
+.mxj-record-page .ettwvL .table-footer.center-row .footer-row span {
+    color: #ffb74d;
+    font-weight: 600;
+    font-size: 15px;
+}
+.mxj-record-page .ettwvL .table-footer.center-row .footer-row:first-child > div {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+}
+.mxj-record-page .ettwvL .table-footer.center-row .footer-row:first-child span {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.95);
+}
+.mxj-record-pagination {
+    margin-top: 16px;
+    padding: 12px 0;
+}
+.mxj-record-pagination .pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 13px;
+    color: #666;
+}
+.mxj-record-pagination .page-info { font-weight: 500; color: #424242; }
+.mxj-record-pagination .page-navi { display: flex; align-items: center; gap: 8px; }
+.mxj-record-pagination .page-navi input {
+    width: 36px;
+    height: 32px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 13px;
+}
+.mxj-record-pagination .page-navi .prev a,
+.mxj-record-pagination .page-navi .next a {
+    padding: 6px 12px;
+    color: #1976d2;
+    text-decoration: none;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #e3f2fd;
+}
+.mxj-record-pagination .page-navi .prev.disabled a,
+.mxj-record-pagination .page-navi .next.disabled a {
+    color: #bdbdbd;
+    border-color: #eee;
+}
+
 .jEffvY {
     height: 100%;
     overflow-y: scroll;
@@ -2297,7 +2483,82 @@ button:disabled {
     margin: 10px 0px 0px 12px;
 }
 
-
+/* 我的页面（参考图）：隐藏默认顶栏，渐变头部 + 8 宫格 */
+.mxj-mypage-hide-header { display: none !important; }
+.mypage-view .main-content { padding-top: 0; }
+.mxj-mypage { background: #fff; min-height: 100%; padding-bottom: 70px; }
+.mxj-mypage-header {
+    background: linear-gradient(180deg, #b3e5fc 0%, #e1f5fe 40%, #fff 100%);
+    padding: 24px 16px 28px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+}
+.mxj-mypage-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #e0e0e0 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239e9e9e'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E") center/28px no-repeat;
+    flex-shrink: 0;
+    margin-right: 14px;
+}
+.mxj-mypage-user { flex: 1; min-width: 0; }
+.mxj-mypage-username { font-size: 16px; font-weight: 600; color: #212121; margin-bottom: 6px; }
+.mxj-mypage-balance { font-size: 15px; color: #212121; }
+.mxj-mypage-lang {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 14px;
+    color: #212121;
+}
+.mxj-mypage-lang-arrow { font-size: 10px; margin-left: 4px; color: #757575; }
+.mxj-mypage-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px 12px;
+    padding: 20px 16px 24px;
+    background: #fff;
+}
+.mxj-mypage-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #212121;
+    font-size: 13px;
+    -webkit-tap-highlight-color: transparent;
+}
+.mxj-mypage-item span:first-child { margin-bottom: 8px; }
+.mxj-mypage-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    line-height: 1;
+}
+.mxj-mypage-icon-orange { background: #ffe0b2; }
+.mxj-mypage-icon-green { background: #c8e6c9; }
+.mxj-mypage-icon-purple { background: #e1bee7; }
+.mxj-mypage-icon-red { background: #ffcdd2; }
+.mxj-mypage-icon-cyan { background: #b2ebf2; }
+.mxj-mypage-icon-doc { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23e65100'%3E%3Crect x='4' y='2' width='16' height='20' rx='2' fill='none' stroke='%23e65100' stroke-width='1.5'/%3E%3Cline x1='8' y1='12' x2='16' y2='12' stroke='%23e65100' stroke-width='1.5'/%3E%3C/svg%3E"); background-color: #ffe0b2; background-position: center; background-repeat: no-repeat; background-size: 28px 28px; }
+.mxj-mypage-icon-doc2 { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='2' width='16' height='20' rx='2' fill='none' stroke='%234caf50' stroke-width='1.5'/%3E%3Cline x1='8' y1='8' x2='16' y2='8' stroke='%234caf50' stroke-width='1.2'/%3E%3Cline x1='8' y1='12' x2='16' y2='12' stroke='%234caf50' stroke-width='1.2'/%3E%3Cline x1='8' y1='16' x2='14' y2='16' stroke='%234caf50' stroke-width='1.2'/%3E%3C/svg%3E"); background-color: #c8e6c9; background-position: center; background-repeat: no-repeat; background-size: 28px 28px; }
+.mxj-mypage-icon-chart { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23c62828' stroke-width='2'%3E%3Crect x='5' y='14' width='3' height='6'/%3E%3Crect x='10' y='10' width='3' height='10'/%3E%3Crect x='15' y='6' width='3' height='14'/%3E%3C/svg%3E"); background-color: #ffcdd2; background-position: center; background-repeat: no-repeat; background-size: 26px 26px; }
+.mxj-mypage-icon-gear { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%237b1fa2'%3E%3Cpath d='M12 15.5A3.5 3.5 0 0 1 8.5 12 3.5 3.5 0 0 1 12 8.5a3.5 3.5 0 0 1 3.5 3.5 3.5 3.5 0 0 1-3.5 3.5m7.43-2.53c.04-.32.07-.64.07-.97 0-.33-.03-.66-.07-1l2.11-1.63c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.31-.61-.22l-2.49 1c-.52-.39-1.06-.73-1.69-.98l-.37-2.65A.506.506 0 0 0 14 2h-4c-.25 0-.46.18-.5.42l-.37 2.65c-.63.25-1.17.59-1.69.98l-2.49-1c-.22-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64L4.57 11c-.04.34-.07.67-.07 1 0 .33.03.65.07.97l-2.11 1.66c-.19.15-.25.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1.01c.52.4 1.06.74 1.69.99l.37 2.65c.04.24.25.42.5.42h4c.25 0 .46-.18.5-.42l.37-2.65c.63-.26 1.17-.59 1.69-.99l2.49 1.01c.22.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.66z'/%3E%3C/svg%3E"); background-color: #e1bee7; background-position: center; background-repeat: no-repeat; background-size: 26px 26px; }
+.mxj-mypage-icon-phone { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23009688'%3E%3Cpath d='M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'/%3E%3C/svg%3E"); background-color: #b2ebf2; background-position: center; background-repeat: no-repeat; background-size: 26px 26px; }
+.mxj-mypage-icon-purple.mxj-mypage-icon-gear { background-color: #e1bee7; }
+.mxj-mypage-icon-purple.mxj-mypage-icon-doc2 { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='2' width='16' height='20' rx='2' fill='none' stroke='%237b1fa2' stroke-width='1.5'/%3E%3Cline x1='8' y1='8' x2='16' y2='8' stroke='%237b1fa2' stroke-width='1.2'/%3E%3Cline x1='8' y1='12' x2='16' y2='12' stroke='%237b1fa2' stroke-width='1.2'/%3E%3Cline x1='8' y1='16' x2='14' y2='16' stroke='%237b1fa2' stroke-width='1.2'/%3E%3C/svg%3E"); background-color: #e1bee7; background-position: center; background-repeat: no-repeat; background-size: 28px 28px; }
+.mxj-mypage-icon-orange.mxj-mypage-icon-chart { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e65100' stroke-width='2'%3E%3Crect x='5' y='14' width='3' height='6'/%3E%3Crect x='10' y='10' width='3' height='10'/%3E%3Crect x='15' y='6' width='3' height='14'/%3E%3C/svg%3E"); background-color: #ffe0b2; background-position: center; background-repeat: no-repeat; background-size: 26px 26px; }
+.mxj-mypage-item-disabled { opacity: 0.7; }
+.mxj-mypage .userinfocon { padding: 0 12px 20px; }
 
 </style>
 <script language="javascript" src="/js/jquery-1.8.3.min.js"></script>
@@ -2309,8 +2570,8 @@ button:disabled {
 var js=1;var sss='other';
 </script>
 <div id="root">
-  <div class="home {+if ($type=='wjs' || $type=='baoday')+}settlement_page{+/if+}">
-    <div class="oc2pj9-1 ilDBjU {+if ($type=='wjs' || $type=='baoday')+}settlement_header{+/if+}">
+  <div class="home {+if ($type=='wjs' || $type=='baoday')+}settlement_page{+/if+}{+if ($type=='userinfo')+} mypage-view{+/if+}">
+    <div class="oc2pj9-1 ilDBjU {+if ($type=='wjs' || $type=='baoday')+}settlement_header{+/if+}{+if ($type=='userinfo')+} mxj-mypage-hide-header{+/if+}">
       <div class="pn_title">
         {+if ($type=='baoweek')+}
            <a style="display: none;"><div class="lb_back"></div></a>
@@ -2562,9 +2823,34 @@ var js=1;var sss='other';
         </div>
       </div>
       {+elseif ($type=='wjs')+}
+<div class="mxj-record-page">
 <div class="sc-1fs8umj-0 ettwvL"><div class="table-header"><div class="col col2">注单号</div><div class="col col3">类型</div><div class="col col1-5">玩法</div><div class="col col1-5">下注金额</div><div class="col col2">可赢金额</div></div><div class="table-content wjslist"><div class="no_date">暂无数据</div></div><div class="table-footer center-row"><div class="footer-row"><div>注数</div><span>0</span></div><div class="footer-row"><div>下注金额(计)</div><span>0</span></div><div class="footer-row"><div>结果(总计)</div><span>0</span></div></div></div>
+</div>
       {+elseif ($type=='userinfo')+}
-      <div class="sc-1mp5qhc-0 jEffvY userinfocon" ></div>
+      <div class="mxj-mypage">
+        <div class="mxj-mypage-header">
+          <div class="mxj-mypage-avatar"></div>
+          <div class="mxj-mypage-user">
+            <div class="mxj-mypage-username">{+$username+}</div>
+            <div class="mxj-mypage-balance">¥ {+if $kmoney+}{+$kmoney+}{+else+}0.00{+/if+}</div>
+          </div>
+          <div class="mxj-mypage-lang">
+            <span class="mxj-mypage-lang-flag">中文</span>
+            <span class="mxj-mypage-lang-arrow">▼</span>
+          </div>
+        </div>
+        <div class="mxj-mypage-grid">
+          <a class="mxj-mypage-item" href="javascript:void(0)" data-type="/creditmobile/report"><span class="mxj-mypage-icon mxj-mypage-icon-orange mxj-mypage-icon-doc"></span><span>未结明细</span></a>
+          <a class="mxj-mypage-item" href="javascript:void(0)" data-type="/creditmobile/todayreport"><span class="mxj-mypage-icon mxj-mypage-icon-green mxj-mypage-icon-doc2"></span><span>今日已结</span></a>
+          <a class="mxj-mypage-item" href="javascript:void(0)" data-type="/creditmobile/history"><span class="mxj-mypage-icon mxj-mypage-icon-purple mxj-mypage-icon-doc2"></span><span>报表查询</span></a>
+          <a class="mxj-mypage-item" href="javascript:void(0)" data-type="/creditmobile/dresult"><span class="mxj-mypage-icon mxj-mypage-icon-red mxj-mypage-icon-chart"></span><span>开奖结果</span></a>
+          <a class="mxj-mypage-item" href="javascript:void(0)" data-type="/creditmobile/userinfo"><span class="mxj-mypage-icon mxj-mypage-icon-purple mxj-mypage-icon-gear"></span><span>个人资讯</span></a>
+          <a class="mxj-mypage-item" href="javascript:void(0)" data-type="/creditmobile/rule"><span class="mxj-mypage-icon mxj-mypage-icon-green mxj-mypage-icon-doc2"></span><span>游戏规则</span></a>
+          <a class="mxj-mypage-item mxj-mypage-item-disabled" href="javascript:void(0)"><span class="mxj-mypage-icon mxj-mypage-icon-cyan mxj-mypage-icon-phone"></span><span>手机设置</span></a>
+          <a class="mxj-mypage-item mxj-mypage-item-disabled" href="javascript:void(0)"><span class="mxj-mypage-icon mxj-mypage-icon-orange mxj-mypage-icon-chart"></span><span>开奖网</span></a>
+        </div>
+        <div class="sc-1mp5qhc-0 jEffvY userinfocon"></div>
+      </div>
       {+elseif ($type=='changepass')+}
       <div class="ggagnp-0 ghAhQy passcon">
 
@@ -2577,8 +2863,10 @@ var js=1;var sss='other';
     </div>
 </div>
       {+elseif ($type=='baoday')+}
+<div class="mxj-record-page">
 <div class="sc-1fs8umj-0 ettwvL"><div class="table-header"><div class="col col2">注单号</div><div class="col col3">类型</div><div class="col col1-5">玩法</div><div class="col col1-5">下注金额</div><div class="col col2">结果</div></div><div class="table-content wjslist"><div class="no_date">暂无数据</div></div><div class="table-footer center-row"><div class="footer-row"><div>注数</div><span>0</span></div><div class="footer-row"><div>下注金额(计)</div><span>0</span></div><div class="footer-row"><div>结果(总计)</div><span>0</span></div></div>
-<div class=""><div class="pagination u42plk-0 jTVanm"><div class="page-info"><span class="total-row">共 2 笔记录</span><span class="total-page">共 1 页</span></div><div class="page-navi single-page"><form class="page-jump"><input type="text" placeholder="1" v='1' value="1"></form><span class="prev"><a>前一页</a></span><span class="next"><a>后一页</a></span></div></div></div></div>
+<div class="mxj-record-pagination"><div class="pagination u42plk-0 jTVanm"><div class="page-info"><span class="total-row">共 2 笔记录</span><span class="total-page">共 1 页</span></div><div class="page-navi single-page"><form class="page-jump"><input type="text" placeholder="1" v='1' value="1"></form><span class="prev"><a>前一页</a></span><span class="next"><a>后一页</a></span></div></div></div>
+</div>
      {+elseif ($type=='baoweek')+}
      <style type="text/css">
 .ettwvL .table-header {

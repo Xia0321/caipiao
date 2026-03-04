@@ -61,6 +61,11 @@ function myready(){
     	getwjs();
     }
     if(type=='userinfo'){
+        $(document).on('click', '.mxj-mypage-item', function(e) {
+            if ($(this).hasClass('mxj-mypage-item-disabled')) return;
+            var t = $(this).attr('data-type');
+            if (t) window.location.href = t;
+        });
         getuserinfo();
     }
     if(type=="changepass"){
