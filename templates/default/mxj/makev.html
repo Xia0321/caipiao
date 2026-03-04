@@ -2735,7 +2735,7 @@ input[type="checkbox" i] {
     visibility: hidden;
     transition: all 0.2s ease-in-out 0s;
 }
-/* 修复顶部栏文字重影：覆盖 .ilDBjU .pn_title 白色/大字冲突 */
+/* 修复顶部栏文字重影、垂直居中、菜单遮挡 */
 .mxj-top-bar.ilDBjU .pn_title {
     color: #1a1a1a;
     font-size: 15px;
@@ -2743,6 +2743,17 @@ input[type="checkbox" i] {
     text-align: unset;
     -webkit-filter: none;
     filter: none;
+    height: 45px;
+    align-items: center;
+    text-shadow: none;
+}
+.mxj-top-bar.ilDBjU .pn_title .menu {
+    position: static !important;
+    width: 20px;
+    height: 20px;
+    margin-left: 2px;
+    flex-shrink: 0;
+    background-size: 280px 160px;
 }
 
 </style>
