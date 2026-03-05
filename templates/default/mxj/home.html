@@ -904,15 +904,15 @@
             /* 大厅：左侧分类选中 + 切换右侧游戏列表 */
             var CAT_GIDS = {
                 all: [],
-                pk10: [161, 162, 107],
-                ssc: [163, 164, 165, 166, 167],
-                lhc: [151, 152],
-                "11x5": [107, 121, 103],
-                k3: [151, 152, 153, 251],
-                "3d": [163, 251],
-                kl8: [135],
-                ssq: [100],
-                xy28: [168]
+                pk10: [172],
+                ssc: [108],
+                lhc: [200],
+                "11x5": [],
+                k3: [151, 251],
+                "3d": [],
+                kl8: [],
+                ssq: [],
+                xy28: []
             };
 
             function filterGamesByCat(cat) {
@@ -933,6 +933,18 @@
                 filterGamesByCat(cat || "all");
             });
             filterGamesByCat("all");
+            /* 隐藏没有可用游戏的分类 */
+            $(".lobby-sidebar .sidebar-item[data-cat]").each(function () {
+                var cat = $(this).attr("data-cat");
+                if (cat === "all") return;
+                var gids = CAT_GIDS[cat];
+                if (!gids || gids.length === 0) { $(this).hide(); return; }
+                var hasGame = false;
+                $(".ilt_div.game a.game").each(function () {
+                    if (gids.indexOf(parseInt($(this).attr("gid"), 10)) !== -1) hasGame = true;
+                });
+                if (!hasGame) $(this).hide();
+            });
             /* 大厅：经典彩票/特色游戏 标签 */
             $(".lobby-tabs .tab[data-tab]").on("click", function () {
                 $(".lobby-tabs .tab").removeClass("active");
