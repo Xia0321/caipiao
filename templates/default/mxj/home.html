@@ -914,11 +914,13 @@
             $(".ilt_div.game a.game").each(function () {
                 var fl = $(this).attr("data-fenlei");
                 var flname = $(this).attr("data-flname");
+                var img = $(this).attr("data-img");
                 if (fl && flname && !seenFenlei[fl]) {
                     seenFenlei[fl] = true;
+                    var icoStyle = img ? 'background-image:url(' + img + ');background-size:contain;' : '';
                     $("#lobbySidebar").append(
                         '<div class="sidebar-item" data-fenlei="' + fl + '">' +
-                        '<span class="ico" style="background-image:url(/css/mobi/img/icon_count.png);background-size:auto;background-position:-244px 0;"></span>' +
+                        '<span class="ico" style="' + icoStyle + '"></span>' +
                         flname + '</div>'
                     );
                 }
@@ -985,7 +987,7 @@ var sss = 'home';
                         {+section name=i loop=$gamecs+}
                         {+if ($gamecs[i].isimg==1)+}
                         <a href="javascript:void(0)" gid='{+$gamecs[i].gid+}' alt="{+$gamecs[i].gname+}"
-                           title="{+$gamecs[i].gname+}" data-fenlei="{+$gamecs[i].fenlei+}" data-flname="{+$gamecs[i].flname+}" class="game">
+                           title="{+$gamecs[i].gname+}" data-fenlei="{+$gamecs[i].fenlei+}" data-flname="{+$gamecs[i].flname+}" data-img="{+$gamecs[i].img+}" class="game">
                             <div class="game-card">
                                 <div class="card-name">{+$gamecs[i].gname+}</div>
                                 <div class="card-status">投注即开</div>
