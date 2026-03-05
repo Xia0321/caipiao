@@ -901,50 +901,35 @@
                 var type = $(this).attr("type");
                 if (type) window.location.href = type;
             });
-            /* 大厅：左侧分类选中 + 切换右侧游戏列表 */
-            var CAT_GIDS = {
-                all: [],
-                pk10: [172],
-                ssc: [108],
-                lhc: [200],
-                "11x5": [],
-                k3: [151, 251],
-                "3d": [],
-                kl8: [],
-                ssq: [],
-                xy28: []
-            };
-
-            function filterGamesByCat(cat) {
-                var gids = CAT_GIDS[cat];
+            /* 大厅：动态生成左侧分类 + 按 fenlei 过滤游戏 */
+            function filterGamesByFenlei(fenlei) {
                 $(".ilt_div.game a.game").each(function () {
-                    var gidStr = $(this).attr("gid");
-                    var gid = parseInt(gidStr, 10);
-                    if (isNaN(gid)) gid = gidStr;
-                    var show = (cat === "all") || (gids && gids.indexOf(gid) !== -1);
+                    var show = (fenlei === "all") || ($(this).attr("data-fenlei") === fenlei);
                     $(this).toggle(show);
                 });
             }
 
-            $(".lobby-sidebar .sidebar-item").on("click", function () {
+            /* 从游戏数据动态生成侧栏分类（无需硬编码） */
+            var seenFenlei = {};
+            $(".ilt_div.game a.game").each(function () {
+                var fl = $(this).attr("data-fenlei");
+                var flname = $(this).attr("data-flname");
+                if (fl && flname && !seenFenlei[fl]) {
+                    seenFenlei[fl] = true;
+                    $("#lobbySidebar").append(
+                        '<div class="sidebar-item" data-fenlei="' + fl + '">' +
+                        '<span class="ico" style="background-image:url(/css/mobi/img/icon_count.png);background-size:auto;background-position:-244px 0;"></span>' +
+                        flname + '</div>'
+                    );
+                }
+            });
+
+            $(document).on("click", ".lobby-sidebar .sidebar-item", function () {
                 $(".lobby-sidebar .sidebar-item").removeClass("active");
                 $(this).addClass("active");
-                var cat = $(this).attr("data-cat");
-                filterGamesByCat(cat || "all");
+                filterGamesByFenlei($(this).attr("data-fenlei") || "all");
             });
-            filterGamesByCat("all");
-            /* 隐藏没有可用游戏的分类 */
-            $(".lobby-sidebar .sidebar-item[data-cat]").each(function () {
-                var cat = $(this).attr("data-cat");
-                if (cat === "all") return;
-                var gids = CAT_GIDS[cat];
-                if (!gids || gids.length === 0) { $(this).hide(); return; }
-                var hasGame = false;
-                $(".ilt_div.game a.game").each(function () {
-                    if (gids.indexOf(parseInt($(this).attr("gid"), 10)) !== -1) hasGame = true;
-                });
-                if (!hasGame) $(this).hide();
-            });
+            filterGamesByFenlei("all");
             /* 大厅：经典彩票/特色游戏 标签 */
             $(".lobby-tabs .tab[data-tab]").on("click", function () {
                 $(".lobby-tabs .tab").removeClass("active");
@@ -989,36 +974,9 @@ var sss = 'home';
         </div>
         <!-- 主体：左侧分类 + 右侧游戏列表 -->
         <div class="lobby-main">
-            <div class="lobby-sidebar">
-                <div class="sidebar-item active" data-cat="all"><span class="ico"
-                                                                      style="background-image:url('/imgs/games/DM_20260212211009_007.png');"></span>即开彩
-                </div>
-                <div class="sidebar-item" data-cat="pk10"><span class="ico"
-                                                                style="background-image:url('/imgs/games/DM_20260212211009_008.png');"></span>PK10
-                </div>
-                <div class="sidebar-item" data-cat="ssc"><span class="ico"
-                                                               style="background-image:url('/imgs/games/DM_20260212211009_009.png');"></span>时时彩
-                </div>
-                <div class="sidebar-item" data-cat="lhc"><span class="ico"
-                                                               style="background-image:url('/imgs/games/DM_20260212211009_010.png');"></span>六合彩
-                </div>
-                <div class="sidebar-item" data-cat="11x5"><span class="ico"
-                                                                style="background-image:url('/imgs/games/DM_20260212211009_011.png');"></span>11选5
-                </div>
-                <div class="sidebar-item" data-cat="k3"><span class="ico"
-                                                              style="background-image:url('/imgs/games/DM_20260212211009_012.png');"></span>快三
-                </div>
-                <div class="sidebar-item" data-cat="3d"><span class="ico"
-                                                              style="background-image:url('/imgs/games/DM_20260212211009_013.png');"></span>3D
-                </div>
-                <div class="sidebar-item" data-cat="kl8"><span class="ico"
-                                                               style="background-image:url('/imgs/games/DM_20260212211009_014.png');"></span>快乐8
-                </div>
-                <div class="sidebar-item" data-cat="ssq"><span class="ico"
-                                                               style="background-image:url('/imgs/games/DM_20260212211009_015.png');"></span>双色球
-                </div>
-                <div class="sidebar-item" data-cat="xy28"><span class="ico"
-                                                                style="background-image:url('/imgs/games/DM_20260212211009_016.png');"></span>幸运28
+            <div class="lobby-sidebar" id="lobbySidebar">
+                <div class="sidebar-item active" data-fenlei="all"><span class="ico"
+                                                                      style="background-image:url('/imgs/games/DM_20260212211009_007.png');"></span>全部
                 </div>
             </div>
             <div class="scroll-wrapper-home after-login">
@@ -1027,7 +985,7 @@ var sss = 'home';
                         {+section name=i loop=$gamecs+}
                         {+if ($gamecs[i].isimg==1)+}
                         <a href="javascript:void(0)" gid='{+$gamecs[i].gid+}' alt="{+$gamecs[i].gname+}"
-                           title="{+$gamecs[i].gname+}" class="game">
+                           title="{+$gamecs[i].gname+}" data-fenlei="{+$gamecs[i].fenlei+}" data-flname="{+$gamecs[i].flname+}" class="game">
                             <div class="game-card">
                                 <div class="card-name">{+$gamecs[i].gname+}</div>
                                 <div class="card-status">投注即开</div>
