@@ -2,6 +2,7 @@
 /**
  * 全局错误与异常处理：发生错误时拦截执行并输出详细信息
  * 包含：文件、行号、方法/函数、错误类型、错误信息
+ * 兼容 PHP 5.6（未使用 ??、Throwable、标量类型等 PHP 7+ 语法）
  */
 
 if (!defined('ERROR_HANDLER_LOADED')) {
@@ -41,7 +42,7 @@ if (!defined('ERROR_HANDLER_LOADED')) {
             $line = isset($t['line']) ? $t['line'] : 0;
             if ($file === $errfile && $line === $errline) {
                 if (isset($t['class']) && $t['class'] !== '') {
-                    return $t['class'] . ($t['type'] ?? '->') . ($t['function'] ?? '') . '()';
+                    return $t['class'] . (isset($t['type']) ? $t['type'] : '->') . (isset($t['function']) ? $t['function'] : '') . '()';
                 }
                 return (isset($t['function']) && $t['function'] !== '') ? $t['function'] . '()' : '{main}';
             }
@@ -103,12 +104,14 @@ if (!defined('ERROR_HANDLER_LOADED')) {
     /**
      * 未捕获异常处理
      */
-    function _global_exception_handler(Throwable $e) {
+    function _global_exception_handler(Exception $e) {
         $file = $e->getFile();
         $line = $e->getLine();
-        $function = $e->getTrace()[0]['function'] ?? '{main}';
-        if (!empty($e->getTrace()[0]['class'])) {
-            $function = ($e->getTrace()[0]['class'] ?? '') . ($e->getTrace()[0]['type'] ?? '') . $function . '()';
+        $trace0 = $e->getTrace();
+        $t0 = isset($trace0[0]) ? $trace0[0] : array();
+        $function = isset($t0['function']) ? $t0['function'] : '{main}';
+        if (!empty($t0['class'])) {
+            $function = (isset($t0['class']) ? $t0['class'] : '') . (isset($t0['type']) ? $t0['type'] : '') . $function . '()';
         } else {
             $function = $function . '()';
         }
@@ -127,23 +130,25 @@ if (!defined('ERROR_HANDLER_LOADED')) {
      */
     function _global_shutdown_handler() {
         $e = error_get_last();
-        if ($e === null) {
+        if (!is_array($e) || !isset($e['type'])) {
             return;
         }
         $fatals = array(E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR);
         if (!in_array($e['type'], $fatals, true)) {
             return;
         }
+        $errfile = isset($e['file']) ? $e['file'] : '';
+        $errline = isset($e['line']) ? $e['line'] : 0;
         $function = '{main}';
         if (function_exists('_error_context_function')) {
-            $function = _error_context_function($e['file'], $e['line']);
+            $function = _error_context_function($errfile, $errline);
         }
         _error_output(array(
-            'file'    => $e['file'],
-            'line'    => $e['line'],
+            'file'    => $errfile,
+            'line'    => $errline,
             'function'=> $function,
             'type'    => _error_type_name($e['type']),
-            'message' => $e['message'],
+            'message' => isset($e['message']) ? $e['message'] : '',
             'trace'   => '',
         ));
     }
