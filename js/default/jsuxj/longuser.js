@@ -109,6 +109,10 @@ function query() {
 			dataType: 'json',
 			cache: false,
 			success: function(m) {
+				if (!m || m.length == 0) {
+					$(".history").html("<tr><td style='text-align:center;padding:20px;color:#666;'>暂无长龙数据</td></tr>");
+					return;
+				}
 				var str = '';
 				var ml = m.length;
 				var kl = m[0]['th'].length;
@@ -248,7 +252,10 @@ function query() {
 			data: 'xtype=long' + str,
 			cache: false,
 			success: function(m) {
-			
+				if (!m || m.length == 0) {
+					$(".history").html("<tr><td style='text-align:center;padding:20px;color:#666;'>暂无长龙数据</td></tr>");
+					return;
+				}
 				var str = '';
 				var ml = m.length;
 				

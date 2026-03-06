@@ -497,8 +497,8 @@ function libs(stype) {
 						tmpsid = m[i]['sid'];
 					}
 					str += "</div></div>";	
-                } else if (fenlei==163 && ngid==251) {
-					// 快3/3D(gid=251) 主盘势：玩法说明 + 百/十/个 大/小/单/双/质/合 + 百位/十位/个位 0-9
+                } else if (fenlei==163 && (ngid==251 || ngid==252)) {
+					// 3D(gid=251/252) 主盘势：玩法说明 + 百/十/个 大/小/单/双/质/合 + 百位/十位/个位 0-9
 					var ruleRow = "<div class='row pls'><div class='col-xs-12 padding10 marginbtm10' style='font-size:12px;color:#555;line-height:1.6;'><strong>玩法说明：</strong><br/>1. 百、十、个：选择位置并投注属性，与开奖属性相同即中奖。<br/>· 大小：≥5为「大」，≤4为「小」。单双：1,3,5,7,9为「单」，0,2,4,6,8为「双」。质合：1,2,3,5,7为「质」，0,4,6,8,9为「合」。<br/>2. 可单独投注具体位置的具体数字（百位/十位/个位 0-9）。</div></div><div class='bet_content'>";
 					str += ruleRow;
 					tmpsid = '';
@@ -657,7 +657,7 @@ function libs(stype) {
 						tmpsid = m[i]['sid'];
 					}
 					str += "</div></div>";	
-			} else if (bname == '两面' && fenlei == 163 && ngid == 251) {
+			} else if (bname == '两面' && fenlei == 163 && (ngid == 251 || ngid == 252)) {
 					tmpsid = '';
 					for (i = 0; i < ml; i++) {
 						if (m[i]['sname'] != '百' && m[i]['sname'] != '十' && m[i]['sname'] != '个') continue;

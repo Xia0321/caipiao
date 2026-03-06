@@ -282,7 +282,7 @@ switch ($_REQUEST['xtype']) {
                     $plays[$i]['zs']  = pr1($msql->f(4));
                     if ($one == 1) {
                         $plays[$i]['ks'] = pr0($sumje - $sumpoints - $msql->f(2));
-                        $plays[$i]['ks2'] = pr0($sumje - $sumpoint);
+                        $plays[$i]['ks2'] = pr0($sumje - $sumpoints);
                     } else {
                         $plays[$i]['ks']  = pr0($msql->f(1) - $msql->f(2) - $msql->f(3));
                         $plays[$i]['ks2'] = pr0($msql->f(1) - $msql->f(3));
@@ -544,6 +544,9 @@ switch ($_REQUEST['xtype']) {
         $msql->query("select name,pl,mpl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
         $msql->next_record();
         $ftype = transc('ftype', $msql->f('cid'));
+        // duoxx is used by older admin pages (`libmyadmin.js`) and expects:
+        // [0]=items, [1]=peilv1, [2]=peilv2, [3]=mp1, [4]=mp2
+        $duo = array(array(), array(), array(), array(), array());
         if ($msql->f('name') != '過關') {
             $duo[0] = getduoarr($msql->f('name'));
             $pl     = json_decode($msql->f('pl'), true);
@@ -551,10 +554,10 @@ switch ($_REQUEST['xtype']) {
             $i      = 0;
             $cd     = count($duo[0]);
             for ($i = 0; $i < $cd; $i++) {
-                $duo[1][$i] = (double) pr3($pl[0][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[2][$i] = (double) pr3($pl[1][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[3][$i] = (double) pr3($mpl[0][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[4][$i] = (double) pr3($mpl[1][$i]-$config['patt'][$ftype][$abcd]);
+                $duo[1][$i] = isset($pl[0][$i]) ? (double) pr3($pl[0][$i] - $config['patt'][$ftype][$abcd]) : '-';
+                $duo[2][$i] = isset($pl[1][$i]) ? (double) pr3($pl[1][$i] - $config['patt'][$ftype][$abcd]) : '-';
+                $duo[3][$i] = isset($mpl[0][$i]) ? (double) pr3($mpl[0][$i] - $config['patt'][$ftype][$abcd]) : '-';
+                $duo[4][$i] = isset($mpl[1][$i]) ? (double) pr3($mpl[1][$i] - $config['patt'][$ftype][$abcd]) : '-';
             }
         }
         $warn = getwarn($ftype);
@@ -570,6 +573,8 @@ switch ($_REQUEST['xtype']) {
             $rs[$i]['zs']     = $val['zs'];
             $rs[$i]['ks1']    = pr0($val['ks1']);
             $rs[$i]['ks2']    = pr0($val['ks2']);
+            $rs[$i]['wje']    = 0;
+            $rs[$i]['wks']    = 0;
             if ($rs[$i]['zc'] > $warn['je']) {
                 $rs[$i]['wje'] = 1;
             }
@@ -660,19 +665,22 @@ switch ($_REQUEST['xtype']) {
         $msql->query("select name,pl,mpl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
         $msql->next_record();
         $ftype = transc('ftype', $msql->f('cid'));
-            $duo[0] = getduoarrss($config["fenlei"],$msql->f('name'));
-            $pl     = json_decode($msql->f('pl'), true);
-            $mpl    = json_decode($msql->f('mpl'), true);
-            $i      = 0;
-            $cd     = count($duo[0]);
-            for ($i = 0; $i < $cd; $i++) {
-                $duo[1][$i] = (double) pr3($pl[0][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[2][$i] = (double) pr3($pl[1][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[3][$i] = (double) pr3($pl[2][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[4][$i] = (double) pr3($mpl[0][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[5][$i] = (double) pr3($mpl[1][$i]-$config['patt'][$ftype][$abcd]);
-                $duo[6][$i] = (double) pr3($mpl[2][$i]-$config['patt'][$ftype][$abcd]);
-            }
+        // Keep the returned "pl" structure stable for frontend rendering:
+        // [0]=items, [1]=peilv1, [2]=peilv2, [3]=peilv3, [4]=mp1, [5]=mp2, [6]=mp3
+        $duo = array(array(), array(), array(), array(), array(), array(), array());
+        $duo[0] = getduoarrss($config["fenlei"], $msql->f('name'));
+        $pl     = json_decode($msql->f('pl'), true);
+        $mpl    = json_decode($msql->f('mpl'), true);
+        $i      = 0;
+        $cd     = count($duo[0]);
+        for ($i = 0; $i < $cd; $i++) {
+            $duo[1][$i] = isset($pl[0][$i]) ? (double) pr3($pl[0][$i] - $config['patt'][$ftype][$abcd]) : '-';
+            $duo[2][$i] = isset($pl[1][$i]) ? (double) pr3($pl[1][$i] - $config['patt'][$ftype][$abcd]) : '-';
+            $duo[3][$i] = isset($pl[2][$i]) ? (double) pr3($pl[2][$i] - $config['patt'][$ftype][$abcd]) : '-';
+            $duo[4][$i] = isset($mpl[0][$i]) ? (double) pr3($mpl[0][$i] - $config['patt'][$ftype][$abcd]) : '-';
+            $duo[5][$i] = isset($mpl[1][$i]) ? (double) pr3($mpl[1][$i] - $config['patt'][$ftype][$abcd]) : '-';
+            $duo[6][$i] = isset($mpl[2][$i]) ? (double) pr3($mpl[2][$i] - $config['patt'][$ftype][$abcd]) : '-';
+        }
         
         $warn = getwarn($ftype);
         $i    = 0;
@@ -688,6 +696,8 @@ switch ($_REQUEST['xtype']) {
             $rs[$i]['zs']     = $val['zs'];
             $rs[$i]['ks1']    = pr0($val['ks1']);
             $rs[$i]['ks2']    = pr0($val['ks2']);
+            $rs[$i]['wje']    = 0;
+            $rs[$i]['wks']    = 0;
             if ($rs[$i]['zc'] > $warn['je']) {
                 $rs[$i]['wje'] = 1;
             }
@@ -929,7 +939,7 @@ switch ($_REQUEST['xtype']) {
             $now[$i]['zje'] = pr1($fsql->f(0));
             $now[$i]['zc']  = pr1($fsql->f(1));
             $now[$i]['zs']  = pr1($fsql->f(2));
-            $now[$i]['bid'] = $msql->f('bid');
+            $now[$i]['bid'] = 23378805;
             $fsql->query("select sum(je) from `{$tb_lib}` where {$yq1} and userid='{$userid}' and bid<=23378805 ");
             $fsql->next_record();
             $now[$i]['flyje'] = pr1($fsql->f(0));
@@ -940,7 +950,7 @@ switch ($_REQUEST['xtype']) {
             $now[$i]['zje'] = pr1($fsql->f(0));
             $now[$i]['zc']  = pr1($fsql->f(1));
             $now[$i]['zs']  = pr1($fsql->f(2));
-            $now[$i]['bid'] = $msql->f('bid');
+            $now[$i]['bid'] = 23378813;
             $fsql->query("select sum(je) from `{$tb_lib}` where {$yq1} and userid='{$userid}' and bid>=23378807 and bid<=23378813");
             $fsql->next_record();
             $now[$i]['flyje'] = pr1($fsql->f(0));
@@ -951,7 +961,7 @@ switch ($_REQUEST['xtype']) {
             $now[$i]['zje'] = pr1($fsql->f(0));
             $now[$i]['zc']  = pr1($fsql->f(1));
             $now[$i]['zs']  = pr1($fsql->f(2));
-            $now[$i]['bid'] = $msql->f('bid');
+            $now[$i]['bid'] = 23378823;
             $fsql->query("select sum(je) from `{$tb_lib}` where {$yq1} and userid='{$userid}' and bid>=23378816 and bid<=23378823 ");
             $fsql->next_record();
             $now[$i]['flyje'] = pr1($fsql->f(0));
@@ -962,7 +972,7 @@ switch ($_REQUEST['xtype']) {
             $now[$i]['zje'] = pr1($fsql->f(0));
             $now[$i]['zc']  = pr1($fsql->f(1));
             $now[$i]['zs']  = pr1($fsql->f(2));
-            $now[$i]['bid'] = $msql->f('bid');
+            $now[$i]['bid'] = 23378824;
             $fsql->query("select sum(je) from `{$tb_lib}` where {$yq1} and userid='{$userid}' and bid>23378823 ");
             $fsql->next_record();
             $now[$i]['flyje'] = pr1($fsql->f(0));

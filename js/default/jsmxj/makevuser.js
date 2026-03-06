@@ -606,8 +606,8 @@ function libs(stype) {
                     }
                     str = str1 + str2 + str;
                 } else if (fenlei == 163) {
-                    // 251 两面：数据为 bid 251001(两面)+251005(1字定位)，按 sid 分组显示
-                    if (ml > 0 && (m[0]['bid'] == 251001 || m[0]['bid'] == 251005)) {
+                    // 3D 两面：数据为 bid 251001/251005 或 252001/252005（两面+1字定位），按 sid 分组显示
+                    if (ml > 0 && (m[0]['bid'] == 251001 || m[0]['bid'] == 251005 || m[0]['bid'] == 252001 || m[0]['bid'] == 252005)) {
                         for (i = 0; i < ml; i++) {
                             if (tmpsid != m[i]['sid']) {
                                 if (tmpsid != 0) str += "</div></div></div></div><div class='rough_lines items'></div>";

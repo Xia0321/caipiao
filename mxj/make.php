@@ -232,7 +232,8 @@ switch ($_REQUEST['xtype']) {
             $msql->query("select fenlei,gname,thisqishu,userclosetime,autoopenpan,panstatus from `{$tb_game}` where gid='{$v['gid']}'");
             $msql->next_record();
             $v['fenlei'] = $msql->f("fenlei");
-            if ($v['fenlei'] != 101 && $v['fenlei'] != 107) {
+            // 长龙/遗漏：支持 SSC(101)、PK10(107)、快3(151)
+            if ($v['fenlei'] != 101 && $v['fenlei'] != 107 && $v['fenlei'] != 151) {
                 continue;
             }
             $v['thisqishu'] = $msql->f("thisqishu");
@@ -264,7 +265,9 @@ switch ($_REQUEST['xtype']) {
             if ($type == 'cl') {
                 if ($v['fenlei'] == 107){
                     $p = $msql->arr("select * from `{$tb_play}` where gid='{$v['gid']}' and ifok=1 and zqishu>='{$qs}' and  name in('单','双','大','小','龙','虎','冠亚单','冠亚双','冠亚大','冠亚小','总和单','总和双','总和大','总和小','合数单','合数双','尾大','尾小') order by gid,sid,cid,xsort", 1);
-                
+                } else if ($v['fenlei'] == 151) {
+                    // 快3：取常见两面连开（保证同 cid 内有对立项便于前端配对展示）
+                    $p = $msql->arr("select * from `{$tb_play}` where gid='{$v['gid']}' and ifok=1 and zqishu>='{$qs}' and name in('大','小','单','双','三军大','三军小') order by gid,sid,cid,xsort", 1);
                 }else{
                     $p = $msql->arr("select * from `{$tb_play}` where gid='{$v['gid']}' and (bid=23378755 or bid=23378763) and ifok=1 and zqishu>'{$qs}' and  name in('单','双','大','小','龙','虎','冠亚单','冠亚双','冠亚大','冠亚小','总和单','总和双','总和大','总和小','合数单','合数双','尾大','尾小') order by gid,sid,cid,xsort", 1);
                 }
@@ -273,6 +276,9 @@ switch ($_REQUEST['xtype']) {
                 
                 if ($v['fenlei'] == 107) {
                     $p = $msql->arr("select * from `{$tb_play}` where gid='{$v['gid']}' and ifok=1 and buzqishu>20 and ztype=0 and bid!=23378805 order by buzqishu desc", 1);
+                } else if ($v['fenlei'] == 151) {
+                    // 快3遗漏：取常见两面/三军大小的遗漏统计
+                    $p = $msql->arr("select * from `{$tb_play}` where gid='{$v['gid']}' and ifok=1 and buzqishu>20 and ztype=0 and name in('大','小','单','双','三军大','三军小') order by buzqishu desc", 1);
                 } else {
                     $p = $msql->arr("select * from `{$tb_play}` where gid='{$v['gid']}' and bid=23378755 and ifok=1 and buzqishu>20 and ztype=0 order by buzqishu desc", 1);
                 }

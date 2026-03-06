@@ -645,7 +645,7 @@ function libs(stype, gpl) {
 					str1 += "</tbody></table>";
 					$(".make").before(str1);
 					$(".table_lm").css("margin-bottom", '5px')
-				} else if (fenlei == 163 && ngid == 251) {
+				} else if (fenlei == 163 && (ngid == 251 || ngid == 252)) {
 					// 快3/3D( gid=251 ) 两面盘：玩法说明 + 百/十/个 大/小/单/双/质/合 + 百/十/个 0-9 号码
 					var ruleHtml = "<div class='rule_desc table_lm' style='margin-bottom:8px;padding:8px;font-size:12px;color:#555;line-height:1.6;'>" +
 						"<strong>玩法说明：</strong><br/>" +
@@ -1145,7 +1145,7 @@ function libs(stype, gpl) {
 				str = "<table class='k100'>"+strsm+"<tbody>" + str + "</tbody></table>";
 				$(".make").html(str);
 				$(".make .name").css("width", 120);
-			} else if (bname == '两面' && fenlei == 163 && ngid == 251) {
+			} else if (bname == '两面' && fenlei == 163 && (ngid == 251 || ngid == 252)) {
 				// 3D( gid=251 ) 两面：百 / 十 / 个
 				// 同一表中先显示属性（大/小/单/双/质/合），再显示具体号码 0-9
 				var lastSname = '';
