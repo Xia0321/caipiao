@@ -223,6 +223,7 @@ function getResult(num, n) {
 	return Math.round(num * Math.pow(10, n)) / Math.pow(10, n)
 }
 function qiu(n, bname) {
+	if (n === undefined || n === null || n === '') return '';
 
 	if (ngid == 100) {
 		var m = Number(n);

@@ -434,7 +434,7 @@ function getnews() {
 }
 
 function qiu(n, bname) {
-    if (n == '') return '';
+    if (n === undefined || n === null || n === '') return '';
     if (fenlei == 107) n = Number(n);
     return "<span><b class='b" + n + "'>" + n + "</b></span>";
 }

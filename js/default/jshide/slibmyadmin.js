@@ -1045,8 +1045,11 @@ function plclass() {
 	return v
 }
 function qiu(n, bname) {
+	if (n === undefined || n === null || n === '') {
+		return '';
+	}
 	if (isNaN(n)) {
-		return n
+		return n;
 	} else {
 		if(bname=='番摊'){
              return n;

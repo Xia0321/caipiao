@@ -498,6 +498,7 @@ function getbu(ks, yks, zc, yje, peilv, sname) {
 	}
 }
 function qiu(n) {
+    if (n === undefined || n === null || n === '') return '';
 
 			if (in_array(n,ma['紅'])) {
 				return "<div class='qiub'>" + n + "</div>"
@@ -506,7 +507,7 @@ function qiu(n) {
 			}else if (in_array(n,ma['綠'])) {
 				return "<div class='qiuc'>" + n + "</div>"
 			}
-	
+	return '';
 
 }
 function lib0() {
