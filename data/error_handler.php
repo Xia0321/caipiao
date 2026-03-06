@@ -89,10 +89,10 @@ if (!defined('ERROR_HANDLER_LOADED')) {
         if (!(error_reporting() & $errno)) {
             return false; // 被 @ 抑制则交给 PHP 默认行为
         }
-        // 仅拦截需要终止程序的错误；警告(E_WARNING)、注意(E_NOTICE)、弃用(E_DEPRECATED)等不拦截
+        // 仅拦截并显示需要终止程序的错误；警告/注意/弃用等静默处理，不显示
         $intercept_only = array(E_USER_ERROR, E_RECOVERABLE_ERROR);
         if (!in_array($errno, $intercept_only, true)) {
-            return false;
+            return true; // 已“处理”（不输出），PHP 也不再显示
         }
         $function = _error_context_function($errfile, $errline);
         _error_output(array(
