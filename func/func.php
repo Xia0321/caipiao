@@ -798,15 +798,19 @@ function updategame($gamecs, $uid)
         $zc = (isset($gamecs[$j]['zc']) && $gamecs[$j]['zc'] !== '' && $gamecs[$j]['zc'] !== null) ? floatval($gamecs[$j]['zc']) : 0;
         $zcmin = (isset($gamecs[$j]['zcmin']) && $gamecs[$j]['zcmin'] !== '' && $gamecs[$j]['zcmin'] !== null) ? floatval($gamecs[$j]['zcmin']) : 0;
         $flyzc = (isset($gamecs[$j]['flyzc']) && $gamecs[$j]['flyzc'] !== '' && $gamecs[$j]['flyzc'] !== null) ? floatval($gamecs[$j]['flyzc']) : 0;
+        $upzc = (isset($gamecs[$j]['upzc']) && $gamecs[$j]['upzc'] !== '' && $gamecs[$j]['upzc'] !== null) ? floatval($gamecs[$j]['upzc']) : 0;
         if ($zc > $psql->f('zc'))
             $zc = $psql->f('zc');
         if ($zcmin > $psql->f('zc'))
             $zcmin = $psql->f('zc');
         if ($flyzc > $psql->f('flyzc'))
             $flyzc = $psql->f('flyzc');
+        if ($upzc > $psql->f('zc'))
+            $upzc = $psql->f('zc');
         $gamecs[$j]['zc'] = $zc;
         $gamecs[$j]['zcmin'] = $zcmin;
         $gamecs[$j]['flyzc'] = $flyzc;
+        $gamecs[$j]['upzc'] = $upzc;
         if ($gamecs[$j]['upzc'] > $psql->f('zc'))
             $gamecs[$j]['upzc'] = $psql->f('zc');
         if ($psql->f('ifok') == 0)
