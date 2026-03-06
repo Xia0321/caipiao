@@ -385,7 +385,7 @@ function lib() {
 		libs('108')
 	} else if (bname == '正特1~6') {
         libs('1-6')
-    } else if (bname == '正码' | bname == '单码') {
+    } else if (bname == '正码' | bname == '单码' | bname == '一字定位' | bname == '1字定位') {
         libs('a')
     } else if (fenlei == 107 | fenlei == 103 | fenlei == 121) {
         libs('a')
