@@ -1,7 +1,10 @@
 <?php
 //认准技术人员唯一TG @zh626666
-error_reporting(0);
 date_default_timezone_set("Asia/Shanghai");
+
+// 全局错误处理：发生错误时拦截执行并打印详情（文件、行号、方法、错误类型、错误信息）
+require_once __DIR__ . '/error_handler.php';
+error_reporting(E_ALL | E_STRICT);
 $dbPort = '3306';
 $dbHost="127.0.0.1";
 $dbName="138";
