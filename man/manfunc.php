@@ -45,7 +45,13 @@ function getgidman($v)
         case "XYNC":
         case "CQXYNC":
             $gid=135;
-        break; 
+        break;
+        case "3D":
+            $gid = 252;
+            break;
+        case "PL3":
+            $gid = 251;
+            break;
     }
     return $gid;
 }
@@ -75,6 +81,10 @@ function getfenleiman($v)
         case "BJKL8":
         case "KL8JSC":
             $gid = 161;
+            break;
+        case "3D":
+        case "PL3":
+            $gid = 163;
             break;
     }
     return $gid;
@@ -122,7 +132,13 @@ function getgametype($gid)
          break;  
         case 162:
             $type = "KL8JSC";
-         break; 
+         break;
+        case 252:
+            $type = "3D";
+            break;
+        case 251:
+            $type = "PL3";
+            break;
     }
     return $type;
 }
