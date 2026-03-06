@@ -83,11 +83,16 @@ if (!defined('ERROR_HANDLER_LOADED')) {
     }
 
     /**
-     * 非致命错误处理（Warning / Notice / User Error 等）：打印详情并终止
+     * 非致命错误处理：仅拦截用户错误与可恢复错误，警告/注意/弃用等不拦截
      */
     function _global_error_handler($errno, $errstr, $errfile, $errline) {
         if (!(error_reporting() & $errno)) {
             return false; // 被 @ 抑制则交给 PHP 默认行为
+        }
+        // 仅拦截需要终止程序的错误；警告(E_WARNING)、注意(E_NOTICE)、弃用(E_DEPRECATED)等不拦截
+        $intercept_only = array(E_USER_ERROR, E_RECOVERABLE_ERROR);
+        if (!in_array($errno, $intercept_only, true)) {
+            return false;
         }
         $function = _error_context_function($errfile, $errline);
         _error_output(array(
