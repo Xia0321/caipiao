@@ -665,8 +665,10 @@ switch ($_REQUEST['xtype']) {
         break;
     case "edituser":
         $uid = $_POST['userid'];
-        if ($uid == '' | !is_numeric($uid) | !checkfid($uid))
+        if ($uid == '' | !is_numeric($uid) | !checkfid($uid)) {
+            echo '0';
             exit;
+        }
         $userpass = $_POST['userpass'];
         $msql->query("select * from `$tb_user` where userid='$uid'");
         $msql->next_record();
@@ -789,7 +791,7 @@ switch ($_REQUEST['xtype']) {
 		updategamezc($gamecs3, $uid);
 	}
 	foreach($uarr as $v){
-	    userchamge("修改占成",$v);
+	    userchange("修改占成",$v);
 	}
         
         $oldplc = transuser($uid, 'plc');

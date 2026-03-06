@@ -1157,7 +1157,7 @@ function editsend() {
 			alert("请至少选择一个盘！");
 			return false
 		}
-		var sucess = false;
+		var success = false;
 		if (maxrenflag == 0 & Number($("#ifagent").val()) == 1) num = num + 1;
 		if (Number(yingdeny) == 0) num = num + 1;
 		if (Number($("#ifagent").val()) == 1) {
@@ -1250,11 +1250,22 @@ function editsend() {
 			async: false,
 			data: 'xtype=edituser' + str,
 			success: function(m) {
-				if (Number(m) == 1) {
+				var r = (m == null || m === undefined) ? '' : String(m).trim();
+				if (r === '1' || Number(r) === 1) {
 					alert("修改成功!");
-					getuser()
+					getuser();
+				} else if (r.length > 0) {
+					alert("保存失败或无权操作，请检查后重试。");
+				} else {
+					alert("已提交，请刷新列表查看是否保存成功。");
 				}
-				$(".utb input:button").attr("disabled", false)
+				$(".utb input:button").attr("disabled", false);
+				$("#edit").attr("disabled", false);
+			},
+			error: function() {
+				alert("请求失败，请检查网络或联系管理员。");
+				$(".utb input:button").attr("disabled", false);
+				$("#edit").attr("disabled", false);
 			}
 		});
 		return false

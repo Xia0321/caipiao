@@ -794,14 +794,21 @@ function updategame($gamecs, $uid)
     for ($j = 0; $j < $cg; $j++) {
         $psql->query("select * from `$tb_gamecs` where userid='$fid' and gid='" . $gamecs[$j]['gid'] . "'");
         $psql->next_record();
-        if ($gamecs[$j]['zc'] > $psql->f('zc'))
-            $gamecs[$j]['zc'] = $psql->f('zc');
-        if ($gamecs[$j]['zcmin'] > $psql->f('zc'))
-            $gamecs[$j]['zcmin'] = $psql->f('zc');
+        // zc/zcmin/flyzc：未传或空则默认为 0；传了则先取传入值，再按上级限制封顶
+        $zc = (isset($gamecs[$j]['zc']) && $gamecs[$j]['zc'] !== '' && $gamecs[$j]['zc'] !== null) ? floatval($gamecs[$j]['zc']) : 0;
+        $zcmin = (isset($gamecs[$j]['zcmin']) && $gamecs[$j]['zcmin'] !== '' && $gamecs[$j]['zcmin'] !== null) ? floatval($gamecs[$j]['zcmin']) : 0;
+        $flyzc = (isset($gamecs[$j]['flyzc']) && $gamecs[$j]['flyzc'] !== '' && $gamecs[$j]['flyzc'] !== null) ? floatval($gamecs[$j]['flyzc']) : 0;
+        if ($zc > $psql->f('zc'))
+            $zc = $psql->f('zc');
+        if ($zcmin > $psql->f('zc'))
+            $zcmin = $psql->f('zc');
+        if ($flyzc > $psql->f('flyzc'))
+            $flyzc = $psql->f('flyzc');
+        $gamecs[$j]['zc'] = $zc;
+        $gamecs[$j]['zcmin'] = $zcmin;
+        $gamecs[$j]['flyzc'] = $flyzc;
         if ($gamecs[$j]['upzc'] > $psql->f('zc'))
             $gamecs[$j]['upzc'] = $psql->f('zc');
-        if ($gamecs[$j]['flyzc'] > $psql->f('flyzc'))
-            $gamecs[$j]['flyzc'] = $psql->f('flyzc');
         if ($psql->f('ifok') == 0)
             $gamecs[$j]['ifok'] = 0;
         if ($psql->f('flytype') == 0)

@@ -17,3 +17,6 @@ caipiao-master/
 uxj/top_debug.php
 uxjs/time.php.bak
 tools/_project_pull.tar.gz
+
+# 同步脚本本地配置（含密码，勿提交）
+scripts/sync_config.local.ps1
