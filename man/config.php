@@ -43,5 +43,11 @@ switch ($_POST["lottery"]) {
 	case "KL8JSC":
 	    $gid = 162;
 	break;
+	case "3D":
+	    $gid = 252;
+	break;
+	case "PL3":
+	    $gid = 251;
+	break;
 }
 $_SESSION["gid"] = $gid;

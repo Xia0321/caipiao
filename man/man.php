@@ -4,9 +4,11 @@
 switch ($_GET['t']) {
     case "agent/index":
         require("./checkagent.php");
+        include("./manfunc.php");
         $tpl->assign("webname",$config['webname']);
         $tpl->assign("username",$_SESSION['username']);
-        
+        $agames = getgamecs($userid);
+        $tpl->assign("lottery", count($agames) ? getgametype($agames[0]['gid']) : 'BJPK10');
         $tpl->display("agent_index.html");
     break;
     case "agent/notice":
@@ -76,11 +78,14 @@ setcookie("ssid1","1859b1345e742f213f4a80547b36da30");
     break;    
     case "member/index":
         require("./check.php");
+        include("./manfunc.php");
         //error_reporting(E_ALL);
         $us = $msql->arr("select * from `$tb_user` where userid='$userid'",1);
         $tpl->assign("us",$us[0]);
         $tpl->assign("username",$_SESSION["username"]);
         $tpl->assign("webname",$config['webname']);
+        $mgames = getgamecs($userid);
+        $tpl->assign("lottery", count($mgames) ? getgametype($mgames[0]['gid']) : 'BJPK10');
         $tpl->display("member_index.html");
     break;
     case "member/odds":
