@@ -20,7 +20,7 @@ if ($config['panstatus'] == 1 & (($time - strtotime($msql->f('opentime'))-$confi
 	$config['panstatus'] = 0;
     $pantime = $time - strtotime($msql->f('opentime'))-$config['times']['o'];
     if ($pantime > 0)
-        $pantime = 3;
+        $pantime = 0;
 }
 if ($config['otherstatus'] == 1 & ($config['autoopenpan']==0 | ($time - strtotime($msql->f('opentime'))-$config['times']['o'])>0)) {
     $othertime = strtotime($msql->f('closetime')) - $time - $config['userclosetime'] - $config['otherclosetime']-$config['times']['c'];
@@ -28,7 +28,7 @@ if ($config['otherstatus'] == 1 & ($config['autoopenpan']==0 | ($time - strtotim
 	$config['otherstatus'] = 0;
     $othertime = $time - strtotime($msql->f('opentime'))-$config['times']['o'];
     if ($othertime > 0)
-        $othertime = 3;
+        $othertime = 0;
 }
 if ($config['autoopenpan'] == 0 | $config['times']['io']==0) {
     $pantime = 9999;
