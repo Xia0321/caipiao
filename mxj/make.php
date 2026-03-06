@@ -927,6 +927,8 @@ function getsm($bid, $ab, $abcd, $sid, $smtype)
                         if ($fenlei == 163) {
                             if ($gid == 251) {
                                 $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(251001,251005) and bid<>26000000 order by bid,sid,xsort";
+                            } elseif ($gid == 252) {
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(252001,252005) and bid<>26000000 order by bid,sid,xsort";
                             } else {
                                 $sql = "select * from `{$tb_play}` where gid='{$gid}' and ( name in('单','双','大','小','质','合') or bid='23378858') and bid<>23378857 and bid<>26000000 order by bid,sid,xsort";
                             }

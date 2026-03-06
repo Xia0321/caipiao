@@ -307,7 +307,7 @@ function zhdx($gid, $v)
             return "小";
         else
             return "大";
-    }else if ($gid==163) {
+    }else if ($gid==163 || $gid==252) {
         if ($v <= 13)
             return "小";
         else

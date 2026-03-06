@@ -397,10 +397,15 @@ function getpsm($bid, $ab, $abcd, $cid)
     //$abcd = low($abcd);
     $time = time();
     // 普通情况：按当前大类 bid 取玩法
-    // 特殊：3D(gid=251, fenlei=163) 的“两面”（bid=251001）页面，需要同时带出
-    //      对应位置的具体号码（1字定位，bid=251005），用于在同一界面下注。
-    if ($gid == 251 && isset($config['fenlei']) && $config['fenlei'] == 163 && $bid == 251001) {
-        $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('251001','251005') order by bid,sid,xsort");
+    // 特殊：3D(gid=251/252, fenlei=163) 的“两面”页面，需要同时带出对应位置的具体号码（1字定位），用于在同一界面下注。
+    if (isset($config['fenlei']) && $config['fenlei'] == 163) {
+        if ($gid == 251 && $bid == 251001) {
+            $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('251001','251005') order by bid,sid,xsort");
+        } elseif ($gid == 252 && $bid == 252001) {
+            $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('252001','252005') order by bid,sid,xsort");
+        } else {
+            $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' order by bid,sid,xsort");
+        }
     } else {
         $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' order by bid,sid,xsort");
     }
