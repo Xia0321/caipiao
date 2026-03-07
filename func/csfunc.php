@@ -1056,7 +1056,9 @@ function getduoarrss($gid,$name){
 function getduoarrssuser($gid,$name){
     
     if($gid==101 || $gid==163){   
-        if((strpos('['.$name.']','组')>0)){
+        if(strpos($name,'一字') !== false || strpos($name,'1字') !== false){
+            $pl = array("0","1","2","3","4","5","6","7","8","9");
+        }else if((strpos('['.$name.']','组')>0)){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
         }else{  
               $names = str_replace('定位','',$name);

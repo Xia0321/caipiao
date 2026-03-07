@@ -12,6 +12,11 @@ function searchqishu($gid, $psize, $page)
         return call_user_func("searchqishu_" . $psql->f('fenlei'), $gid, $psize, $page, $psql->f('fenlei'));
     }
 }
+function searchqishu_100($gid, $psize, $page, $fenlei)
+{
+    // 六合彩期号：与 searchnew 一致，此处仅占位避免 fenlei=100 时 call_user_func 未定义报错
+    return;
+}
 function searchqishu_101($gid, $psize, $page,$fenlei)
 {
     global $tsql, $fsql, $psql;

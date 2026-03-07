@@ -487,7 +487,7 @@ function lib() {
         libs('108')
     } else if (bname == '正特1~6') {
         libs('1-6')
-    } else if (bname == '正码' | bname == '单码') {
+    } else if (bname == '正码' | bname == '单码' | bname == '一字定位' | bname == '1字定位') {
         libs('a')
     } else if (fenlei == 107 | fenlei == 103 | fenlei == 121) {
         libs('a')
@@ -809,6 +809,16 @@ function libs(stype) {
                         }
                         str += rhtmlb(m[i]);
                         tmpcid = m[i]['cid'];
+                    }
+                    str += "</div></div></div></div><div class='rough_lines items'></div>";
+            }else if(bname=='一字定位' || bname=='1字定位'){
+                    for (i = 0; i < ml; i++) {
+                        if (tmpsid != m[i]['sid']) {
+                            if (tmpsid != 0) str += "</div></div></div></div><div class='rough_lines items'></div>";
+                            str += rhtmls(m[i]['sname']);
+                        }
+                        str += rhtmla(m[i]);
+                        tmpsid = m[i]['sid'];
                     }
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
             }else if(bname.indexOf("第")!=-1 | (bname.indexOf("正")!=-1 && bname.indexOf("特")!=-1) | bname=='特碼' | bname=='正碼' | bname=='正码' | bname=='两面'){

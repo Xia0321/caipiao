@@ -1812,9 +1812,10 @@ function kjjs_101($qishu, $gid, $fenlei)
                 case '两面':
                     $hm = '';
                     $hm = $kj[$fsql->f('mtype')];
-                    if (strpos('[单双]', $tsql->f('name'))) {
+                    if (strpos('[单双奇偶]', $tsql->f('name')) !== false) {
                         $tmp = danshuang($hm);
-                        if ($tmp == $tsql->f('name')) {
+                        $pname = danshuang_cmp_name(trim($tsql->f('name')));
+                        if ($tmp == $pname) {
                             $psql->query($sql1);
                             $psql->query($sqlz);
                         } else {
@@ -1858,9 +1859,10 @@ function kjjs_101($qishu, $gid, $fenlei)
                         } else {
                             $psql->query($sql0);
                         }
-                    } else if (strpos('[单双]', $tsql->f('name'))) {
+                    } else if (strpos('[单双奇偶]', $tsql->f('name')) !== false) {
                         $tmp = danshuang($hm);
-                        if ($tmp == $tsql->f('name')) {
+                        $pname = danshuang_cmp_name(trim($tsql->f('name')));
+                        if ($tmp == $pname) {
                             $psql->query($sql1);
                             $psql->query($sqlz);
                         } else {
@@ -2111,9 +2113,10 @@ function kjjs_101($qishu, $gid, $fenlei)
                                 break;
                         }
                     }
-                    if (strpos('[单双]', $tsql->f('name'))) {
+                    if (strpos('[单双奇偶]', $tsql->f('name')) !== false) {
                         $tmp = danshuang($hm);
-                        if ($tmp == $tsql->f('name')) {
+                        $pname = danshuang_cmp_name(trim($tsql->f('name')));
+                        if ($tmp == $pname) {
                             $psql->query($sql1);
                             $psql->query($sqlz);
                         } else {

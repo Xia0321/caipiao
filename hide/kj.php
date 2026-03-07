@@ -246,6 +246,9 @@ switch ($_REQUEST['xtype']) {
 
             $gname = $gid !== '' ? transgame($gid, 'sgname') : '';
             $trace[] = 'step6_gname_ok';
+            // 使用当前选中游戏的 mnum，使 3D(252)、极速快3(151) 等只显示 3 个球，与江苏快3 一致
+            $mnum_kj = $gid !== '' ? (int)transgame($gid, 'mnum') : (isset($config['mnum']) ? (int)$config['mnum'] : 0);
+            if ($mnum_kj < 1) $mnum_kj = isset($config['mnum']) ? (int)$config['mnum'] : 0;
 
             $i              = 0;
             $kj             = array();
@@ -272,7 +275,7 @@ switch ($_REQUEST['xtype']) {
                 $kj[$i]['js']             = $row['js'];
                 $kj[$i]['qishu']          = $row['qishu'];
                 $kj[$i]['lib']            = getlibje($row['gid'], $row['qishu']);
-                for ($j = 1; $j <= $config['mnum']; $j++) {
+                for ($j = 1; $j <= $mnum_kj; $j++) {
                     $kj[$i]['m' . $j] = isset($row['m' . $j]) ? $row['m' . $j] : '';
                 }
                 $i++;
@@ -292,7 +295,7 @@ switch ($_REQUEST['xtype']) {
             "kj" => $kj,
             'pcount' => $pcount,
             'rcount' => $rcount,
-            'mnum' => isset($config['mnum']) ? $config['mnum'] : 0
+            'mnum' => isset($mnum_kj) ? $mnum_kj : (isset($config['mnum']) ? $config['mnum'] : 0)
         );
         $out['_trace'] = isset($trace) ? $trace : array();
         if ($err !== null) {

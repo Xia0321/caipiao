@@ -83,6 +83,10 @@ $garr = array(
 if ($_REQUEST['gids'] && is_numeric($_REQUEST['gids']) && strlen($_REQUEST['gids'])==3) {
     $_SESSION['gid'] = $_REQUEST['gids'];
 }
+// 总后台子页面通过 URL 传入 gid 时同步到 session，与顶部 menus 切换一致
+if (isset($_REQUEST['gid']) && $_REQUEST['gid'] !== '' && in_array($_REQUEST['gid'], $garr)) {
+    $_SESSION['gid'] = $_REQUEST['gid'];
+}
 //$wid                  = $_SESSION['wid'];
 $wid                  = 100;
 $config               = array();

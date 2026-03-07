@@ -68,8 +68,7 @@ a.red{color:red}
     <tr>
       <th >彩种选择</th><th>当前期</th><th>自动开奖</th><th>自动开关盘</th><th>特码状态</th><th>正码状态</th>
       </tr></thead>
-      <tr> <td><?php echo $this->_tpl_vars['game'][0]['gname']; ?>
-<select class="game" style="display: none;">
+      <tr> <td><select class="game">
        <?php unset($this->_sections['i']);
 $this->_sections['i']['name'] = 'i';
 $this->_sections['i']['loop'] = is_array($_loop=$this->_tpl_vars['game']) ? count($_loop) : max(0, (int)$_loop); unset($_loop);
@@ -96,7 +95,7 @@ $this->_sections['i']['last']       = ($this->_sections['i']['iteration'] == $th
 ?>
          <option value="<?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['gid']; ?>
 " fast='<?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['fast']; ?>
-'><?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['gname']; ?>
+'<?php if ($this->_tpl_vars['game'][$this->_sections['i']['index']]['gid'] == $this->_tpl_vars['game'][0]['gid']) { ?> selected="selected"<?php } ?>><?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['gname']; ?>
 </option>
          <?php endfor; endif; ?>
        </select></td>  <td><label><?php echo $this->_tpl_vars['game'][0]['thisqishu']; ?>
