@@ -173,6 +173,23 @@ function getbh()
         $b[$i]['i']    = $i;
         $i++;
     }
+    // 3D(251/252)：左侧菜单只保留一个「两面」，去重
+    $fenlei = transgame($gid, 'fenlei');
+    if ($fenlei == 163 && count($b) > 0) {
+        $seen_liangmian = false;
+        $b = array_values(array_filter($b, function ($row) use (&$seen_liangmian) {
+            if ($row['name'] === '两面') {
+                if ($seen_liangmian) {
+                    return false;
+                }
+                $seen_liangmian = true;
+            }
+            return true;
+        }));
+        foreach ($b as $k => $v) {
+            $b[$k]['i'] = $k;
+        }
+    }
     return $b;
 }
 function getb8($gid)
@@ -1014,7 +1031,10 @@ function getduoarr($name){
 function getduoarrss($gid,$name){
     
     if($gid==101 || $gid==163){   
-        if((strpos('['.$name.']','组')>0)){
+        if (strpos($name, '组选3') !== false || strpos($name, '组选6') !== false || strpos($name, '组选三') !== false || strpos($name, '组选六') !== false) {
+            // 组选3/组选6：百位、十位、个位各选若干，共30项(百0-9+十0-9+个0-9)，与3字定位一致便于前端三区展示
+            $pl = array("0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9");
+        } else if((strpos('['.$name.']','组')>0)){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
         }else{  
               $names = str_replace('定位','',$name);
@@ -1058,7 +1078,9 @@ function getduoarrssuser($gid,$name){
     if($gid==101 || $gid==163){   
         if(strpos($name,'一字') !== false || strpos($name,'1字') !== false){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
-        }else if((strpos('['.$name.']','组')>0)){
+        } else if (strpos($name, '组选3') !== false || strpos($name, '组选6') !== false || strpos($name, '组选三') !== false || strpos($name, '组选六') !== false) {
+            $pl = array("0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9");
+        } else if((strpos('['.$name.']','组')>0)){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
         }else{  
               $names = str_replace('定位','',$name);

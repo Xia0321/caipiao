@@ -278,6 +278,17 @@ switch ($_REQUEST['xtype']) {
                 for ($j = 1; $j <= $mnum_kj; $j++) {
                     $kj[$i]['m' . $j] = isset($row['m' . $j]) ? $row['m' . $j] : '';
                 }
+                // 3D：根据三码和计算 和值/单双/大小，供前端显示
+                if ($mnum_kj == 3) {
+                    $m1 = (int) (isset($row['m1']) ? $row['m1'] : 0);
+                    $m2 = (int) (isset($row['m2']) ? $row['m2'] : 0);
+                    $m3 = (int) (isset($row['m3']) ? $row['m3'] : 0);
+                    $kj[$i]['m'] = array($kj[$i]['m1'], $kj[$i]['m2'], $kj[$i]['m3']);
+                    $sum = $m1 + $m2 + $m3;
+                    $kj[$i]['hs'] = $sum;
+                    $kj[$i]['ds'] = ($sum % 2 == 0) ? '双' : '单';
+                    $kj[$i]['dx'] = ($sum >= 14) ? '大' : '小';
+                }
                 $i++;
             }
             $trace[] = 'step7_loop_done_kj_count=' . count($kj);

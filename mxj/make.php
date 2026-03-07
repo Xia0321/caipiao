@@ -651,6 +651,19 @@ switch ($_REQUEST['xtype']) {
                 }
             }
             $cd = count($duo[0]);
+            // 组选3/组选6 百十个三区：若 pl 仅 10 项则按三区各 10 扩展为 30 项
+            if (($cd == 30) && (strpos($pname, '组选3') !== false || strpos($pname, '组选6') !== false || strpos($pname, '组选三') !== false || strpos($pname, '组选六') !== false)) {
+                $n = isset($pl[0]) ? count($pl[0]) : 0;
+                if ($n == 10) {
+                    $pl[0] = array_merge($pl[0], $pl[0], $pl[0]);
+                    if (!isset($pl[1]) || count($pl[1]) < 30) {
+                        $pl[1] = isset($pl[1]) ? array_merge($pl[1], $pl[1], $pl[1]) : $pl[0];
+                    }
+                    if (!isset($pl[2]) || count($pl[2]) < 30) {
+                        $pl[2] = isset($pl[2]) ? array_merge($pl[2], $pl[2], $pl[2]) : $pl[0];
+                    }
+                }
+            }
             for ($i = 0; $i < $cd; $i++) {
                 $duo[1][$i] = (double) (pr3($pl[0][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
                 $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);

@@ -27,7 +27,12 @@ function ds($expect)
 function dx($gid, $expect)
 {    
     $array = [];
-
+    // 3D(251/252等)：按三码和算总和大小，和值14-27为大，0-13为小
+    if (count($expect) == 3 && max($expect) <= 9 && min($expect) >= 0) {
+        $sum = array_sum($expect);
+        $array[] = $sum >= 14 ? 0 : 1; // 0=大 1=小，与其它玩法一致
+        return $array;
+    }
     foreach ($expect as $v) {
       
         if ($gid==101) {

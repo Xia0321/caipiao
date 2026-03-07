@@ -1874,13 +1874,14 @@ function moni_101($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                 break;
             }
             $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if (in_array($arr[0], $cons) && in_array($arr[1], $cons) && in_array($arr[2], $cons)) {
-                $v = 1;
-            } else {
+            // 组选3 百位-十位-个位 每注3个数：开奖三位(对子)与该注三位不计顺序相同即中奖
+            if (count($cons) != 3) {
                 $v = 0;
+                break;
             }
+            sort($arr);
+            sort($cons);
+            $v = ($arr[0] == $cons[0] && $arr[1] == $cons[1] && $arr[2] == $cons[2]) ? 1 : 0;
             break;
         case '组选6':
             if (strpos($p['name'], '前三') !== false) {
@@ -1899,13 +1900,14 @@ function moni_101($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                 break;
             }
             $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if (in_array($arr[0], $cons) && in_array($arr[1], $cons) && in_array($arr[2], $cons)) {
-                $v = 1;
-            } else {
+            // 组选6 百位-十位-个位 每注3个数：开奖三位(三不同)与该注三位不计顺序相同即中奖
+            if (count($cons) != 3) {
                 $v = 0;
+                break;
             }
+            sort($arr);
+            sort($cons);
+            $v = ($arr[0] == $cons[0] && $arr[1] == $cons[1] && $arr[2] == $cons[2]) ? 1 : 0;
             break;
         case '跨度':
             switch ($c['cm']) {
