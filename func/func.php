@@ -1819,6 +1819,10 @@ function wf($g, $b, $s, $c, $p)
             case "前三":
                 return $s . '-' . $p;
                 break;
+            case "两面":
+            case "1字定位":
+                return $s . '-' . $p;
+                break;
         }
     } else {
         return $b . '-' . $p;
