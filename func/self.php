@@ -2076,7 +2076,8 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                     $ma == $p['name'] ? $v = 1 : ($v = 0);
                     break;
                 case "单双":
-                    strpos($p['name'], danshuang($ma)) !== false ? $v = 1 : ($v = 0);
+                    $pnameNorm = danshuang_cmp_name(trim($p['name']));
+                    (strpos('[单双奇偶]', $p['name']) !== false && $pnameNorm === danshuang($ma)) ? $v = 1 : ($v = 0);
                     break;
                 case "大小":
                     if ($p['name'] == "大" && $ma >= 5) {
@@ -2146,8 +2147,8 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                     $arr = $kj[3] + $kj[4];
                     break;
             }
-            if (strpos('[单双]', $p['name'])) {
-                $p['name'] == danshuang($arr) ? $v = 1 : ($v = 0);
+            if (strpos('[单双奇偶]', $p['name']) !== false) {
+                danshuang_cmp_name(trim($p['name'])) === danshuang($arr) ? $v = 1 : ($v = 0);
             } else {
                 $tmp = daxiaow($arr % 10);
                 strpos($p['name'], $tmp) !== false ? $v = 1 : ($v = 0);

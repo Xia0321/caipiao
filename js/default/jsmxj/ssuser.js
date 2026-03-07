@@ -722,6 +722,16 @@ function libs(stype) {
 						tmpcid = m[i]['cid'];
 					}
 					str += "</div></div>";	
+			}else if(bname=='一字定位' || bname=='1字定位'){
+					for (i = 0; i < ml; i++) {
+						if (tmpsid != m[i]['sid']) {
+							if (tmpsid != 0) str += "</div></div>";
+							str += rhtmls(m[i]['sname']);
+						}
+						str += rhtml(m[i]);
+						tmpsid = m[i]['sid'];
+					}
+					str += "</div></div>";
 			}else  if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码'  | bname == '任选牛牛'){			
 					str += rhtmlslm(bname);
 					var pnamea,znums;

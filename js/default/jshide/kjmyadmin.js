@@ -411,15 +411,21 @@ function setdate(val) {
 }
 
 function qius(n, t) {
-	if (isNaN(n) | n == '') {
-		return n
-	} else {
+	// 0 要正常显示，不用 n==''（JS 里 0=='' 为 true 会误判）
+	if (n === '' || n === undefined || n === null || (typeof n === 'number' && isNaN(n))) {
+		return n;
+	}
+	n = Number(n);
+	if (isNaN(n)) return '';
+	// 下面按彩种显示
+	{
 
 		if (fenlei==151) {
 			if (n > 100) {
 				n = "<img src='../imgn/4_" + (n%10) + ".gif' /><img src='../imgn/4_" + (n%10) + ".gif' /><img src='../imgn/4_" + (n%10) + ".gif' />"
 			} else if (n > 10) {
-				n = "<img src='../imgn/4_" + n.substr(0, 1) + ".gif' /><img src='../imgn/4_" + (n%10) + ".gif' />"
+				var s = String(n);
+				n = "<img src='../imgn/4_" + s.substr(0, 1) + ".gif' /><img src='../imgn/4_" + (n%10) + ".gif' />"
 			} else {
 				n = "<img src='../imgn/4_" + n + ".gif' />"
 			}

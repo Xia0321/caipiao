@@ -125,6 +125,13 @@ function danshuang($v)
     }
     return $v;
 }
+/** 奇偶与单双统一：奇=单、偶=双，用于 252 等奇偶玩法与单双结算一致 */
+function danshuang_cmp_name($name)
+{
+    if ($name === '奇' || $name === '奇 ') return '单';
+    if ($name === '偶' || $name === '偶 ') return '双';
+    return $name;
+}
 function danshuang_100($v)
 {
     if ($v % 2 == 1) {

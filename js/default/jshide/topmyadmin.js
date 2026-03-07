@@ -10,6 +10,8 @@ var lottery = "",
     resetTimer;
 var cxflytime;
 var cztxtime;
+// 当前 iframe 子页信息，用于顶部切换游戏时同步刷新子页
+var currentFramePage = { u: 'kj', type: 'show', extra: '' };
 function myready() {
     if(top.location.href.indexOf("top.php")==-1 && ismobi()){
         //top.location.href="top.php?xtype=this";
@@ -93,32 +95,58 @@ function myready() {
         $(this).addClass("selected");
         var u = $(this).attr('u');
         var type = $(this).attr('type');
-        frame.window.location.href = mulu+u + ".php?xtype=" + type;
+        var cgid = $(".games a.xz").attr("gid");
+        currentFramePage.u = u || 'kj';
+        currentFramePage.type = type || 'show';
+        currentFramePage.extra = '';
+        var url = mulu + u + ".php?xtype=" + type;
+        if (cgid) url += "&gid=" + cgid;
+        frame.window.location.href = url;
     });
 
 
     $(".topmenu li a").click(function () {
         $(this).parent().find('a').removeClass("selected");
         $(this).addClass("selected");
-        //if($(this).html()=='现金管理') return false;
 		if($(this).html()=='退出') return false;
         var url = $(this).attr('x');
+        var cgid = $(".games a.xz").attr("gid");
+        var gidSuffix = (cgid ? "&gid=" + cgid : "");
         if (url == 'suser') {
-            frame.window.location.href = mulu+url + ".php?xtype=show&layer=" + $(this).attr('u')
+            currentFramePage.u = 'suser';
+            currentFramePage.type = 'show';
+            currentFramePage.extra = 'layer=' + ($(this).attr('u') || '0');
+            frame.window.location.href = mulu+url + ".php?xtype=show&layer=" + $(this).attr('u') + gidSuffix;
         } else if (url == 'top') {
-            frame.window.location.href = mulu+url + ".php?logout=yes"
+            frame.window.location.href = mulu+url + ".php?logout=yes";
         } else if (url == 'admins') {
-            frame.window.location.href = mulu+url + ".php?xtype=list"
+            currentFramePage.u = 'admins';
+            currentFramePage.type = 'list';
+            currentFramePage.extra = '';
+            frame.window.location.href = mulu+url + ".php?xtype=list";
         } else if (url == 'class') {
-            frame.window.location.href = mulu+url + ".php?xtype=bigclass"
+            currentFramePage.u = 'class';
+            currentFramePage.type = 'bigclass';
+            currentFramePage.extra = '';
+            frame.window.location.href = mulu+url + ".php?xtype=bigclass" + gidSuffix;
         } else if (url == 'setatt') {
-            frame.bottom.window.location.href = mulu+"zshui.php?xtype=setattshow"
+            frame.bottom.window.location.href = mulu+"zshui.php?xtype=setattshow" + gidSuffix;
         } else if (url == 'money') {
-            frame.window.location.href = mulu+url + ".php?xtype=chongzhi"
+            currentFramePage.u = 'money';
+            currentFramePage.type = 'chongzhi';
+            currentFramePage.extra = '';
+            frame.window.location.href = mulu+url + ".php?xtype=chongzhi";
+        } else if (url == 'slib' || url == 'baox' || url == 'longs') {
+            currentFramePage.u = url;
+            currentFramePage.type = 'show';
+            currentFramePage.extra = '';
+            frame.window.location.href = mulu+url + ".php?xtype=show" + gidSuffix;
         } else {
-            frame.window.location.href = mulu+url + ".php?xtype=show"
+            currentFramePage.u = url || 'kj';
+            currentFramePage.type = 'show';
+            currentFramePage.extra = '';
+            frame.window.location.href = mulu+url + ".php?xtype=show" + gidSuffix;
         }
-
         $(".panstatus").show();
         $(".otherstatus").hide();
         return false
@@ -155,12 +183,21 @@ function myready() {
 
     getnews();
     $(".more").click(function () {
+        currentFramePage.u = 'new';
+        currentFramePage.type = '';
+        currentFramePage.extra = '';
         frame.window.location.href = mulu+"new.php";
     })
     $("a#notices").click(function () {
+        currentFramePage.u = 'new';
+        currentFramePage.type = '';
+        currentFramePage.extra = '';
         frame.window.location.href = mulu+"new.php";
     });
     $(".online").click(function () {
+        currentFramePage.u = 'online';
+        currentFramePage.type = 'show';
+        currentFramePage.extra = '';
         frame.window.location.href = mulu+"online.php?xtype=show";
     });
     cztxtime = setTimeout(cztx, 5000);
@@ -173,18 +210,44 @@ function myready() {
     //frame.window.location.href='new.php';
 }
 
+// 顶部切换游戏时子页必须跟随：先跳转 #contents 内 iframe，再同步 session
 function changegid(gid) {
+    var u = currentFramePage.u || 'kj';
+    var type = currentFramePage.type || 'show';
+    var extra = currentFramePage.extra ? ('&' + currentFramePage.extra) : '';
+    var base = (typeof mulu !== 'undefined' && mulu) ? mulu : '/hide/';
+    if (base.indexOf('/') !== 0 && base.indexOf('http') !== 0) base = '/' + base;
+    var newSrc = base + u + '.php?' + (type ? 'xtype=' + type + '&' : '') + 'gid=' + gid + extra + '&_=' + (new Date().getTime());
+
+    var done = false;
+    try {
+        if (window.frames && window.frames['frame']) {
+            window.frames['frame'].location.href = newSrc;
+            done = true;
+        }
+    } catch (e) {}
+    if (!done) {
+        try {
+            if (typeof frame !== 'undefined' && frame && frame.location) {
+                frame.location.href = newSrc;
+                done = true;
+            }
+        } catch (e2) {}
+    }
+    if (!done) {
+        var doc = window.document;
+        var el = doc.getElementById('frame') || (doc.getElementById('contents') && doc.getElementById('contents').querySelector('iframe'));
+        if (el && el.tagName && el.tagName.toUpperCase() === 'IFRAME') {
+            el.src = newSrc;
+            done = true;
+        }
+    }
+
     $.ajax({
         type: 'POST',
-        url: mulu + 'top.php',
-        data: 'xtype=setgame&gid=' + gid,
-        success: function (m) {
-            if (Number(m) == 1) {
-
-                frame.window.location.href = frame.window.location.href;
-            }
-        }
-    })
+        url: (base || '') + 'top.php',
+        data: 'xtype=setgame&gid=' + gid
+    });
 }
 
 function cztx() {
