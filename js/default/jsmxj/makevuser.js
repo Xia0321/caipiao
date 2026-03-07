@@ -175,18 +175,6 @@ function myready() {
         lib();
     });
 
-    // 更多玩法：点击切换 menuplay 面板显示/隐藏
-    $("#mxj-menuplay-toggle").on("click", function () {
-        var $panel = $("#mxj-menuplay-panel");
-        if ($panel.hasClass("menuplay-panel-visible")) {
-            $panel.removeClass("menuplay-panel-visible").addClass("menuplay-panel-hidden");
-            $(this).attr("title", "点击显示玩法");
-        } else {
-            $panel.removeClass("menuplay-panel-hidden").addClass("menuplay-panel-visible");
-            $(this).attr("title", "点击隐藏玩法");
-        }
-    });
-
     $(".tongji").click(function(){
         $(".tongjidiv").show();
     });
