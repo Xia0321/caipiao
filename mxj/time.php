@@ -1,5 +1,6 @@
 <?php
 include('../data/comm.inc.php');
+include('../func/func.php');
 
 
 
@@ -7,7 +8,7 @@ $time = time();
 $msql->query("select opentime,closetime,kjtime from `$tb_kj` where gid='$gid' and qishu='" . $config['thisqishu'] . "'");
 
 $msql->next_record();
-// 修复：thisqishu  被提前切换时（opentime 还未到或记录不存在），回退到实际当前期
+// 修复：thisqishu 被提前切换时（opentime 还未到或记录不存在），回退到实际当前期
 if ($msql->f('opentime') == '' || strtotime($msql->f('opentime')) > $time) {
     $now_sql = date('Y-m-d H:i:s', $time);
     $msql->query("select opentime,closetime,kjtime,qishu from `$tb_kj` where gid='$gid' and opentime <= '$now_sql' order by qishu desc limit 1");

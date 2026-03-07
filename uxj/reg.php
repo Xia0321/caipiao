@@ -6,7 +6,7 @@ include("../global/session.class.php");
 include("../global/forms.php");
 include('../func/func.php');
 if($_POST['tj']==1){
-	$_SESSION["wid"] = 103; 
+	$_SESSION["wid"] = 100; 
     $wid = $_SESSION["wid"];
     $agent = strtoupper($_POST["reg_agent"]);
 	$username = strtoupper($_POST["reg_username"]);
