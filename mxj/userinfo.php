@@ -275,6 +275,10 @@ switch ($_REQUEST['xtype']) {
         unset($news);
         break;
     case "getusermoney":
+        if (!function_exists('mch_get_balance_from_api')) {
+            require_once __DIR__ . '/../task_notify_mch.php';
+        }
+        mch_get_balance_from_api($userid);
         $msql->query("select maxmoney,money,kmaxmoney,kmoney,fudong,sy,jzkmoney from `{$tb_user}` where userid='{$userid}'");
         $msql->next_record();
         

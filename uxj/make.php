@@ -224,6 +224,19 @@ switch ($_REQUEST['xtype']) {
             }
         }
         $cd = count($duo[0]);
+        // 组选3/组选6 百十个三区：若 pl 仅 10 项则按三区各 10 扩展为 30 项（与手机端一致）
+        if (($cd == 30) && (strpos($pname, '组选3') !== false || strpos($pname, '组选6') !== false || strpos($pname, '组选三') !== false || strpos($pname, '组选六') !== false)) {
+            $n = isset($pl[0]) ? count($pl[0]) : 0;
+            if ($n == 10) {
+                $pl[0] = array_merge($pl[0], $pl[0], $pl[0]);
+                if (!isset($pl[1]) || count($pl[1]) < 30) {
+                    $pl[1] = isset($pl[1]) ? array_merge($pl[1], $pl[1], $pl[1]) : $pl[0];
+                }
+                if (!isset($pl[2]) || count($pl[2]) < 30) {
+                    $pl[2] = isset($pl[2]) ? array_merge($pl[2], $pl[2], $pl[2]) : $pl[0];
+                }
+            }
+        }
         for ($i = 0; $i < $cd; $i++) {
             $duo[1][$i] = (double) (pr3($pl[0][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
             if ($pname == '三中二' | $pname == '二中特' | strpos($pname, '字组合')) {
@@ -689,9 +702,9 @@ function getsm($bid, $ab, $abcd, $sid, $smtype, $fenlei)
                     } else {
                         if ($fenlei == 163) {
                             if ($gid == 251) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(251001,251005) order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid<>26000000 order by bid,sid,xsort";
                             } elseif ($gid == 252) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(252001,252005) order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid<>26000000 order by bid,sid,xsort";
                             } else {
                                 $sql = "select * from `{$tb_play}` where gid='{$gid}' and ( name in('单','双','大','小','质','合') or bid='23378858') and bid!=23378857 order by bid,sid,xsort";
                             }

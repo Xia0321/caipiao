@@ -21,6 +21,11 @@ switch ($_REQUEST['xtype']) {
         $msql->query("select kfurl from `{$tb_config}`");
         $msql->next_record();
         $tpl->assign('kfurl', $msql->f('kfurl'));
+        // 免登录/接口玩家：先向代理接口拉取实时余额再展示，与 getbalance 轮询一致
+        if (!function_exists('mch_get_balance_from_api')) {
+            require_once __DIR__ . '/../task_notify_mch.php';
+        }
+        mch_get_balance_from_api($userid);
         $msql->query("select maxmoney,money,kmaxmoney,kmoney,pan,defaultpan,username,name,fastje,fudong,sy,jzkmoney from `{$tb_user}` where userid='{$userid}'");
         $msql->next_record();
          

@@ -1030,7 +1030,7 @@ function getduoarr($name){
 }
 function getduoarrss($gid,$name){
     
-    if($gid==101 || $gid==163){   
+    if($gid==101 || $gid==163 || $gid==251 || $gid==252){
         if (strpos($name, '组选3') !== false || strpos($name, '组选6') !== false || strpos($name, '组选三') !== false || strpos($name, '组选六') !== false) {
             // 组选3/组选6：百位、十位、个位各选若干，共30项(百0-9+十0-9+个0-9)，与3字定位一致便于前端三区展示
             $pl = array("0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9");
@@ -1075,7 +1075,7 @@ function getduoarrss($gid,$name){
 }
 function getduoarrssuser($gid,$name){
     
-    if($gid==101 || $gid==163){   
+    if($gid==101 || $gid==163 || $gid==251 || $gid==252){
         if(strpos($name,'一字') !== false || strpos($name,'1字') !== false){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
         } else if (strpos($name, '组选3') !== false || strpos($name, '组选6') !== false || strpos($name, '组选三') !== false || strpos($name, '组选六') !== false) {
