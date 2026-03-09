@@ -1732,7 +1732,7 @@ function rhtmlduohm2(name,  i) {
 function rhtmlD2ByZitou(duo, ifok) {
     var h = '', k, j, lab, od, cls, peilvNum;
     for (k = 0; k <= 9; k++) {
-        h += "<div class='bcn_center2 items'><div class='bcn_title'><a class='bt_icon open'></a>" + k + "\u5b57\u5934</div><div class='ReactCollapse--collapse' style='height: auto;'><div class='ReactCollapse--content'><div class='bcn_number_type mxj-zitou-grid'>";
+        h += "<div class='bcn_center2 items'><div class='bcn_title'><a class='bt_icon open'></a>" + k + "\u5b57\u5934</div><div class='ReactCollapse--collapse' style='height: auto;'><div class='ReactCollapse--content'><div class='bcn_number_type'>";
         for (j = 0; j <= 9; j++) {
             lab = '' + k + j;
             if (k === j) {
@@ -1743,8 +1743,8 @@ function rhtmlD2ByZitou(duo, ifok) {
                 peilvNum = (p1 && p2) ? Math.min(p1, p2) : (p1 || p2);
             }
             od = peilvNum ? rpeilv(peilvNum, ifok) : '-';
-            cls = "mxj-d2zt dds";
-            h += "<a class='" + cls + "' data-d1='" + k + "' data-d2='" + j + "' data-peilv='" + peilvNum + "'><div class='name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
+            cls = "mxj-d2zt qiuc dds";
+            h += "<a class='" + cls + "' data-d1='" + k + "' data-d2='" + j + "' data-peilv='" + peilvNum + "'><div class='mxj-zt-num'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
         }
         h += "</div></div></div></div><div class='rough_lines items'></div>";
     }
@@ -1757,7 +1757,7 @@ function rhtmlD3ByZitou(duo, ifok) {
     for (k = 0; k <= 9; k++) {
         list = [];
         for (a = k; a <= 9; a++) for (b = a; b <= 9; b++) for (c = b; c <= 9; c++) list.push([a, b, c]);
-        h += "<div class='bcn_center2 items'><div class='bcn_title'><a class='bt_icon open'></a>" + k + "\u5b57\u5934</div><div class='ReactCollapse--collapse' style='height: auto;'><div class='ReactCollapse--content'><div class='bcn_number_type mxj-zitou-grid'>";
+        h += "<div class='bcn_center2 items'><div class='bcn_title'><a class='bt_icon open'></a>" + k + "\u5b57\u5934</div><div class='ReactCollapse--collapse' style='height: auto;'><div class='ReactCollapse--content'><div class='bcn_number_type'>";
         for (i = 0; i < list.length; i++) {
             a = list[i][0]; b = list[i][1]; c = list[i][2];
             lab = '' + a + b + c;
@@ -1775,8 +1775,8 @@ function rhtmlD3ByZitou(duo, ifok) {
                 peilvNum = (p2a && p2b && p2c) ? Math.min(p2a, p2b, p2c) : (p2a || p2b || p2c);
             }
             od = peilvNum ? rpeilv(peilvNum, ifok) : '-';
-            cls = "mxj-d3zt dds";
-            h += "<a class='" + cls + "' data-d1='" + a + "' data-d2='" + b + "' data-d3='" + c + "' data-peilv='" + peilvNum + "'><div class='name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
+            cls = "mxj-d3zt qiuc dds";
+            h += "<a class='" + cls + "' data-d1='" + a + "' data-d2='" + b + "' data-d3='" + c + "' data-peilv='" + peilvNum + "'><div class='mxj-zt-num'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
         }
         h += "</div></div></div></div><div class='rough_lines items'></div>";
     }
