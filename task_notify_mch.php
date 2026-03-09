@@ -1,7 +1,7 @@
 <?php
 /**
- * 任务：检索所有 is_api=1 的用户，按 mch_code 从 x_mchs 取回调链接，将该用户游戏数据实时通知到该链接。
- * 扩展：基于 x_mchs 表 callback_url + 方法名请求商户接口：
+ * 任务：检索所有 is_api=1 的用户，按 x_user 表内 callback_url、mch_secret 等字段将该用户游戏数据实时通知到该链接。
+ * 扩展：基于 x_user 表 callback_url + 方法名请求商户接口：
  *   - getBalance：实时获取 is_api=1 用户余额
  *   - changeBalance：下注扣款通知（带本次下注详情 orders：tid,gid,qishu,pid,content,je,gname）
  *   - settleOrder：注单结算通知（带有效投注 valid_je、输赢 win_loss、注单详情）
@@ -29,7 +29,6 @@ require_once __DIR__ . '/func/func.php';
 
 // 被 include 时不覆盖调用方已设置的表名（如 kj.php 中 $tb_lib 可能为 x_lib_total）
 if (!isset($tb_user)) $tb_user = 'x_user';
-if (!isset($tb_mchs)) $tb_mchs = 'x_mchs';
 if (!isset($tb_lib))  $tb_lib  = 'x_lib';
 
 /** 商户回调请求专用日志，写入 logs/mch_notify.log */
@@ -93,68 +92,64 @@ function task_mch_http_post($url, $payload, $mch_secret = '') {
 }
 
 /**
- * 从注单用户向上遍历 fid 直到最顶级代理，判断该代理是否开启 API（is_api=1），是则返回其商户回调信息。
- * 流程：注单 userid -> 循环 fid 直到最顶层 -> 判断该顶层是否为代理且 is_api=1 -> 取 callback_url 组合 settleOrder/cancelOrder 等。
+ * 从注单用户向上找第一个 is_api=1 的代理并返回其商户回调信息。
+ * 流程：一次查出 x_user 中该用户所有 fid 相关字段（fid, fid1, fid2, ... fid8），再按索引 0~N 遍历每个 fid 值，
+ * 若该 fid 对应用户是代理且 is_api=1 则返回其 callback_url 等信息，供通过 callback_url 获取玩家余额。
  * @param string $userid 会员 userid（注单所属用户）
  * @return array|null 含 agent_userid, agent_username, mch_code, callback_url, mch_secret，无则 null
  */
 function mch_get_top_api_agent($userid) {
-    global $msql, $tb_user, $tb_mchs;
+    global $msql, $tb_user;
     $userid = trim($userid);
     if ($userid === '') return null;
     mch_log('get_agent_start', array('userid' => $userid));
 
-    // 通过 fid 逐级向上直到最顶层（无上级或 layer<=1）
-    $current = $userid;
-    $visited = array($userid => true);
-    for ($i = 0; $i < 20; $i++) {
-        $msql->query("SELECT fid, layer FROM `$tb_user` WHERE userid='" . addslashes($current) . "'");
-        if (!$msql->next_record()) break;
-        $layer = (int)$msql->f('layer');
-        $fid   = $msql->f('fid');
-        if ($layer <= 1 || $fid === '' || $fid === null || $fid === '0') break;
-        if (isset($visited[$fid])) break;
-        $visited[$fid] = true;
-        $current       = $fid;
-    }
-    $top_id = $current;
+    // 一次查出该用户所有 fid 相关字段（fid, fid1, fid2, ... fid8），先全部读入数组，避免后续查询覆盖结果集
+    $msql->query("SELECT fid, fid1, fid2, fid3, fid4, fid5, fid6, fid7, fid8 FROM `$tb_user` WHERE userid='" . addslashes($userid) . "'");
+    if ($msql->next_record()) {
+        $fidValues = array();
+        $fidColCount = 9;
+        for ($i = 0; $i < $fidColCount; $i++) {
+            $col = $i === 0 ? 'fid' : 'fid' . $i;
+            $fidValues[$i] = $msql->f($col);
+        }
+        for ($i = 0; $i < $fidColCount; $i++) {
+            $pid = $fidValues[$i];
+            if ($pid === '' || $pid === null || $pid === '0') continue;
 
-    // 判断最顶级是否为代理且开启 API（is_api=1）
-    $msql->query("SELECT userid, username, ifagent, is_api, mch_code, status FROM `$tb_user` WHERE userid='" . addslashes($top_id) . "' AND ifagent='1' AND is_api='1' AND status='1'");
-    $msql->next_record();
-    $anc_userid = $msql->f('userid');
-    if ($anc_userid !== '' && $anc_userid !== null) {
-        $mch_code     = $msql->f('mch_code');
-        $anc_username = $msql->f('username');
-        if ($mch_code !== '' && $mch_code !== null) {
-            $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-            $msql->next_record();
+            // 直接从 $tb_user 取 is_api, mch_code, mch_secret, callback_url，不查 x_mchs
+            $msql->query("SELECT userid, username, ifagent, is_api, mch_code, mch_secret, callback_url, status FROM `$tb_user` WHERE userid='" . addslashes($pid) . "' AND ifagent='1' AND is_api='1' AND status='1'");
+            if (!$msql->next_record()) continue;
+
+            $mch_code     = $msql->f('mch_code');
+            $anc_username = $msql->f('username');
+            $anc_userid   = $msql->f('userid');
+            if ($mch_code === '' || $mch_code === null) continue;
+
             $cb  = $msql->f('callback_url');
             $sec = $msql->f('mch_secret');
             $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
             $mch_secret   = ($sec !== null) ? $sec : '';
-            if ($callback_url !== '') {
-                mch_log('get_agent_found', array('userid' => $userid, 'top_agent' => $anc_username, 'mch_code' => $mch_code, 'callback_url' => $callback_url));
-                return array(
-                    'agent_userid'   => $anc_userid,
-                    'agent_username' => $anc_username,
-                    'mch_code'       => $mch_code,
-                    'callback_url'   => $callback_url,
-                    'mch_secret'     => $mch_secret,
-                );
-            }
+            if ($callback_url === '') continue;
+
+            mch_log('get_agent_found', array('userid' => $userid, 'top_agent' => $anc_username, 'mch_code' => $mch_code, 'callback_url' => $callback_url));
+            return array(
+                'agent_userid'   => $anc_userid,
+                'agent_username' => $anc_username,
+                'mch_code'       => $mch_code,
+                'callback_url'   => $callback_url,
+                'mch_secret'     => $mch_secret,
+            );
         }
     }
-
-    // 兼容：用户自身即为 API 代理（is_api=1，如 API 注册）
-    $msql->query("SELECT userid, username, mch_code FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND is_api='1' AND status='1' AND mch_code!=''");
+die;
+    // 兼容：用户自身即为 API 代理（ifagent=1 且 is_api=1，如 API 注册），直接从 $tb_user 取 callback_url、mch_secret
+    $msql->query("SELECT userid, username, mch_code, mch_secret, callback_url FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND ifagent='1' AND is_api='1' AND status='1' AND mch_code!=''");
     $msql->next_record();
     $self_id  = $msql->f('userid');
     if ($self_id !== '' && $self_id !== null) {
         $mch_code     = $msql->f('mch_code');
         $self_uname   = $msql->f('username');
-        $msql->query("SELECT callback_url, mch_secret FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-        $msql->next_record();
         $cb  = $msql->f('callback_url');
         $sec = $msql->f('mch_secret');
         $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
@@ -171,7 +166,7 @@ function mch_get_top_api_agent($userid) {
         }
     }
 
-    mch_log('get_agent_notfound', array('userid' => $userid, 'ancestors_count' => count($ancestors)));
+    mch_log('get_agent_notfound', array('userid' => $userid));
     return null;
 }
 
@@ -326,7 +321,7 @@ function mch_verify_and_update_balance($userid, $response_body, $expected_kmoney
  * @return bool 是否成功请求到商户
  */
 function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders = array()) {
-    global $msql, $tb_user, $tb_mchs;
+    global $msql, $tb_user;
     $userid = trim($userid);
     $amount = (float) $amount;
     mch_log('change_balance_start', array('userid' => $userid, 'amount' => $amount, 'type' => $type, 'orders_count' => count($orders)));
@@ -380,7 +375,7 @@ function mch_notify_change_balance($userid, $amount, $type = 'deduct', $orders =
  * @return bool 是否成功请求到商户
  */
 function mch_notify_settle_orders($userid, $orders) {
-    global $msql, $tb_user, $tb_mchs;
+    global $msql, $tb_user;
     $userid = trim($userid);
     mch_log('settle_orders_start', array('userid' => $userid, 'orders_count' => count($orders)));
     if ($userid === '' || empty($orders)) {
@@ -435,7 +430,7 @@ function mch_notify_settle_orders($userid, $orders) {
  * @return bool 是否成功请求到商户
  */
 function mch_notify_cancel_orders($userid, $orders) {
-    global $msql, $tb_user, $tb_mchs;
+    global $msql, $tb_user;
     $userid = trim($userid);
     mch_log('cancel_orders_start', array('userid' => $userid, 'orders_count' => count($orders)));
     if ($userid === '' || empty($orders)) {
@@ -512,7 +507,7 @@ switch ($action) {
     case 'getBalance':
         // 实时获取所有 is_api=1 用户余额：通过层级遍历找到对应的顶级 API 代理并请求 getBalance
         // 使用 mch_get_balance_from_api() 保持与其他通知路径一致的层级遍历逻辑
-        $msql->query("SELECT userid FROM `$tb_user` WHERE is_api=1 AND status=1");
+        $msql->query("SELECT userid FROM `$tb_user` WHERE ifagent=1 AND is_api=1 AND status=1");
         $uid_list = array();
         while ($msql->next_record()) {
             $uid_list[] = $msql->f('userid');
@@ -666,31 +661,30 @@ switch ($action) {
         break;
 
     default:
-        // 原有逻辑：按用户通知游戏数据到 callback_url（不带方法名，保持兼容）
-        $msql->query("SELECT userid, username, mch_code, money, kmoney, maxmoney, kmaxmoney FROM `$tb_user` WHERE is_api=1 AND status=1 AND mch_code!=''");
+        // 原有逻辑：按用户通知游戏数据到 callback_url（直接从 x_user 取 callback_url、mch_secret）
+        $msql->query("SELECT userid, username, mch_code, money, kmoney, maxmoney, kmaxmoney, callback_url, mch_secret FROM `$tb_user` WHERE ifagent=1 AND is_api=1 AND status=1 AND mch_code!=''");
         $users = array();
         while ($msql->next_record()) {
+            $cb = $msql->f('callback_url');
+            $callback_url = ($cb !== null && $cb !== '') ? trim($cb) : '';
+            if ($callback_url === '') continue;
             $users[] = array(
-                'userid'   => $msql->f('userid'),
-                'username' => $msql->f('username'),
-                'mch_code' => $msql->f('mch_code'),
-                'money'    => $msql->f('money'),
-                'kmoney'   => $msql->f('kmoney'),
-                'maxmoney' => $msql->f('maxmoney'),
-                'kmaxmoney'=> $msql->f('kmaxmoney'),
+                'userid'       => $msql->f('userid'),
+                'username'     => $msql->f('username'),
+                'mch_code'     => $msql->f('mch_code'),
+                'money'        => $msql->f('money'),
+                'kmoney'       => $msql->f('kmoney'),
+                'maxmoney'     => $msql->f('maxmoney'),
+                'kmaxmoney'    => $msql->f('kmaxmoney'),
+                'callback_url' => $callback_url,
+                'mch_secret'   => $msql->f('mch_secret') !== null ? $msql->f('mch_secret') : '',
             );
         }
 
         foreach ($users as $u) {
-            $mch_code = $u['mch_code'];
-            $msql->query("SELECT id, callback_url, mch_secret, status FROM `$tb_mchs` WHERE mch_code='" . addslashes($mch_code) . "' AND status=1");
-            $msql->next_record();
-            if ($msql->f('callback_url') === '' || $msql->f('callback_url') === null) {
-                continue;
-            }
-            $callback_url = trim($msql->f('callback_url'));
-            $mch_secret   = $msql->f('mch_secret');
-            if ($callback_url === '') continue;
+            $callback_url = $u['callback_url'];
+            $mch_secret   = $u['mch_secret'];
+            $mch_code     = $u['mch_code'];
 
             $userid = $u['userid'];
             $dates  = date('Y-m-d');
@@ -787,14 +781,16 @@ switch ($action) {
                     'mch_code' => $msql->f('mch_code'),
                 );
             }
-            // 检查 x_mchs 配置
+            // 从 x_user 取 is_api=1 用户的商户配置（不再使用 x_mchs）
             $mch_list = array();
-            $msql->query("SELECT mch_code, callback_url, mch_secret, status FROM `$tb_mchs`");
+            $msql->query("SELECT userid, username, mch_code, callback_url, mch_secret, status FROM `$tb_user` WHERE ifagent=1 AND is_api=1 AND status=1");
             while ($msql->next_record()) {
                 $mch_list[] = array(
+                    'userid'       => $msql->f('userid'),
+                    'username'     => $msql->f('username'),
                     'mch_code'     => $msql->f('mch_code'),
                     'callback_url' => $msql->f('callback_url'),
-                    'has_secret'   => ($msql->f('mch_secret') !== ''),
+                    'has_secret'   => ($msql->f('mch_secret') !== '' && $msql->f('mch_secret') !== null),
                     'status'       => $msql->f('status'),
                 );
             }

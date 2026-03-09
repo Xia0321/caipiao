@@ -27,6 +27,9 @@ switch ($_REQUEST['xtype']) {
         }
         $tpl->assign('je', $je);
         $tpl->assign('thisqishu', $config['thisqishu']);
+        $msql->query("select qishu from `{$tb_kj}` where gid='{$gid}' and qishu<'" . addslashes($config['thisqishu']) . "' order by qishu desc limit 1");
+        $upqishu = $msql->next_record() ? $msql->f('qishu') : '';
+        $tpl->assign('upqishu', $upqishu !== '' && $upqishu !== null ? $upqishu : '');
         $tpl->assign('gid', $gid);
         $b = getbh();
         if ($fenlei == 161) {
@@ -68,7 +71,7 @@ switch ($_REQUEST['xtype']) {
             $othertime = 9999;
         }
         $kjtime = strtotime($msql->f('kjtime'))-time();
-       // var_dump($config);
+        // var_dump($config);
         $tpl->assign('panstatus', $config['panstatus']);
         $tpl->assign('otherstatus', $config['otherstatus']);
         $tpl->assign('kjtime', $kjtime);
@@ -81,9 +84,9 @@ switch ($_REQUEST['xtype']) {
         $tpl->assign('ft', $config['cs']['ft']);
         $tpl->assign('fenlei', $fenlei);
         if($_GET['menu']!=''){
-           $tpl->assign('menu', $_REQUEST['menu']);
+            $tpl->assign('menu', $_REQUEST['menu']);
         }else{
-          $tpl->assign('menu','0');
+            $tpl->assign('menu','0');
         }
         if ($fenlei == 100) {
             $tpl->assign('ma', getma());
@@ -239,6 +242,19 @@ switch ($_REQUEST['xtype']) {
             }
         }
         $cd = count($duo[0]);
+        // 组选3/组选6 百十个三区：若 pl 仅 10 项则按三区各 10 扩展为 30 项（与手机端一致）
+        if (($cd == 30) && (strpos($pname, '组选3') !== false || strpos($pname, '组选6') !== false || strpos($pname, '组选三') !== false || strpos($pname, '组选六') !== false)) {
+            $n = isset($pl[0]) ? count($pl[0]) : 0;
+            if ($n == 10) {
+                $pl[0] = array_merge($pl[0], $pl[0], $pl[0]);
+                if (!isset($pl[1]) || count($pl[1]) < 30) {
+                    $pl[1] = isset($pl[1]) ? array_merge($pl[1], $pl[1], $pl[1]) : $pl[0];
+                }
+                if (!isset($pl[2]) || count($pl[2]) < 30) {
+                    $pl[2] = isset($pl[2]) ? array_merge($pl[2], $pl[2], $pl[2]) : $pl[0];
+                }
+            }
+        }
         for ($i = 0; $i < $cd; $i++) {
             $duo[1][$i] = (double) (pr3($pl[0][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
             if ($pname == '三中二' || $pname == '二中特' || strpos($pname, '字组合') !== false) {
@@ -434,17 +450,46 @@ switch ($_REQUEST['xtype']) {
         unset($arr);
         break;
     case 'upl':
-        $qishu = $config['thisqishu'];
-       // var_dump($qishu);
-        $qs = $_POST['qs'];
-        $tu = $_POST['tu'];
-        $news = $_POST['news'];
-        $m1 = $_POST['m1'];
+        // 与 hide/top.php upl 一致：先确定当前彩种，再查该彩种上一期已开奖结果
+        $qs   = isset($_POST['qs']) ? trim($_POST['qs']) : (isset($_POST['qishu']) ? trim($_POST['qishu']) : '');
+        $tu   = isset($_POST['tu']) ? $_POST['tu'] : '';
+        $news = isset($_POST['news']) ? $_POST['news'] : '';
+        $m1   = isset($_POST['m1']) ? $_POST['m1'] : '';
         $time = sqltime(time());
-        $msql->query("select * from `{$tb_kj}` where gid='{$gid}' and m1!='' and closetime<'{$time}' order by gid,qishu desc limit 1");
-        $msql->next_record();
+        $upl_gid = $gid;
+        if (isset($_POST['gid']) && $_POST['gid'] !== '' && is_numeric($_POST['gid'])) {
+            $req_gid = (int)$_POST['gid'];
+            $msql->query("select gid from `{$tb_game}` where gid='{$req_gid}' and ifopen=1 limit 1");
+            if ($msql->next_record()) {
+                $upl_gid = (string)$req_gid;
+            }
+        }
+        if ($upl_gid == $gid && $qs !== '' && $qs !== '0') {
+            $qs_safe = addslashes($qs);
+            $msql->query("select gid from `{$tb_kj}` where gid='{$upl_gid}' and qishu='{$qs_safe}' limit 1");
+            if ($msql->next_record()) {
+                $by_qishu_gid = $msql->f('gid');
+                $msql->query("select gid from `{$tb_game}` where gid='{$by_qishu_gid}' and ifopen=1 limit 1");
+                if ($msql->next_record()) {
+                    $upl_gid = (string)$by_qishu_gid;
+                }
+            }
+        }
+        $upl_mnum = (int)transgame($upl_gid, 'mnum');
+        if ($upl_mnum < 1) $upl_mnum = (int)$config['mnum'];
+        // 期数为0时：按 gid 取该游戏最新一次开奖（m1非空、id最大）；否则取已开奖的上一期
+        if ($qs === '0' || $qs === 0) {
+            $msql->query("select * from `{$tb_kj}` where gid='{$upl_gid}' and m1!='' order by id desc limit 1");
+        } else {
+            $msql->query("select * from `{$tb_kj}` where gid='{$upl_gid}' and m1!='' and closetime<'{$time}' and kjtime is not null and kjtime!='' and kjtime<'{$time}' order by qishu desc limit 1");
+        }
+        $has_row = $msql->next_record();
+        if (!$has_row) {
+            echo json_encode(array("A", "B", $news));
+            exit;
+        }
         if ($m1 == $msql->f('m1') && $qs == $msql->f('qishu') && $news != '1') {
-            echo json_encode(array("A", "B",$news));
+            echo json_encode(array("A", "B", $news));
             exit;
         }
         $mm = 1;
@@ -452,97 +497,95 @@ switch ($_REQUEST['xtype']) {
             $mm = 0;
         }
         $ma = array();
-        $sx=[];
-        for ($i = 1; $i <= $config['mnum']; $i++) {
+        $sx = array();
+        $upl_fenlei = (int)transgame($upl_gid, 'fenlei');
+        for ($i = 1; $i <= $upl_mnum; $i++) {
             $ma[] = $msql->f('m' . $i);
-            //var_dump($msql->f('m'.$i));
-            //var_dump($msql->f('bml'.$i));
-            $config['fenlei']==100 && $sx[] = shengxiaos($msql->f('m'.$i),$msql->f("bml"));
+            $upl_fenlei == 100 && $sx[] = shengxiaos($msql->f('m'.$i), $msql->f("bml"));
         }
-        
         $mqishu = $msql->f('qishu');
-        $fenlei = $config['fenlei'];
+        $fenlei = $upl_fenlei;
         //error_reporting(E_ALL);
         //if ($fenlei != 100) {
-            $tpl->assign('fenlei', $fenlei);
-            $tpl->assign('tu', $tu);
-            if ($fenlei != 151 & 1 == 2) {
-                $kj = getkjs($gid, $config['mnum'], 30, sqltime(time()));
-                $tpl->assign('kj', $kj);
-                $co[0] = 'blue';
-                $co[1] = 'orange';
-                $co[2] = 'lv';
-                $co[3] = 'red';
-                $tpl->assign('co', $co);
-                $longl = $tpl->fetch('longl.html');
+        $tpl->assign('fenlei', $fenlei);
+        $tpl->assign('tu', $tu);
+        if ($fenlei != 151) {
+            $kj = getkjs($gid, $config['mnum'], 1, sqltime(time()));
+            $tpl->assign('kj', $kj);
+            $co[0] = 'blue';
+            $co[1] = 'orange';
+            $co[2] = 'lv';
+            $co[3] = 'red';
+            $tpl->assign('co', $co);
+            $longl = $tpl->fetch('longl.html');
+        }
+        $ftlu=[];
+        if ($config['cs']['ft'] == '1' && $tu == 2) {
+            $tpl->assign("ftnum",$config['cs']['ftnum']);
+
+            if(date("H:i:s")<$config['editend']){
+                $timestr = " and dates='" . date("Y-m-d", time()-86400) . "' ";
+            } else {
+                $timestr = " and dates='" . date("Y-m-d") . "' ";
             }
-            $ftlu=[];
-            if ($config['cs']['ft'] == '1' && $tu == 2) {
-                $tpl->assign("ftnum",$config['cs']['ftnum']);
-                
-                if(date("H:i:s")<$config['editend']){
-                    $timestr = " and dates='" . date("Y-m-d", time()-86400) . "' ";
-                } else {
-                    $timestr = " and dates='" . date("Y-m-d") . "' ";
-                }
-                $sql = '';
-                for ($i = 1; $i <= $config['mnum']; $i++) {
-                    $sql .= ",m" . $i;
-                }
-                //echo "select qishu$sql from `$tb_kj` where gid='$gid' and m1!='' $timestr $kjtime order by qishu desc";
-                $kj = $psql->arr("select * from `{$tb_kj}` where gid='{$gid}' {$timestr} and m1!=''  order by qishu desc limit 99", 1);
-                $ck = count($kj);
-                $cn = count($num);
-                for($i=0;$i<99;$i++){
-                    $ftlu[$i] = 0;
-                }
-                //$k1 = floor($ck/10);
-                 //1
-                for ($i = 0; $i < $ck; $i++) {
-                    $kjarr = [$kj[$i]['m1'],$kj[$i]['m2'],$kj[$i]['m3'],$kj[$i]['m4'],$kj[$i]['m5'],$kj[$i]['m6'],$kj[$i]['m7'],$kj[$i]['m8'],$kj[$i]['m9'],$kj[$i]['m10']] ;
-                    $zh = getftzh($kjarr,$config['cs']);
-                    $kj[$i]['z'] = $zh;
-                    $zh = $zh % 4 == 0 ? 4 : $zh % 4;
-                    $kj[$i]['mft'] = $zh;
-                    $kj[$i]['ftds'] = danshuang($zh);
-                    $kj[$i]['ftdx'] = $zh <= 2 ? '小' : '大';   
-                    $j = $ck-$i-1;
-                    $k1 = floor($j/10);//2 
-                    $k2 = $j%10;
-                    //$ftlu[$k2*10+$k1] = substr($kj[$i]['qishu'],-3); //21      
-                    $ftlu[$k2*10+$k1] = $zh;          
-                }
-                
+            $sql = '';
+            for ($i = 1; $i <= $config['mnum']; $i++) {
+                $sql .= ",m" . $i;
+            }
+            //echo "select qishu$sql from `$tb_kj` where gid='$gid' and m1!='' $timestr $kjtime order by qishu desc";
+            $kj = $psql->arr("select * from `{$tb_kj}` where gid='{$gid}' {$timestr} and m1!=''  order by qishu desc limit 99", 1);
+            $ck = count($kj);
+            $cn = count($num);
+            for($i=0;$i<99;$i++){
+                $ftlu[$i] = 0;
+            }
+            //$k1 = floor($ck/10);
+            //1
+            for ($i = 0; $i < $ck; $i++) {
+                $kjarr = [$kj[$i]['m1'],$kj[$i]['m2'],$kj[$i]['m3'],$kj[$i]['m4'],$kj[$i]['m5'],$kj[$i]['m6'],$kj[$i]['m7'],$kj[$i]['m8'],$kj[$i]['m9'],$kj[$i]['m10']] ;
+                $zh = getftzh($kjarr,$config['cs']);
+                $kj[$i]['z'] = $zh;
+                $zh = $zh % 4 == 0 ? 4 : $zh % 4;
+                $kj[$i]['mft'] = $zh;
+                $kj[$i]['ftds'] = danshuang($zh);
+                $kj[$i]['ftdx'] = $zh <= 2 ? '小' : '大';
+                $j = $ck-$i-1;
+                $k1 = floor($j/10);//2
+                $k2 = $j%10;
+                //$ftlu[$k2*10+$k1] = substr($kj[$i]['qishu'],-3); //21
+                $ftlu[$k2*10+$k1] = $zh;
+            }
+
+            $tpl->assign('kj', $kj);
+            $longr = $tpl->fetch('longr.html');
+        } else {
+            if ($fenlei == 151) {
+                $kj = getkjs($gid, $config['mnum'], $config['cs']['qsnums'], sqltime(time()), $fenlei);
                 $tpl->assign('kj', $kj);
                 $longr = $tpl->fetch('longr.html');
             } else {
-                if ($fenlei == 151) {
-                    $kj = getkjs($gid, $config['mnum'], $config['cs']['qsnums'], sqltime(time()), $fenlei);
-                    $tpl->assign('kj', $kj);
-                    $longr = $tpl->fetch('longr.html');
-                } else {
-                    $z = getzlong();
-                    $buz = getbuzlong();
-                    $tpl->assign('z', $z);
-                    $tpl->assign('buz', $buz);
-                    $longr = $tpl->fetch('longr.html');
-                }
+                $z = getzlong();
+                $buz = getbuzlong();
+                $tpl->assign('z', $z);
+                $tpl->assign('buz', $buz);
+                $longr = $tpl->fetch('longr.html');
             }
-            if ($tu != 0) {
-                //echo $gid, $config['mnum'],$fenlei,$tu;
-                $tu = tu($gid, $config['mnum'], $fenlei, $tu);
-                //$tu = '';
-            }
+        }
+        if ($tu != 0) {
+            //echo $gid, $config['mnum'],$fenlei,$tu;
+            $tu = tu($gid, $config['mnum'], $fenlei, $tu);
+            //$tu = '';
+        }
         //}
-       // var_dump($num);
+        // var_dump($num);
         $longl = json_encode($num);
-       // var_dump($longl);
+        // var_dump($longl);
         $news="";
         $time = time();
         $msql->query("select content from `$tb_message` where userid='$userid' and $time-UNIX_TIMESTAMP(time)<600 order by time desc limit 1");
-            if ($msql->next_record()) {
-                $news = $msql->f('content');
-            }
+        if ($msql->next_record()) {
+            $news = $msql->f('content');
+        }
         echo json_encode(array($longl, $longr, $tu, $mm, $ma, $mqishu, $config['gname'],$news,$config['cs']['ft'],$ftlu,$sx));
         unset($longl);
         unset($longr);
@@ -704,9 +747,9 @@ function getsm($bid, $ab, $abcd, $sid, $smtype, $fenlei)
                     } else {
                         if ($fenlei == 163) {
                             if ($gid == 251) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(251001,251005) order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid<>26000000 order by bid,sid,xsort";
                             } elseif ($gid == 252) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(252001,252005) order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid<>26000000 order by bid,sid,xsort";
                             } else {
                                 $sql = "select * from `{$tb_play}` where gid='{$gid}' and ( name in('单','双','大','小','质','合') or bid='23378858') and bid!=23378857 order by bid,sid,xsort";
                             }
@@ -1110,7 +1153,7 @@ function tu($gid, $mnum, $fenlei, $tt)
                                         }
                                     }
                                     $tu["总尾大小"][$i] = daxiao($he % 10);
-   
+
                                     for ($j = 0; $j < 8; $j++) {
 
                                         $tu[$bname[$j]][$bname[$j]][$i] = $kj[$i]['m' . ($j + 1)];
@@ -1121,7 +1164,7 @@ function tu($gid, $mnum, $fenlei, $tt)
                                         }
                                         $tu[$bname[$j]]['尾数大小'][$i] = daxiao($kj[$i]['m' . ($j + 1)] % 10);
                                         $tu[$bname[$j]]['合数单双'][$i] = danshuang(heshu($kj[$i]['m' . ($j + 1)]));
-                                        
+
                                         //$tu[$bname[$j]]['方位'][$i] = fangwei($kj[$i]['m' . ($j + 1)]);
                                         //$tu[$bname[$j]]['中发白'][$i] = zhongfabai($kj[$i]['m' . ($j + 1)]);
                                         foreach ($ma as $k => $v) {
@@ -1198,9 +1241,9 @@ function shengxiaos($ma, $bml)
     $arr = array('鼠', '牛', '虎', '兔', '龍', '蛇', '馬', '羊', '猴', '雞', '狗', '豬');
     $in= 0 ;
     if ($index >= $ma) {
-      $in = $index - $ma;
+        $in = $index - $ma;
     } else {
-       $in =  $index - $ma + 12;
+        $in =  $index - $ma + 12;
     }
     if($in>=12) $in -=12;
     return $arr[$in];

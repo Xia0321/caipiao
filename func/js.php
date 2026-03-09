@@ -2423,23 +2423,11 @@ function kjjs_101($qishu, $gid, $fenlei)
                     break;
                 case '组选3':
                     if (strpos('[' . $pname . ']', '后三')) {
-                        $arr = array(
-                            $kj[2],
-                            $kj[3],
-                            $kj[4]
-                        );
+                        $arr = array($kj[2], $kj[3], $kj[4]);
                     } else if (strpos('[' . $pname . ']', '中三')) {
-                        $arr = array(
-                            $kj[1],
-                            $kj[2],
-                            $kj[3]
-                        );
+                        $arr = array($kj[1], $kj[2], $kj[3]);
                     } else {
-                        $arr = array(
-                            $kj[0],
-                            $kj[1],
-                            $kj[2]
-                        );
+                        $arr = array($kj[0], $kj[1], $kj[2]);
                     }
                     if (duizhi($arr[0], $arr[1], $arr[2]) != 1) {
                         $psql->query("update `$tb_lib` set kk=1,z='0' where $whi and pid='" . $tsql->f('pid') . "'  and z!=7");
@@ -2448,15 +2436,14 @@ function kjjs_101($qishu, $gid, $fenlei)
                     $rs = $psql->arr("select * from `$tb_lib` where $whi and  pid='" . $tsql->f('pid') . "'  and z!=7", 1);
                     $cr = count($rs);
                     for ($k = 0; $k < $cr; $k++) {
-                        $zflag = 0;
-                        $con   = explode('-', $rs[$k]['content']);
-                        $con   = array_unique($con);
-                        $cc    = count($con);
-                        if ($cc != $tsql->f('znum1')) {
+                        $con = explode('-', $rs[$k]['content']);
+                        if (count($con) != 3) {
                             $psql->query("update `$tb_lib` set kk=1,z='0' where id='" . $rs[$k]['id'] . "'");
                             continue;
                         }
-                        if (in_array($arr[0], $con) & in_array($arr[1], $con) & in_array($arr[2], $con)) {
+                        sort($arr);
+                        sort($con);
+                        if ($arr[0] == $con[0] && $arr[1] == $con[1] && $arr[2] == $con[2]) {
                             $psql->query("update `$tb_lib` set kk=1,z='1' where id='" . $rs[$k]['id'] . "'");
                         } else {
                             $psql->query("update `$tb_lib` set kk=1,z='0' where id='" . $rs[$k]['id'] . "'");
@@ -2490,15 +2477,14 @@ function kjjs_101($qishu, $gid, $fenlei)
                     $rs = $psql->arr("select * from `$tb_lib` where $whi and  pid='" . $tsql->f('pid') . "'  and z!=7", 1);
                     $cr = count($rs);
                     for ($k = 0; $k < $cr; $k++) {
-                        $zflag = 0;
-                        $con   = explode('-', $rs[$k]['content']);
-                        $con   = array_unique($con);
-                        $cc    = count($con);
-                        if ($cc != $tsql->f('znum1')) {
+                        $con = explode('-', $rs[$k]['content']);
+                        if (count($con) != 3) {
                             $psql->query("update `$tb_lib` set kk=1,z='0' where id='" . $rs[$k]['id'] . "'");
                             continue;
                         }
-                        if (in_array($arr[0], $con) & in_array($arr[1], $con) & in_array($arr[2], $con)) {
+                        sort($arr);
+                        sort($con);
+                        if ($arr[0] == $con[0] && $arr[1] == $con[1] && $arr[2] == $con[2]) {
                             $psql->query("update `$tb_lib` set kk=1,z='1' where id='" . $rs[$k]['id'] . "'");
                         } else {
                             $psql->query("update `$tb_lib` set kk=1,z='0' where id='" . $rs[$k]['id'] . "'");

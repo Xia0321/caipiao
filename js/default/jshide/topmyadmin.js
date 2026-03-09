@@ -330,12 +330,36 @@ function kj() {
 function updatel() {
     clearTimeout(upl);
     var mm = $(".upqishu").attr("m").split(',');
+    var uplData = "xtype=upl&qishu=" + $(".upqishu").html() + "&m1=" + mm[0];
+    // 请求开奖结果必须传 gid，后端才能按彩种返回上一期；优先从页面 data-gid/ngid 取，再试 frame/菜单
+    var gid = $("body").attr("data-gid") || (typeof ngid !== 'undefined' && (ngid || ngid === 0) ? String(ngid) : '');
+    try {
+        if (!gid && window.frames && window.frames['frame']) {
+            var frameUrl = window.frames['frame'].location.href || '';
+            if (frameUrl.indexOf('kj.php') !== -1) {
+                var match = frameUrl.match(/[?&]gid=(\d+)/);
+                if (match && match[1]) gid = match[1];
+            }
+            if (!gid && window.frames['frame'].document) {
+                var sel = window.frames['frame'].document.querySelector('select.game');
+                if (sel && sel.value) gid = sel.value;
+            }
+        }
+        if (!gid) {
+            var cgid = $(".games a.xz").attr("gid");
+            if (cgid) gid = cgid;
+        }
+        if (gid) uplData += "&gid=" + gid;
+    } catch (e) {
+        if (!gid && typeof ngid !== 'undefined' && (ngid || ngid === 0)) gid = String(ngid);
+        if (gid) uplData += "&gid=" + gid;
+    }
     $.ajax({
         type: 'POST',
         url: mulu + 'top.php',
         dataType: 'json',
         cache: false,
-        data: "xtype=upl&qishu=" + $(".upqishu").html() + "&m1=" + mm[0],
+        data: uplData,
         success: function (m) {
             if (m[0] != 'A') {
                 $(".upqishu").html(m[0]);
@@ -383,6 +407,7 @@ function getnowtime() {
                         $(".otherstatus").html($(".otherstatus").html().replace("开", "关"))
                     }
                     $("label.qishu").html(m[2]);
+                    updatel();
                     if (frame.window.location.href.indexOf('slib') != -1) {
                         frame.window.location.href = frame.window.location.href;
                     }
@@ -399,6 +424,7 @@ function getnowtime() {
                         $(".panstatus").html($(".panstatus").html().replace("开", "关"))
                     }
                     $("label.qishu").html(m[2]);
+                    updatel();
                     if (frame.window.location.href.indexOf('slib') != -1) {
                         frame.window.location.href = frame.window.location.href;
                     }

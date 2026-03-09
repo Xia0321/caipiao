@@ -27,7 +27,12 @@ function ds($expect)
 function dx($gid, $expect)
 {    
     $array = [];
-
+    // 3D(251/252等)：按三码和算总和大小，和值14-27为大，0-13为小
+    if (count($expect) == 3 && max($expect) <= 9 && min($expect) >= 0) {
+        $sum = array_sum($expect);
+        $array[] = $sum >= 14 ? 0 : 1; // 0=大 1=小，与其它玩法一致
+        return $array;
+    }
     foreach ($expect as $v) {
       
         if ($gid==101) {
@@ -145,20 +150,26 @@ function shengxiaos($ma, $bml)
     return $arr[$in];
 }
 
-    $msql->query("select cs,mtype,ztype,fenlei from `$tb_game` where gid='$gid'");
+    $req_gid = isset($input['gid']) ? trim($input['gid']) : $gid;
+    if ($req_gid === '' || !is_numeric($req_gid)) {
+        $msql->query("select gid from `$tb_game` where ifopen=1 order by xsort limit 1");
+        $req_gid = $msql->next_record() && $msql->f('gid') !== '' ? $msql->f('gid') : '107';
+    }
+    $msql->query("select cs,mtype,ztype,fenlei,mnum from `$tb_game` where gid='" . addslashes($req_gid) . "'");
     $msql->next_record();
     $fenlei = $msql->f("fenlei");
+    $mnum_kj = (int)$msql->f('mnum');
+    if ($mnum_kj < 1) $mnum_kj = isset($config['mnum']) ? (int)$config['mnum'] : 5;
         
-    $where = '1 = 1';
-    $where .= " AND gid = {$input['gid']}";
-    $where .= " AND kjtime like '%{$input['dates']}%'";
+    $where = " gid='" . addslashes($req_gid) . "' ";
+    $where .= " AND kjtime like '%" . addslashes(isset($input['dates']) ? $input['dates'] : date('Y-m-d')) . "%'";
     $where .= ' AND js = 1';
     $array = [];
-    $res = $msql->query("select * from `x_kj` where $where  order by id desc limit 1500");
+    $res = $msql->query("select * from `$tb_kj` where $where order by qishu desc, id desc limit 1500");
     while ($msql->next_record()) {
         $expect = [];
         $sx=[];
-        for ($j = 1; $j <= $config['mnum']; $j++) {
+        for ($j = 1; $j <= $mnum_kj; $j++) {
             $expect[] = $msql->f('m' . $j);
             $fenlei ==100 && $sx[] = shengxiaos( $msql->f('m' . $j) ,$msql->f("bml"));
         }
@@ -192,7 +203,7 @@ function shengxiaos($ma, $bml)
         echo json_encode(array(
             "kj" => $array,
             'fenlei' => $fenlei,
-            'rcount' => 1,
-            'mnum' => $config['mnum']
+            'rcount' => count($array),
+            'mnum' => $mnum_kj
         ));
         

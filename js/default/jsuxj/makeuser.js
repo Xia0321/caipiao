@@ -323,13 +323,24 @@ function updatel(news) {
 	var objb = $("#result_balls",parent.document);
 	//alert("xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + t)
 	if(m1==undefined) m1='X';
-	//alert(news);
+	// 请求开奖结果必须传 gid，否则后端无法按彩种返回；优先从页面 data-gid 取，再 ngid、select
+	var gidParam = (typeof $ !== 'undefined' && $("body").attr("data-gid")) ? $("body").attr("data-gid") : '';
+	if (!gidParam && typeof ngid !== 'undefined' && (ngid || ngid === 0)) gidParam = String(ngid);
+	if (!gidParam && typeof $ !== 'undefined') {
+		var sel = $(document).find('select.game');
+		if (sel.length && sel.val()) gidParam = sel.val();
+	}
+	if (!gidParam && typeof parent !== 'undefined' && parent.document) {
+		var psel = $(parent.document).find('select.game');
+		if (psel.length && psel.val()) gidParam = psel.val();
+	}
+	var gidSuffix = gidParam ? "&gid=" + gidParam : "";
 	$.ajax({
 		type: 'POST',
 		url: mulu + 'make.php',
 		dataType: 'json',
 		cache: false,
-		data: "xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + t+"&news="+news,
+		data: "xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + t + "&news=" + news + gidSuffix,
 		success: function(m) {
 		   //console.log(m);
 		   //$("#test").html(m);return;

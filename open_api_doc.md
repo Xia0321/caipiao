@@ -327,7 +327,7 @@ $entry_url = "https://您的域名/138/open_api.php?action=entry&userid=" . urle
 
 ## 10. 概述
 
-`task_notify_mch.php` 用于平台向**商户**推送或拉取数据：检索所有 `is_api=1` 的用户，按其在后台「商户管理」中配置的 `mch_code` 从表 `x_mchs` 取 `callback_url` 与 `mch_secret`，再按「回调根地址 + 方法名」向商户发起 POST 请求。
+`task_notify_mch.php` 用于平台向**商户**推送或拉取数据：检索所有 `is_api=1` 的用户，直接从 `x_user` 表读取该用户的 `mch_code`、`callback_url`、`mch_secret` 等字段，再按「回调根地址 + 方法名」向商户发起 POST 请求（不再使用 `x_mchs` 表）。
 
 | 项目 | 说明 |
 |------|------|

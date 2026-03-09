@@ -15,7 +15,7 @@ function exe() {
 	var sname;
 	var cname;
 	var zhi = 0;
-	if (bname == '任选牛牛' | bname == '连码' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6') {
+	if (bname == '任选牛牛' | bname == '连码' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
 		var pid = $(".make input.xz:checked").attr('pid');
 		var pname = $(".make input.xz:checked").attr('mname');
 		var num = $(".make input.xz:checked").attr('znum1');
@@ -41,7 +41,8 @@ function exe() {
 			zhi = 1
 		}
 		var mode = Number($(".duoexetb a.mode.on").attr('mode'));
-		if ((bname == '连码' & zhi == 0) | bname == '组选3' | bname == '组选6' | bname == '任选牛牛') {
+		// 组选3/组选6 当为百位/十位/个位三区(30格)时走三区逻辑，否则走单区组合
+		if ((bname == '连码' & zhi == 0) | bname == '任选牛牛' | ((bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') && $(".duotbs .p").length < 30)) {
 			if (mode == 2 & (bname == '连码' | bname == '任选牛牛')) {
 				var y1 = $(".duotbs td.selected").length;
 				var y2 = $(".duotbsclone td.selected2").length;
@@ -124,7 +125,7 @@ function exe() {
 				y3 = 0,
 				nl;
 			ashree = [];
-			if (bname == '2字定位' | bname == '2字组合' | bname == '3字定位' | bname == '3字组合') {
+			if (bname == '2字定位' | bname == '2字组合' | bname == '3字定位' | bname == '3字组合' | bname == '组选3' | bname == '组选6') {
 				nl = 10
 			} else if (pname == '选前二直选' | pname == '选前三直选') {
 				nl = 11
@@ -186,9 +187,13 @@ function exe() {
 					return false
 				}
 				aall = Ctwo(aone, atwo, bname, pname)
-			} else if (bname == '3字定位' | bname == '3字组合' | pname == '选前三直选' | pname == '选三前直') {
+			} else if (bname == '3字定位' | bname == '3字组合' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
 				if (y1 == 0 | y2 == 0 | y3 == 0) {
-					alert("选择的号码数不够");
+					if (bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+						alert("组选3/组选6 请在百位、十位、个位各至少选择1个号码");
+					} else {
+						alert("选择的号码数不够");
+					}
 					return false
 				}
 				aall = Cshree(aone, atwo, ashree, bname, pname)
@@ -306,7 +311,7 @@ function exe() {
 	for (j = 0; j < i; j++) {
 		str += "<tr pid='" + play[j]['pid'] + "' content='' class='cg s" + j + "'>";
 		str += "<td style='display:none;'>" + (j + 1) + "</td>";
-		if (bname == '任选牛牛' | bname == '连码' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6') {
+		if (bname == '任选牛牛' | bname == '连码' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
 			str += "<td>" + play[j]['name'] + ' <label class=red>' + play[j]['con'].join('-') + "</label></td>"
 		} else {
 			str += "<td>" + play[j]['classx'] + ' <label class=red>' + play[j]['name'] + "</label></td>"
@@ -1145,6 +1150,23 @@ function libs(stype, gpl) {
 				str = "<table class='k100'>"+strsm+"<tbody>" + str + "</tbody></table>";
 				$(".make").html(str);
 				$(".make .name").css("width", 120);
+			} else if ((bname == '1字定位' || (bname == '1字组合' && ml === 30)) && fenlei == 163 && (ngid == 251 || ngid == 252)) {
+				// 3D 单独点击「1字定位」或「1字组合」(30项百十个)：只显示百位/十位/个位 0-9，放入 .make 以便 addfunc 绑定
+				var lastSname = '';
+				for (i = 0; i < ml; i++) {
+					if (isNaN(m[i]['name'])) continue;
+					if (m[i]['sname'] != '百位' && m[i]['sname'] != '十位' && m[i]['sname'] != '个位') continue;
+					if (m[i]['sname'] != lastSname) {
+						if (lastSname != '') str += "</tr></tbody></table>";
+						str += "<table style='width:33.2%' class='tball table_ball table_betbox'><tbody><tr class='head'><th colspan='5'>" + m[i]['sname'] + " (0-9)</th></tr><tr>";
+						lastSname = m[i]['sname'];
+					}
+					str += rhtmls(m[i], 2);
+					if ((i + 1) % 5 === 0 && (i + 1) % 10 !== 0) str += "</tr><tr>";
+				}
+				if (lastSname != '') str += "</tr></tbody></table>";
+				$(".make").html(str);
+				$(".make table").css("margin-bottom", "5px");
 			} else if (bname == '两面' && fenlei == 163 && (ngid == 251 || ngid == 252)) {
 				// 3D( gid=251 ) 两面：百 / 十 / 个
 				// 同一表中先显示属性（大/小/单/双/质/合），再显示具体号码 0-9
@@ -1471,6 +1493,18 @@ function duofunc() {
 							j = 0
 						}
 					}
+					if (bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+						if (i == 0) {
+							stra += "<tr class='head'><th colspan=20>百位(多选自动组合)</th></tr>";
+							j = 0
+						} else if (i == 10) {
+							stra += "<tr class='head'><th colspan=20>十位</th></tr>";
+							j = 0
+						} else if (i == 20) {
+							stra += "<tr class='head'><th colspan=20>个位</th></tr>";
+							j = 0
+						}
+					}
 					if (j % 10 == 0) {
 						if (j > 0) stra += "</tr>";
 						stra += "<tr>"
@@ -1499,7 +1533,7 @@ function duofunc() {
 					str += stra;
 					str += "<tr class='head'><th colspan=20>选择第3个</th></tr><tr>";
 					str += stra
-				} else if (bname == '2字定位' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | pname == '选前二直选') {
+				} else if (bname == '2字定位' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | pname == '选前二直选' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
 					str += stra
 				} else if (pname == '选二连直') {
 					str += "<tr class='head'><th colspan=20>选择第1球(多选自动组合)</th></tr><tr>";
@@ -1720,29 +1754,29 @@ function Cshree(a, b, c, bname, pname) {
 	var h = 0;
 	var ins = '';
 	var tmps = '';
-	for (i = 0; i < al; i++) {
-		for (j = 0; j < bl; j++) {
-			for (k = 0; k < cl; k++) {
-				if (bname == '3字组合' | pname == '选前三直选' | pname == '选三前直') {
-					tmps = [a[i]['n'], b[j]['n'], c[k]['n']];
-					if (ins.indexOf(tmps.sort().join('-')) != -1) {
-						continue
+			for (i = 0; i < al; i++) {
+				for (j = 0; j < bl; j++) {
+					for (k = 0; k < cl; k++) {
+						if (bname == '3字组合' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+							tmps = [a[i]['n'], b[j]['n'], c[k]['n']];
+							if (ins.indexOf(tmps.sort().join('-')) != -1) {
+								continue
+							}
+							ins += ',' + tmps.sort().join('-')
+						}
+						r[h] = [];
+						if ((a[i]['n'] == b[j]['n'] & a[i]['n'] == c[k]['n']) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+							r[h]['p'] = Math.min(a[i]['p'][0], b[j]['p'][0], c[k]['p'][0])
+						} else if (a[i]['n'] == b[j]['n'] | a[i]['n'] == c[k]['n'] | b[j]['n'] == c[k]['n']) {
+							r[h]['p'] = Math.min(a[i]['p'][1], b[j]['p'][1], c[k]['p'][1])
+						} else {
+							r[h]['p'] = Math.min(a[i]['p'][2], b[j]['p'][2], c[k]['p'][2])
+						}
+						r[h]['n'] = [a[i]['n'], b[j]['n'], c[k]['n']];
+						h++
 					}
-					ins += ',' + tmps.sort().join('-')
 				}
-				r[h] = [];
-				if ((a[i]['n'] == b[j]['n'] & a[i]['n'] == c[k]['n']) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
-					r[h]['p'] = Math.min(a[i]['p'][0], b[j]['p'][0], c[k]['p'][0])
-				} else if (a[i]['n'] == b[j]['n'] | a[i]['n'] == c[k]['n'] | b[j]['n'] == c[k]['n']) {
-					r[h]['p'] = Math.min(a[i]['p'][1], b[j]['p'][1], c[k]['p'][1])
-				} else {
-					r[h]['p'] = Math.min(a[i]['p'][2], b[j]['p'][2], c[k]['p'][2])
-				}
-				r[h]['n'] = [a[i]['n'], b[j]['n'], c[k]['n']];
-				h++
 			}
-		}
-	}
 	return r
 }
 function rhtmls_lm(arr) {

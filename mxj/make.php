@@ -21,6 +21,11 @@ switch ($_REQUEST['xtype']) {
         $msql->query("select kfurl from `{$tb_config}`");
         $msql->next_record();
         $tpl->assign('kfurl', $msql->f('kfurl'));
+        // 免登录/接口玩家：先向代理接口拉取实时余额再展示，与 getbalance 轮询一致
+        if (!function_exists('mch_get_balance_from_api')) {
+            require_once __DIR__ . '/../task_notify_mch.php';
+        }
+        mch_get_balance_from_api($userid);
         $msql->query("select maxmoney,money,kmaxmoney,kmoney,pan,defaultpan,username,name,fastje,fudong,sy,jzkmoney from `{$tb_user}` where userid='{$userid}'");
         $msql->next_record();
          
@@ -46,6 +51,9 @@ switch ($_REQUEST['xtype']) {
             $tpl->assign('defaultpan', $msql->f('defaultpan'));
         }
         $tpl->assign('thisqishu', substr($config['thisqishu'], -8));
+        $msql->query("select qishu from `{$tb_kj}` where gid='{$gid}' and qishu<'" . addslashes($config['thisqishu']) . "' order by qishu desc limit 1");
+        $upqishu = $msql->next_record() ? $msql->f('qishu') : '';
+        $tpl->assign('upqishu', $upqishu !== '' && $upqishu !== null ? substr($upqishu, -8) : '');
         $tpl->assign('gname', $config['gname']);
         $gamecs = getgamecs($userid);
         $gamecs = getgamename($gamecs);
@@ -460,6 +468,7 @@ switch ($_REQUEST['xtype']) {
                 break;
             case "d":
             case "d2":
+            // 玩法与赔率均来自 x_play（含 3D gid=251/252）
             if($config["fenlei"]==100){
             $sid  = $bid;
             $bid='';
@@ -687,6 +696,19 @@ switch ($_REQUEST['xtype']) {
                 }
             }
             $cd = count($duo[0]);
+            // 组选3/组选6 百十个三区：若 pl 仅 10 项则按三区各 10 扩展为 30 项
+            if (($cd == 30) && (strpos($pname, '组选3') !== false || strpos($pname, '组选6') !== false || strpos($pname, '组选三') !== false || strpos($pname, '组选六') !== false)) {
+                $n = isset($pl[0]) ? count($pl[0]) : 0;
+                if ($n == 10) {
+                    $pl[0] = array_merge($pl[0], $pl[0], $pl[0]);
+                    if (!isset($pl[1]) || count($pl[1]) < 30) {
+                        $pl[1] = isset($pl[1]) ? array_merge($pl[1], $pl[1], $pl[1]) : $pl[0];
+                    }
+                    if (!isset($pl[2]) || count($pl[2]) < 30) {
+                        $pl[2] = isset($pl[2]) ? array_merge($pl[2], $pl[2], $pl[2]) : $pl[0];
+                    }
+                }
+            }
             for ($i = 0; $i < $cd; $i++) {
                 $duo[1][$i] = (double) (pr3($pl[0][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
                 $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
@@ -696,6 +718,7 @@ switch ($_REQUEST['xtype']) {
                     $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
                 }
             }
+            // duo/pl 来自 x_play 表（含 252 二字组合/三字组合赔率），前端按字头展示
             $play[0]['duo']    = $duo;
             $play[0]['pidduo'] = $pid;
         }
@@ -754,14 +777,40 @@ switch ($_REQUEST['xtype']) {
         unset($arr);
         break;
     case 'upl':
-        $qishu = $config['thisqishu'];
-        $qs = $_POST['qs'];
-        $tu = 1;
-        $news = $_POST['news'];
-        $m1 = $_POST['m1'];
+        // 与 hide/top.php upl 一致：先确定当前彩种，再查该彩种上一期已开奖结果
+        $qs   = isset($_POST['qs']) && $_POST['qs'] !== '' ? trim($_POST['qs']) : (isset($_POST['qishu']) ? trim($_POST['qishu']) : '');
+        $tu   = 1;
+        $news = isset($_POST['news']) ? $_POST['news'] : '';
+        $m1   = isset($_POST['m1']) ? $_POST['m1'] : '';
         $time = sqltime(time());
-        $msql->query("select * from `{$tb_kj}` where gid='{$gid}' and m1!='' and closetime<'{$time}' order by gid,qishu desc limit 1");
-        $msql->next_record();
+        $upl_gid = $gid;
+        if (isset($_POST['gid']) && $_POST['gid'] !== '' && is_numeric($_POST['gid'])) {
+            $req_gid = (int)$_POST['gid'];
+            $msql->query("select gid from `{$tb_game}` where gid='{$req_gid}' and ifopen=1 limit 1");
+            if ($msql->next_record()) {
+                $upl_gid = (string)$req_gid;
+            }
+        }
+        if ($upl_gid == $gid && $qs !== '') {
+            $qs_safe = addslashes($qs);
+            $msql->query("select gid from `{$tb_kj}` where gid='{$req_gid}' and qishu='{$qs_safe}' limit 1");
+            if ($msql->next_record()) {
+                $by_qishu_gid = $msql->f('gid');
+                $msql->query("select gid from `{$tb_game}` where gid='{$by_qishu_gid}' and ifopen=1 limit 1");
+                if ($msql->next_record()) {
+                    $upl_gid = (string)$by_qishu_gid;
+                }
+            }
+        }
+        $upl_mnum = (int)transgame($upl_gid, 'mnum');
+        if ($upl_mnum < 1) $upl_mnum = (int)$config['mnum'];
+        // 当前彩种上一期：已关盘、开奖时间已过、且有开奖号，按期号倒序取一条（与 hide/top.php 一致）
+        $msql->query("select * from `{$tb_kj}` where gid='{$upl_gid}' and m1!='' and closetime<'{$time}' and kjtime is not null and kjtime!='' and kjtime<'{$time}' order by qishu desc limit 1");
+        $has_row = $msql->next_record();
+        if (!$has_row) {
+            echo json_encode(array("A", "B", $news));
+            exit;
+        }
         if ($m1 == $msql->f('m1') && $qs == $msql->f('qishu')) {
             echo json_encode(array("A", "B", $news));
             exit;
@@ -771,13 +820,15 @@ switch ($_REQUEST['xtype']) {
             $mm = 0;
         }
         $ma = array();
-        $sx=[];
-        for ($i = 1; $i <= $config['mnum']; $i++) {
+        $sx = array();
+        $upl_fenlei = (int)transgame($upl_gid, 'fenlei');
+        for ($i = 1; $i <= $upl_mnum; $i++) {
             $ma[] = $msql->f('m' . $i);
-            $config['fenlei']==100 && $sx[] = shengxiaos($msql->f('m'.$i),$msql->f("bml"));
+            $upl_fenlei == 100 && $sx[] = shengxiaos($msql->f('m'.$i), $msql->f("bml"));
         }
         $mqishu = $msql->f('qishu');
-        $fenlei = $config['fenlei'];
+        $fenlei = $upl_fenlei;
+        $upl_gname = transgame($upl_gid, 'sgname') ?: $config['gname'];
         $tu = tu($gid, $config['mnum'], $fenlei, $tu);
         $longl = "";
         $longr = "";
@@ -813,7 +864,7 @@ switch ($_REQUEST['xtype']) {
                 $ftlu[$k2*10+$k1] = $zh;          
             }
         }
-        echo json_encode(array($longl, $longr, $tu, $mm, $ma, $mqishu, $config['gname'], $qs, $zlong, $bzlong, $news,$config['cs']['ft'],$ftlu,$sx));
+        echo json_encode(array($longl, $longr, $tu, $mm, $ma, $mqishu, $upl_gname, $qs, $zlong, $bzlong, $news,$config['cs']['ft'],$ftlu,$sx));
         unset($longl);
         unset($longr);
         break;

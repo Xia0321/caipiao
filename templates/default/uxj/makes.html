@@ -27,7 +27,7 @@
 $(function(){myready()});
 </script>
 </head>
-<body class="{+$skin+}">
+<body class="{+$skin+}" data-gid="{+$gid+}">
 <script type="text/javascript" id="myjs">var mulu='{+$mulu+}';
 var js=0;
 var sss="make";
@@ -45,6 +45,7 @@ var ustatus = {+$status+};
             data: {xtype: 'getbalance'},
             dataType: 'json',
             timeout: 8000,
+            xhrFields: { withCredentials: true },
             success: function(d){
                 if(d && d.code === 0){
                     var b = (typeof d.kmoney !== 'undefined') ? d.kmoney : d.money;

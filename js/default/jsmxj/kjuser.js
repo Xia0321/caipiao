@@ -51,6 +51,20 @@ function getkj(){
 			var str = '';
 			$(".con").empty();
 			for (i = 0; i < ml; i++) {
+				// 无 m 时用 m1,m2,m3 组装（兼容 hide/kj getkj）
+				if (!m[i]['m'] && mnum >= 1) {
+					var arr = [];
+					for (var jj = 1; jj <= mnum; jj++) arr.push(m[i]['m' + jj] != null ? m[i]['m' + jj] : '');
+					m[i]['m'] = arr;
+				}
+				// 3D：根据三码和计算 和值/单双/大小（避免显示 undefined）
+				if (mnum == 3 && (m[i]['dx'] === undefined || m[i]['dx'] === null)) {
+					var a = m[i]['m'][0], b = m[i]['m'][1], c = m[i]['m'][2];
+					var sum = (Number(a) || 0) + (Number(b) || 0) + (Number(c) || 0);
+					m[i]['hs'] = sum;
+					m[i]['ds'] = (sum % 2 == 0) ? '双' : '单';
+					m[i]['dx'] = (sum >= 14) ? '大' : '小';
+				}
 				str += "<tr>";
 				str += "<td>" + m[i]['qishu'] + "<BR />"+m[i]['kjtime']+"</td>";
 				str += "<td>";
@@ -68,8 +82,8 @@ function getkj(){
 				
 				str += "</td>";				
 				str += "<td>";
-				if(m[i]['hs']!=0){
-				str  +=  m[i]['hs'] + "<BR />"+m[i]['ds']+ "/"+m[i]['dx'];
+				if (m[i]['hs'] !== undefined && m[i]['hs'] !== null && m[i]['hs'] !== '') {
+				str  +=  m[i]['hs'] + "<BR />" + (m[i]['ds'] != null ? m[i]['ds'] : '') + "/" + (m[i]['dx'] != null ? m[i]['dx'] : '');
 				}
 				str += "</td>";
 				str += "</tr>";

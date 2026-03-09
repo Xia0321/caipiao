@@ -173,6 +173,23 @@ function getbh()
         $b[$i]['i']    = $i;
         $i++;
     }
+    // 3D(251/252)：左侧菜单只保留一个「两面」，去重
+    $fenlei = transgame($gid, 'fenlei');
+    if ($fenlei == 163 && count($b) > 0) {
+        $seen_liangmian = false;
+        $b = array_values(array_filter($b, function ($row) use (&$seen_liangmian) {
+            if ($row['name'] === '两面') {
+                if ($seen_liangmian) {
+                    return false;
+                }
+                $seen_liangmian = true;
+            }
+            return true;
+        }));
+        foreach ($b as $k => $v) {
+            $b[$k]['i'] = $k;
+        }
+    }
     return $b;
 }
 function getb8($gid)
@@ -1006,6 +1023,9 @@ function getduoarr($name){
            $pl = array("鼠","牛","虎","兔","龍","蛇","馬","羊","猴","雞","狗","豬");
         }else if(strpos($name,'尾')>0){
            $pl = array("0尾","1尾","2尾","3尾","4尾","5尾","6尾","7尾","8尾","9尾");
+        }else if(strpos($name,'字组合') !== false){
+           // 二字组合(00-99)、三字组合(000-999)：键为 0-9，与 x_play.pl 下标一致
+           $pl = array("0","1","2","3","4","5","6","7","8","9");
         }else{
            $pl = array("01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49");
         }
@@ -1013,8 +1033,11 @@ function getduoarr($name){
 }
 function getduoarrss($gid,$name){
     
-    if($gid==101 || $gid==163){   
-        if((strpos('['.$name.']','组')>0)){
+    if($gid==101 || $gid==163 || $gid==251 || $gid==252){
+        if (strpos($name, '组选3') !== false || strpos($name, '组选6') !== false || strpos($name, '组选三') !== false || strpos($name, '组选六') !== false) {
+            // 组选3/组选6：百位、十位、个位各选若干，共30项(百0-9+十0-9+个0-9)，与3字定位一致便于前端三区展示
+            $pl = array("0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9");
+        } else if((strpos('['.$name.']','组')>0)){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
         }else{  
               $names = str_replace('定位','',$name);
@@ -1055,10 +1078,12 @@ function getduoarrss($gid,$name){
 }
 function getduoarrssuser($gid,$name){
     
-    if($gid==101 || $gid==163){   
+    if($gid==101 || $gid==163 || $gid==251 || $gid==252){
         if(strpos($name,'一字') !== false || strpos($name,'1字') !== false){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
-        }else if((strpos('['.$name.']','组')>0)){
+        } else if (strpos($name, '组选3') !== false || strpos($name, '组选6') !== false || strpos($name, '组选三') !== false || strpos($name, '组选六') !== false) {
+            $pl = array("0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9","0","1","2","3","4","5","6","7","8","9");
+        } else if((strpos('['.$name.']','组')>0)){
             $pl = array("0","1","2","3","4","5","6","7","8","9");
         }else{  
               $names = str_replace('定位','',$name);

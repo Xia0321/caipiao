@@ -280,11 +280,7 @@ switch ($_REQUEST['xtype']) {
       $tpl->assign("is_api", (int)@$msql->f('is_api'));
       $tpl->assign("mch_code", $msql->f('mch_code') !== null ? $msql->f('mch_code') : '');
       $tpl->assign("mch_secret", $msql->f('mch_secret') !== null ? $msql->f('mch_secret') : '');
-      $cb_url = '';
-      if (trim($msql->f('mch_code')) !== '') {
-         $fsql->query("SELECT callback_url FROM `x_mchs` WHERE mch_code='" . addslashes($msql->f('mch_code')) . "' LIMIT 1");
-         if ($fsql->next_record()) $cb_url = $fsql->f('callback_url') ? $fsql->f('callback_url') : '';
-      }
+      $cb_url = ($msql->f('callback_url') !== null && $msql->f('callback_url') !== '') ? trim($msql->f('callback_url')) : '';
       $tpl->assign("callback_url", $cb_url);
       $tpl->assign("action", 'edit');
       
@@ -460,7 +456,7 @@ switch ($_REQUEST['xtype']) {
       $layer  = transuser($fid, "layer") + 1;
       $uid    = setupid("$tb_user", "userid");
 	 $time = time();
-      $sql    = "insert into `$tb_user` set username='$username',userid='$uid',userpass='$userpass',name='$name',status='$status',ifagent='$ifagent',layer='$layer',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',fdc='$fdc',pan='$pan',defaultpan='$defaultpan',maxmoney='$maxmoney',kmaxmoney='$kmaxmoney',fmaxmoney='$fmaxmoney',money='$money',kmoney='$kmoney',fmoney='$fmoney',fudong='$fudong',fid='$fid',wid='$wid',fastje=0,gid='$mgid',cssz='$cssz',regtime=NOW(),yingdenyje='$yingdenyjes',is_api='$is_api',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql'"; 
+      $sql    = "insert into `$tb_user` set username='$username',userid='$uid',userpass='$userpass',name='$name',status='$status',ifagent='$ifagent',layer='$layer',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',fdc='$fdc',pan='$pan',defaultpan='$defaultpan',maxmoney='$maxmoney',kmaxmoney='$kmaxmoney',fmaxmoney='$fmaxmoney',money='$money',kmoney='$kmoney',fmoney='$fmoney',fudong='$fudong',fid='$fid',wid='$wid',fastje=0,gid='$mgid',cssz='$cssz',regtime=NOW(),yingdenyje='$yingdenyjes',is_api='$is_api',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql',callback_url='$callback_url_sql'"; 
 		
 		$sql .= ",tel='$tel',qq='$qq',email='$email',bz='$bz',bank='$bank',bankname='$bankname',banknum='$banknum',moneypass='$moneypass'";
       $thefid = $fid;
@@ -474,14 +470,7 @@ switch ($_REQUEST['xtype']) {
          echo 2;
       } else {
          if ($msql->query($sql)) {
-            if ($is_api == 1 && $mch_code !== '') {
-               $fsql->query("SELECT id FROM `x_mchs` WHERE mch_code='$mch_code_sql' LIMIT 1");
-               if ($fsql->next_record()) {
-                  $msql->query("UPDATE `x_mchs` SET callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1 WHERE mch_code='$mch_code_sql'");
-               } else {
-                  $msql->query("INSERT INTO `x_mchs` SET mch_code='$mch_code_sql', callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1");
-               }
-            }
+            // 商户配置已全部存于 x_user（callback_url 已写入上方 insert），不再操作 x_mchs
             userchange("新增", $uid);
             if ($layer == 1) {
                $msql->query("insert into `$tb_play_user` select NULL,gid,$uid,bid,sid,cid,pid,0,0,mp1,mp2,pl,mpl,0,0,xsort,0,0,0,0 from `$tb_play`");
@@ -707,20 +696,10 @@ switch ($_REQUEST['xtype']) {
       }
 	  $sql .= ",tel='$tel',qq='$qq',email='$email',bz='$bz',bank='$bank',bankname='$bankname',banknum='$banknum',moneypass='$moneypass'";
 	  $old_mch_code = $msql->f('mch_code');
-	  $sql .= ",is_api='$is_api',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql'";
+	  $sql .= ",is_api='$is_api',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql',callback_url='$callback_url_sql'";
 	  $sql .= " where userid='$uid' ";
 	  $msql->query($sql);
-      if ($is_api == 1 && $mch_code !== '') {
-         $fsql->query("SELECT id FROM `x_mchs` WHERE mch_code='$mch_code_sql' LIMIT 1");
-         if ($fsql->next_record()) {
-            $msql->query("UPDATE `x_mchs` SET callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1 WHERE mch_code='$mch_code_sql'");
-         } else {
-            $msql->query("INSERT INTO `x_mchs` SET mch_code='$mch_code_sql', callback_url='$callback_url_sql', mch_secret='$mch_secret_sql', status=1");
-         }
-      } else if ($is_api == 0 && trim($old_mch_code) !== '') {
-         $old_mch = addslashes($old_mch_code);
-         $msql->query("UPDATE `x_mchs` SET status=0 WHERE mch_code='$old_mch'");
-      }
+      // 商户配置已全部存于 x_user，不再操作 x_mchs
       userchange("修改资料", $uid);
       $layer = transuser($uid, 'layer');
       if ($layer == 1) {

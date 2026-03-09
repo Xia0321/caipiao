@@ -1,5 +1,9 @@
 var gatt, time0, time1, settime0, settime1, timek, settimek, gntime = 8,
     setgntime, upl, fastobj,tuvar, wanfaarr = [];
+/** 二字组合：菜单可能显示「二字组合」或「2字组合」 */
+function is2zCombo(n) { return n == '2字组合' || n == '二字组合'; }
+/** 三字组合：菜单可能显示「三字组合」或「3字组合」 */
+function is3zCombo(n) { return n == '3字组合' || n == '三字组合'; }
 
 function myready() {
     if(fenlei==107){
@@ -59,6 +63,12 @@ function myready() {
         
     });
     $(".menuplay a:eq(2)").addClass("lrm_back");
+    $(document).off("click.makeMenuplayToggle", "#make-menuplay-toggle, .make-menuplay-toggle").on("click.makeMenuplayToggle", "#make-menuplay-toggle, .make-menuplay-toggle", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $container = $(this).closest(".kDGwcG");
+        if ($container.length) $container.toggleClass("menuplay-hidden");
+    });
     $(".refresh div").click(function() {
         clearTimeout(setgntime);
         lib();
@@ -155,13 +165,15 @@ function myready() {
         if(menuhtml=='长龙' || menuhtml=='遗漏'){
             return false;
         }
+        if (window._menuplaySwitching) return false;
+        window._menuplaySwitching = true;
         $(".menuplay a.lrm_back").removeClass("lrm_back");
         $(this).addClass("lrm_back");
         if(menuhtml=='番摊'){
             $(".tongji").html("番路");
             $(".tongjidiv .title").html("番路");
             $(".tongjidiv .cl").hide();
-            $(".tongjidiv .lz").hide();            
+            $(".tongjidiv .lz").hide();
             $(".tongjidiv .ftlu").show();
             $(".tongjidiv .tjmenu").hide();
         }else{
@@ -173,6 +185,7 @@ function myready() {
             $(".tongjidiv .tjmenu").show();
         }
         lib();
+        return false;
     });
 
     $(".tongji").click(function(){
@@ -475,7 +488,7 @@ function lib() {
         $(".abcdakjs").hide();
     }
 
-    if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码' | bname == '任选牛牛') {
+    if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | is2zCombo(bname) | bname == '2字定位' | is3zCombo(bname) | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码' | bname == '任选牛牛') {
         libs('d2')
     } else if (bname == '两面' || bname=="大小骰宝") {
         libs('sm')
@@ -510,12 +523,13 @@ function libs(stype) {
     //console.log('xtype=lib&stype=' + stype + sstr + "&pid=" + pidduo)
     $(".bcn_center2.items").remove();
     $(".rough_lines.items").remove();
+    $(".make").addClass("make-loading");
     $.ajax({
         type: 'POST',
         url:mulu+'make.php',
         dataType: 'json',
         cache: false,
-        async: false,
+        async: true,
         data: 'xtype=lib&stype=' + stype + sstr + "&pid=" + pidduo,
         success: function(m) {
             //console.log(JSON.stringify(m));
@@ -837,7 +851,7 @@ function libs(stype) {
                         tmpsid = m[i]['sid'];
                     }
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
-            }else  if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码'  | bname == '任选牛牛'){          
+            }else  if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | is2zCombo(bname) | bname == '2字定位' | is3zCombo(bname) | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码'  | bname == '任选牛牛'){          
                     str += rhtmlsduo();
                     var pnamea,znums;
                     for (i = 0; i <ml; i++) {                       
@@ -869,10 +883,21 @@ function libs(stype) {
                 var i;
                 var str1 = '';
                 var str2 = '';
+                var isZuxuan30 = (bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六');
+                if (isZuxuan30 && (!m[0]['duo'] || !m[0]['duo'][0] || m[0]['duo'][0].length < 10)) {
+                    var def = ["0","1","2","3","4","5","6","7","8","9"];
+                    var def30 = def.concat(def).concat(def);
+                    m[0]['duo'] = [def30, def30.map(function(){return '-';})];
+                    if (!m[m[0]['index']]) m[m[0]['index']] = {};
+                    m[m[0]['index']]['ifok'] = m[m[0]['index']]['ifok'] || 1;
+                }
                 var cd = m[0]['duo'][0].length;
+                var cd_orig = cd;
+                if (isZuxuan30 && cd == 10) { cd = 30; }
                 var j = 1;
                 var peilv=[];
                 for (i = 0; i < cd; i++) {
+                    var idx = (isZuxuan30 && cd_orig == 10) ? (i % 10) : i;
                     if (bname == '2字定位') {
                         if (i == 0) {
                             str1 += rhtmls("选择" + pnamea.substr(0, 1) + "位(多选自动组合)");
@@ -935,50 +960,56 @@ function libs(stype) {
                             j = 3
                         }
                     }
-                    str2 += rhtmlduohm2(m[0]['duo'][0][i],m[0]['duo'][0][i]);
-                    
-                    peilv[0] = rpeilv(m[0]['duo'][1][i], m[m[0]['index']]['ifok']);
-                    var p=1;
-                    if (bname == '2字组合' | bname == '三中二' | bname == '二中特') {
-                         p=2;
-                         peilv[1] = rpeilv(m[0]['duo'][2][i], m[m[0]['index']]['ifok']);
+                    if (bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+                        if (i == 0) {
+                            str1 += rhtmls("百位");
+                            j = 1
+                        } else if (i == 10) {
+                            str1 += "</div></div></div></div><div class='rough_lines items'></div>";
+                            str1 += rhtmls("十位");
+                            j = 2
+                        } else if (i == 20) {
+                            str1 += "</div></div></div></div><div class='rough_lines items'></div>";
+                            str1 += rhtmls("个位");
+                            j = 3
+                        }
                     }
-                    if (bname == '3字组合') {
+                    str2 += rhtmlduohm2(m[0]['duo'][0][idx],m[0]['duo'][0][idx]);
+                    
+                    peilv[0] = rpeilv(m[0]['duo'][1][idx], m[m[0]['index']]['ifok']);
+                    var p=1;
+                    if (is2zCombo(bname) | bname == '三中二' | bname == '二中特') {
+                         p=2;
+                         peilv[1] = rpeilv(m[0]['duo'][2][idx], m[m[0]['index']]['ifok']);
+                    }
+                    if (is3zCombo(bname)) {
                          p=3;
-                         peilv[1] = rpeilv(m[0]['duo'][2][i], m[m[0]['index']]['ifok']);
-                         peilv[2] = rpeilv(m[0]['duo'][3][i], m[m[0]['index']]['ifok']);
+                         peilv[1] = rpeilv(m[0]['duo'][2][idx], m[m[0]['index']]['ifok']);
+                         peilv[2] = rpeilv(m[0]['duo'][3][idx], m[m[0]['index']]['ifok']);
                     }
                     if(j==2){
-                        str1 += rhtmlduohm(m[0]['duo'][0][i],peilv,m[0]['duo'][0][i],p).replace(/d1/g, 'd2');
+                        str1 += rhtmlduohm(m[0]['duo'][0][idx],peilv,m[0]['duo'][0][idx],p).replace(/d1/g, 'd2');
                     }else if(j==3){
-                        str1 += rhtmlduohm(m[0]['duo'][0][i],peilv,m[0]['duo'][0][i],p).replace(/d1/g, 'd3');
+                        str1 += rhtmlduohm(m[0]['duo'][0][idx],peilv,m[0]['duo'][0][idx],p).replace(/d1/g, 'd3');
                     }else{
-                        str1 += rhtmlduohm(m[0]['duo'][0][i],peilv,m[0]['duo'][0][i],p);  
+                        str1 += rhtmlduohm(m[0]['duo'][0][idx],peilv,m[0]['duo'][0][idx],p);  
                     }
                     
                     
                 }
 
                 
-                if (bname == '2字组合') {
-                    // 按字头分组显示全部2位组合，赔率从接口动态获取
-                    var duo0 = m[0]['duo'][0];
-                    var duolen = duo0.length;
-                    var zpid = m[m[0]['index']]['pid'];
-                    var zifok = m[m[0]['index']]['ifok'];
-                    for (var zi = 0; zi < duolen; zi++) {
-                        str += rhtmls(duo0[zi] + "字头");
-                        for (var zj = 0; zj < duolen; zj++) {
-                            var zrate = (zi == zj)
-                                ? rpeilv(m[0]['duo'][1][zi], zifok)
-                                : rpeilv(m[0]['duo'][2][zi], zifok);
-                            str += "<a class='dds ztoucell' m='" + duo0[zi] + "," + duo0[zj] + "' pid='" + zpid + "'>" +
-                                   "<div class='name'>" + duo0[zi] + duo0[zj] + "</div>" +
-                                   "<div class='b_odds peilv1'>" + zrate + "</div></a>";
-                        }
-                        str += "</div></div></div></div><div class='rough_lines items'></div>";
-                    }
-                } else if (bname == '3字组合') {
+                if (is2zCombo(bname)) {
+                    str += "<div class='mxj-duo-hidden'>";
+                    str += rhtmls("第1个投注号码");
+                    str += str1;
+                    str += "</div></div></div></div><div class='rough_lines items'></div>";
+                    str += rhtmls("第2个投注号码");
+                    str += str2;
+                    str += "</div></div></div></div></div>";
+                    str += rhtmlD2ByZitou(m[0]['duo'], m[m[0]['index']] ? m[m[0]['index']]['ifok'] : 1);
+                } else if (is3zCombo(bname)) {
+                    str += "<div class='mxj-duo-hidden'>";
                     str += rhtmls("第1个投注号码");
                     str += str1;
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
@@ -987,7 +1018,8 @@ function libs(stype) {
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
                     str += rhtmls("第3个投注号码");
                     str += str2.replace(/d2/g, 'd3');
-                    str += "</div></div></div></div><div class='rough_lines items'></div>";
+                    str += "</div></div></div></div></div>";
+                    str += rhtmlD3ByZitou(m[0]['duo'], m[m[0]['index']] ? m[m[0]['index']]['ifok'] : 1);
                 } else if (pnamea == '选二连直') {
                     str += rhtmls("选择第1球(多选自动组合)");
                     str += str1;
@@ -995,7 +1027,7 @@ function libs(stype) {
                     str += rhtmls("第2球");
                     str += str1.replace(/d1/g, 'd2');
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
-                } else if (pnamea == '选三前直' | pnamea == '选前三直选'  | pnamea == '选前二直选'  | bname == '3字定位' | bname == '2字定位') {
+                } else if (pnamea == '选三前直' | pnamea == '选前三直选'  | pnamea == '选前二直选'  | bname == '3字定位' | bname == '2字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                     str += str1;
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
                 } else {
@@ -1011,8 +1043,14 @@ function libs(stype) {
 
             }
             addfunc(duo);
+            $(".make").removeClass("make-loading");
+            window._menuplaySwitching = false;
+        },
+        error: function() {
+            $(".make").removeClass("make-loading");
+            window._menuplaySwitching = false;
         }
-    })
+    });
 }
 function addfunc(duo){
     var bname = $(".menuplay a.lrm_back span").html();
@@ -1026,30 +1064,25 @@ function addfunc(duo){
             $(".tz").hide();
         });
         $(".dds").click(function(){
+            // 二字/三字组合字头格由 .mxj-d2zt / .mxj-d3zt 单独处理，避免重复 toggle 和错误 tzstatus
+            if ($(this).hasClass('mxj-d2zt') || $(this).hasClass('mxj-d3zt')) return;
             $(this).toggleClass("qiuselect");
             var znum1 = Number($(".plays.qiuselect").attr("znum1"));
             var pname = $(".plays.qiuselect").attr("mname");
             
             if (pname=="三中二") znum1 = 3;
             
-            if (bname == '2字组合') {
-                // 字头模式：有选中的组合即可下注
-                if ($(".ztoucell.qiuselect").length > 0) {
-                    tzstatus(1);
-                } else {
-                    tzstatus(0);
-                }
-            } else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
+            if (is2zCombo(bname) | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
 
                 var dnum1 = $(".d1.qiuselect").length;
                 var dnum2 = $(".d2.qiuselect").length;
                 if(dnum1>0 && dnum2>0){
-                    tzstatus(1);
+                    tzstatus(1);                       
                 }else{
-                    tzstatus(0);
+                    tzstatus(0);  
                 }
 
-            }else if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前组') {
+            }else if (is3zCombo(bname) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前组' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                 var dnum1 = $(".d1.qiuselect").length;
                 var dnum2 = $(".d2.qiuselect").length;
                 var dnum3 = $(".d3.qiuselect").length;
@@ -1066,6 +1099,18 @@ function addfunc(duo){
                 }
             }
             totalje();
+        });
+        $(document).off("click.mxjD2zt", ".mxj-d2zt").on("click.mxjD2zt", ".mxj-d2zt", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).toggleClass("qiuselect");
+            addtouzhupaly();
+        });
+        $(document).off("click.mxjD3zt", ".mxj-d3zt").on("click.mxjD3zt", ".mxj-d3zt", function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).toggleClass("qiuselect");
+            addtouzhupaly();
         });
     }else{
         $(".play").click(function(){
@@ -1102,18 +1147,25 @@ function addfunc(duo){
 
 
 function addtouzhupaly(){
-    var zs = $(".play.qiuselect").length;
+    var zs = 0;
     var bname = $(".menuplay a.lrm_back span").html();
-    if (bname=='快捷') {
-        zs = zs * $(".kj span.active").length;
+    if (is2zCombo(bname)) {
+        zs = $(".mxj-d2zt.qiuselect").length;
+    } else if (is3zCombo(bname)) {
+        zs = $(".mxj-d3zt.qiuselect").length;
+    } else {
+        zs = $(".play.qiuselect").length;
+        if (bname=='快捷') {
+            zs = zs * $(".kj span.active").length;
+        }
     }
-    $(".tz .tzzs").html("已选"+zs+"注")   
+    $(".tz .tzzs").html("已选"+zs+"注");
     if(zs>0){
-        tzstatus(1);                           
-   }else{
-        tzstatus(0); 
-   }
-   totalje();
+        tzstatus(1);
+    }else{
+        tzstatus(0);
+    }
+    totalje();
 }
 
 function tzstatus(v){
@@ -1136,14 +1188,17 @@ function totalje(){
     if($(".plays.qiuselect").length>0){
         var pname = $(".plays.qiuselect").attr("mname");
         var bname = $(".menuplay a.lrm_back span").html();
-        //console.log(bname)
-        if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
+        if (is2zCombo(bname)) {
+            zs = $(".mxj-d2zt.qiuselect").length;
+        } else if (is3zCombo(bname)) {
+            zs = $(".mxj-d3zt.qiuselect").length;
+        } else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
             var dnum1 = $(".d1.qiuselect").length;
             var dnum2 = $(".d2.qiuselect").length;
             zs = dnum1*dnum2;
             //console.log(dnum1+"-"+dnum2)
         
-        }else if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前组') {
+        }else if (bname == '3字定位' | pname == '选前三直选' | pname == '选三前组' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
             var dnum1 = $(".d1.qiuselect").length;
             var dnum2 = $(".d2.qiuselect").length;
             var dnum3 = $(".d3.qiuselect").length;
@@ -1213,29 +1268,45 @@ function exe() {
         var pone = [];
         var ptwo = [];
         var pid = $(".plays.qiuselect").attr("pid");
-        if (bname == '2字组合') {
-            // 字头模式：直接读取选中的2位组合
-            var i = 0;
-            $(".ztoucell.qiuselect").each(function() {
-                play[i] = [];
-                play[i]['gid'] = ngid;
-                play[i]['pid'] = pid;
-                play[i]['name'] = pname;
-                play[i]['je'] = je;
-                var parts = $(this).attr('m').split(',');
-                play[i]['con'] = parts.sort();
-                play[i]['peilv1'] = Number($(this).find(".peilv1").html());
-                i++;
-            });
-            if (i == 0) {
-                alert("请选择号码");
-                window._makevSubmitting = false;
-                return false;
-            }
-        } else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
+        if (is2zCombo(bname) | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | is3zCombo(bname) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
             var nl;
             ashree = [];
-            if (bname == '2字定位' | bname == '3字定位' | bname == '3字组合') {
+            if (is2zCombo(bname)) {
+                if ($(".mxj-d2zt.qiuselect").length > 0) {
+                    var je = $(".tz .je").val();
+                    $(".mxj-d2zt.qiuselect").each(function(i) {
+                        play[i] = [];
+                        play[i]['gid'] = ngid;
+                        play[i]['pid'] = pid;
+                        play[i]['name'] = pname;
+                        play[i]['je'] = je;
+                        play[i]['con'] = [$(this).attr('data-d1'), $(this).attr('data-d2')].sort();
+                        play[i]['peilv1'] = Number($(this).attr('data-peilv')) || 0;
+                    });
+                } else {
+                    alert("请至少选择1个二字组合");
+                    window._makevSubmitting = false;
+                    return false;
+                }
+            } else if (is3zCombo(bname)) {
+                if ($(".mxj-d3zt.qiuselect").length > 0) {
+                    var je = $(".tz .je").val();
+                    $(".mxj-d3zt.qiuselect").each(function(i) {
+                        play[i] = [];
+                        play[i]['gid'] = ngid;
+                        play[i]['pid'] = pid;
+                        play[i]['name'] = pname;
+                        play[i]['je'] = je;
+                        play[i]['con'] = [$(this).attr('data-d1'), $(this).attr('data-d2'), $(this).attr('data-d3')].sort();
+                        play[i]['peilv1'] = Number($(this).attr('data-peilv')) || 0;
+                    });
+                } else {
+                    alert("请至少选择1个三字组合");
+                    window._makevSubmitting = false;
+                    return false;
+                }
+            } else {
+            if (bname == '2字定位' | is2zCombo(bname) | bname == '3字定位' | is3zCombo(bname)) {
                 nl = 10;
             } else if (pname == '选前二直选' | pname == '选前三直选') {
                 nl = 11;
@@ -1249,10 +1320,10 @@ function exe() {
                     aone[i]['n'] = $(this).attr('m');
                     aone[i]['p'] = [];
                     aone[i]['p'][0] = Number($(this).find(".peilv1").html());
-                    if (bname == '2字组合') {
+                    if (is2zCombo(bname)) {
                         aone[i]['p'][1] = Number($(this).find(".peilv2").html());
                     }
-                    if (bname == '3字组合') {
+                    if (is3zCombo(bname)) {
                         aone[i]['p'][1] = Number($(this).find(".peilv2").html());
                         aone[i]['p'][2] = Number($(this).find(".peilv3").html());
                     }
@@ -1264,15 +1335,15 @@ function exe() {
                 if ($(this).hasClass('qiuselect')) {
                     atwo[i] = [];
                     var j;
-                    if (bname == '2字组合' | bname == '3字组合') {
+                    if (is2zCombo(bname) | is3zCombo(bname)) {
                         atwo[i]['n'] = $(this).attr('m');
                         j =  $(this).attr('pid');
                         atwo[i]['p'] = [];
                         atwo[i]['p'][0] = Number($(".dds.d1.p"+j).find(".peilv1").html());
-                        if (bname == '2字组合') {
+                        if (is2zCombo(bname)) {
                             atwo[i]['p'][1] = Number($(".dds.d1.p"+j).find(".peilv2").html());
                         }
-                        if (bname == '3字组合') {
+                        if (is3zCombo(bname)) {
                             atwo[i]['p'][1] = Number($(".dds.d1.p"+j).find(".peilv2").html());
                             atwo[i]['p'][2] = Number($(".dds.d1.p"+j).find(".peilv3").html());
                         }
@@ -1284,18 +1355,18 @@ function exe() {
                     i++;
                 }
             });
-            if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
+            if (is3zCombo(bname) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                 i=0;
                 $(".dds.d3").each(function() {
                     if ($(this).hasClass('qiuselect')) {
                         var j;
-                        if (bname == '3字组合') {
+                        if (is3zCombo(bname)) {
                             ashree[i] = [];
                             ashree[i]['n'] = $(this).attr('m');
                             j = $(this).attr('pid');
                             ashree[i]['p'] = [];
                             ashree[i]['p'][0] = Number($(".dds.d1.p"+j).find(".peilv1").html());
-                            if (bname == '3字组合') {
+                            if (is3zCombo(bname)) {
                                 ashree[i]['p'][1] = Number($(".dds.d1.p"+j).find(".peilv2").html());
                                 ashree[i]['p'][2] = Number($(".dds.d1.p"+j).find(".peilv3").html());
                             }
@@ -1309,10 +1380,15 @@ function exe() {
                     }
                 });
             }
+            if ((bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') && (aone.length < 1 || atwo.length < 1 || ashree.length < 1)) {
+                alert("组选3/组选6 请在百位、十位、个位各至少选择1个号码");
+                window._makevSubmitting = false;
+                return false;
+            }
             var aall = 0;
-            if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
+            if (bname == '2字定位' | is2zCombo(bname) | pname == '选前二直选' | pname == '选二连直') {
                 aall = Ctwo(aone, atwo, bname, pname);
-            } else if (bname == '3字定位' | bname == '3字组合' | pname == '选前三直选' | pname == '选三前直') {
+            } else if (bname == '3字定位' | is3zCombo(bname) | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                 aall = Cshree(aone, atwo, ashree, bname, pname);
             }
             var dw = 0;
@@ -1345,6 +1421,7 @@ function exe() {
             ashree = null;
             pone = null;
             ptwo = null;
+            }
         } else {
             if (pname == '三中二') {
                 znum = 3
@@ -1516,20 +1593,13 @@ function exe() {
 
     }
     $(".tz .jeqr").attr("disabled",true);
-    var pstr = '[';
-    for (i = 0; i < play.length; i++) {
-        //console.log(play[i]['pid'])
-        if (i != 0) pstr += ',';
-        pstr += json_encode_js(play[i])
-    }
-    pstr += ']';
-    //console.log(pstr);
+    var pstr = encodeURIComponent(JSON.stringify(play));
     var ab = $(".ab span.active").attr("v");
     var abcd = $(".abcd").val();
     $.ajax({
         type: 'POST',
         url:mulu+'makelib.php',
-        data: 'xtype=make&pstr=' + pstr + "&abcd=" + abcd + "&ab=" + ab,
+        data: 'xtype=make&pstr=' + pstr + "&abcd=" + (abcd||'') + "&ab=" + (ab||'A'),
         dataType: 'json',
         cache: false,
         async: false,
@@ -1635,7 +1705,7 @@ function rhtmlsduo(name) {
 function rhtmlduo(arr,bname,flag) {
     var qiuselect="";
     if(flag==1) qiuselect = " qiuselect";
-    if(bname=="2字组合" || bname=="3字组合"){
+    if(is2zCombo(bname) || is3zCombo(bname)){
         var str = "<a class='sc-1csyyul-1"+qiuselect+" qiue plays p" + arr['pid'] + "' bid='" + arr['bid'] + "' pid='" + arr['pid'] + "' sname='" + arr['sname'] + "' cname='" + arr['cname'] + "' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' znum2='" + arr['znum2'] + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + arr['name'] + "</div></a>";
     }else{
         var str = "<a class='sc-1csyyul-1"+qiuselect+" qiud plays p" + arr['pid'] + "' bid='" + arr['bid'] + "' pid='" + arr['pid'] + "' sname='" + arr['sname'] + "' cname='" + arr['cname'] + "' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' znum2='" + arr['znum2'] + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + arr['name'] + "</div></a>";
@@ -1656,6 +1726,61 @@ function rhtmlduohm2(name,  i) {
     var str = "<a class='sc-1csyyul-1 qiuc dds d2 p" + i + "'  pid='" + i + "' m='" + name + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + qiu(name) + "</div>";
     str += "</a>"
     return str;
+}
+
+/** 二字组合：按字头列出所有组合，点击直接下注 */
+function rhtmlD2ByZitou(duo, ifok) {
+    var h = '', k, j, lab, od, cls, peilvNum;
+    for (k = 0; k <= 9; k++) {
+        h += "<div class='bcn_center2 items'><div class='bcn_title'><a class='bt_icon open'></a>" + k + "\u5b57\u5934</div><div class='ReactCollapse--collapse' style='height: auto;'><div class='ReactCollapse--content'><div class='bcn_number_type mxj-zitou-grid'>";
+        for (j = 0; j <= 9; j++) {
+            lab = '' + k + j;
+            if (k === j) {
+                peilvNum = (duo[1] && duo[1][k] != null) ? Number(duo[1][k]) : 0;
+            } else {
+                var p1 = (duo[2] && duo[2][k] != null) ? Number(duo[2][k]) : 0;
+                var p2 = (duo[2] && duo[2][j] != null) ? Number(duo[2][j]) : 0;
+                peilvNum = (p1 && p2) ? Math.min(p1, p2) : (p1 || p2);
+            }
+            od = peilvNum ? rpeilv(peilvNum, ifok) : '-';
+            cls = "mxj-d2zt sc-1csyyul-1 qiuc dds";
+            h += "<a class='" + cls + "' data-d1='" + k + "' data-d2='" + j + "' data-peilv='" + peilvNum + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
+        }
+        h += "</div></div></div></div><div class='rough_lines items'></div>";
+    }
+    return h;
+}
+
+/** 三字组合：按字头列出所有组合，点击直接下注 */
+function rhtmlD3ByZitou(duo, ifok) {
+    var h = '', k, a, b, c, list, i, lab, od, cls, peilvNum;
+    for (k = 0; k <= 9; k++) {
+        list = [];
+        for (a = k; a <= 9; a++) for (b = a; b <= 9; b++) for (c = b; c <= 9; c++) list.push([a, b, c]);
+        h += "<div class='bcn_center2 items'><div class='bcn_title'><a class='bt_icon open'></a>" + k + "\u5b57\u5934</div><div class='ReactCollapse--collapse' style='height: auto;'><div class='ReactCollapse--content'><div class='bcn_number_type mxj-zitou-grid'>";
+        for (i = 0; i < list.length; i++) {
+            a = list[i][0]; b = list[i][1]; c = list[i][2];
+            lab = '' + a + b + c;
+            if (a === b && b === c) {
+                peilvNum = (duo[1] && duo[1][a] != null) ? Number(duo[1][a]) : 0;
+            } else if (a !== b && a !== c && b !== c) {
+                var pa = (duo[3] && duo[3][a] != null) ? Number(duo[3][a]) : 0;
+                var pb = (duo[3] && duo[3][b] != null) ? Number(duo[3][b]) : 0;
+                var pc = (duo[3] && duo[3][c] != null) ? Number(duo[3][c]) : 0;
+                peilvNum = (pa && pb && pc) ? Math.min(pa, pb, pc) : (pa || pb || pc);
+            } else {
+                var p2a = (duo[2] && duo[2][a] != null) ? Number(duo[2][a]) : 0;
+                var p2b = (duo[2] && duo[2][b] != null) ? Number(duo[2][b]) : 0;
+                var p2c = (duo[2] && duo[2][c] != null) ? Number(duo[2][c]) : 0;
+                peilvNum = (p2a && p2b && p2c) ? Math.min(p2a, p2b, p2c) : (p2a || p2b || p2c);
+            }
+            od = peilvNum ? rpeilv(peilvNum, ifok) : '-';
+            cls = "mxj-d3zt sc-1csyyul-1 qiuc dds";
+            h += "<a class='" + cls + "' data-d1='" + a + "' data-d2='" + b + "' data-d3='" + c + "' data-peilv='" + peilvNum + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
+        }
+        h += "</div></div></div></div><div class='rough_lines items'></div>";
+    }
+    return h;
 }
 
 function json_encode_js(aaa) {
@@ -1725,7 +1850,7 @@ function Ctwo(a, b, bname, pname) {
     var tmps = '';
     for (i = 0; i < al; i++) {
         for (j = 0; j < bl; j++) {
-            if (bname == '2字组合' | pname == '选前二直选' | pname == '选二连直') {
+            if (is2zCombo(bname) | pname == '选前二直选' | pname == '选二连直') {
                 tmps = [a[i]['n'], b[j]['n']];
                 if (ins.indexOf(tmps.sort().join('-')) != -1) {
                     continue;
@@ -1757,7 +1882,7 @@ function Cshree(a, b, c, bname, pname) {
     for (i = 0; i < al; i++) {
         for (j = 0; j < bl; j++) {
             for (k = 0; k < cl; k++) {
-                if (bname == '3字组合' | pname == '选前三直选' | pname == '选三前直') {
+                if (is3zCombo(bname) | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                     tmps = [a[i]['n'], b[j]['n'], c[k]['n']];
                     if (ins.indexOf(tmps.sort().join('-')) != -1) {
                         continue;
@@ -1765,7 +1890,7 @@ function Cshree(a, b, c, bname, pname) {
                     ins += ',' + tmps.sort().join('-');
                 }
                 r[h] = [];
-                if ((a[i]['n'] == b[j]['n'] & a[i]['n'] == c[k]['n']) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
+                if ((a[i]['n'] == b[j]['n'] & a[i]['n'] == c[k]['n']) | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                     r[h]['p'] = Math.min(a[i]['p'][0], b[j]['p'][0], c[k]['p'][0]);
                 } else if (a[i]['n'] == b[j]['n'] | a[i]['n'] == c[k]['n'] | b[j]['n'] == c[k]['n']) {
                     r[h]['p'] = Math.min(a[i]['p'][1], b[j]['p'][1], c[k]['p'][1]);
@@ -1883,12 +2008,23 @@ function updatel() {
     var qs = $(".upqishu").attr("q");
     if (m1 == 'undefined' || m1 == undefined) m1 = '';
 
+    var gidParam = (typeof ngid !== 'undefined' && (ngid || ngid === 0)) ? String(ngid) : '';
+    if (!gidParam) {
+        var bodyEl = document.body || document.querySelector('body');
+        if (bodyEl && bodyEl.getAttribute('data-gid')) gidParam = bodyEl.getAttribute('data-gid');
+    }
+    if (!gidParam) {
+        var sel = document.querySelector('select.game');
+        if (sel && sel.value) gidParam = sel.value;
+    }
+    var gidSuffix = gidParam ? "&gid=" + gidParam : "";
+
     $.ajax({
         type: 'POST',
         url:mulu+'make.php',
         cache: false,
         dataType: "json",
-        data: "xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + tustr,
+        data: "xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + tustr + gidSuffix,
         success: function(m) {
             getusermoney();
             //console.log(m);

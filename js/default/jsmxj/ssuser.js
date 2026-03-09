@@ -12,11 +12,11 @@ function exe() {
         var ptwo = [];
         var pid = $(".betlist.betlistactive-radio").parent().attr('pid');
         var znum = 0;
-        if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
+        if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
 
             var nl;
             ashree = [];
-            if (bname == '2字定位' | bname == '2字组合' | bname == '3字定位' | bname == '3字组合') {
+            if (bname == '2字定位' | bname == '2字组合' | bname == '3字定位' | bname == '3字组合' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                 nl = 10;
             } else if (pname == '选前二直选' | pname == '选前三直选') {
                 nl = 11;
@@ -65,7 +65,7 @@ function exe() {
                     i++;
                 }
             });
-            if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
+            if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6') {
 				i=0;
                 $(".duo.d3").each(function() {
                     if ($(this).hasClass('betlistactive')) {
@@ -90,10 +90,14 @@ function exe() {
                     }
                 });
             }
+            if ((bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') && (aone.length < 1 || atwo.length < 1 || ashree.length < 1)) {
+                alert("组选3/组选6 请在百位、十位、个位各至少选择1个号码");
+                return false;
+            }
             var aall = 0;
             if (bname == '2字定位' | bname == '2字组合' | pname == '选前二直选' | pname == '选二连直') {
                 aall = Ctwo(aone, atwo, bname, pname);
-            } else if (bname == '3字定位' | bname == '3字组合' | pname == '选前三直选' | pname == '选三前直') {
+            } else if (bname == '3字定位' | bname == '3字组合' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                 aall = Cshree(aone, atwo, ashree, bname, pname);
             }
             var al = aall.length;
@@ -107,7 +111,7 @@ function exe() {
                 play[i]['pid'] = pid;
                 play[i]['name'] = pname;
                 play[i]['je'] = je;
-                play[i]['con'] = aall[i]['n'].sort();
+                play[i]['con'] = aall[i]['n'].sort().join('-');
                 play[i]['peilv1'] = aall[i]['p'];
             }
             aall = null;
@@ -371,7 +375,7 @@ function lib() {
 	}
 	$("#bet_panel").css("height",$(window).height()-232);
     console.log(123);
-    if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码' | bname == '任选牛牛') {
+    if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六' | bname == '连码' | bname == '任选牛牛') {
         libs('d2')
     } else if (bname == '主盘势') {
         libs('sm')
@@ -418,14 +422,14 @@ function rhtmls(name){
 }
 function rhtmllm(arr,bname){
 	var css ;
-	if(bname=='2字组合' | bname=='3字组合' | bname=='组选3'  | bname=='组选6') css = "style='height:60px;'"; 
+	if(bname=='2字组合' | bname=='3字组合' | bname=='组选3'  | bname=='组选6' | bname=='组选三' | bname=='组选六') css = "style='height:60px;'";
 	else css = " style='height:40px' ";
     var str="<div class='col-xs-4 col-sm-3 p"+arr['pid']+"'  pid='" + arr['pid'] + "' sname='" + arr['sname'] +"' cname='" + arr['cname'] +"' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' ifok='" + arr['ifok'] + "'><div class='betlist borderpink' "+css+"><h1 title='"+arr['name']+"' class='name'>"+qiu(arr['name'])+"</h1><div class='betarrow-radio borderpink'><i class='fa fa-dot-circle-o'></i></div></div></div>";
 	return str;
 }
 function rhtmllmselected(arr,bname){
 	var css ;
-	if(bname=='2字组合' | bname=='3字组合' | bname=='组选3'  | bname=='组选6') css = "style='height:60px;'"; 
+	if(bname=='2字组合' | bname=='3字组合' | bname=='组选3'  | bname=='组选6' | bname=='组选三' | bname=='组选六') css = "style='height:60px;'";
 	else css = " style='height:40px' ";
     var str="<div class='col-xs-4 col-sm-3 p"+arr['pid']+"'  pid='" + arr['pid'] + "' sname='" + arr['sname'] +"' cname='" + arr['cname'] +"' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' ifok='" + arr['ifok'] + "'><div class='betlist borderpink betlistactive-radio' "+css+"><h1 title='"+arr['name']+"' class='name'>"+qiu(arr['name'])+"</h1><div class='betarrow-radio borderpink' style='display:block;'><i class='fa fa-dot-circle-o'></i></div></div></div>";
 	return str;
@@ -454,6 +458,20 @@ function rhtmllmhm2(name,i){
 function rhtmlslmhm(name){
    var cc = " T"+fenlei+" ball";	
    return "<div class='row pls "+cc+"'><div class='col-xs-12 padding10 bgpink borderpink marginbtm10'><div class='text-center'><span class='rowtitle white vcenter'>"+name+"</span></div></div><div class='bet_content'>";
+}
+function rhtmlZuxuanSection(title, dClass, duo0Arr, duo1Arr, ifok) {
+	var cc = " T" + fenlei + " ball";
+	var h = "<div class='row pls " + cc + " zuxuan-section'><div class='col-xs-12 padding10 marginbtm10'><div class='zuxuan-section-inner clearfix'>";
+	h += "<div class='zuxuan-label'>" + title + "</div>";
+	h += "<div class='zuxuan-balls bet_content'>";
+	var peilv0;
+	for (var k = 0; k < 10; k++) {
+		peilv0 = rpeilv(duo1Arr[k], ifok);
+		h += "<div class='col-xs-4 col-sm-2'><div class='betlist borderpink duo " + dClass + " p" + k + "' pid='" + k + "' m='" + duo0Arr[k] + "'><h1 class='name'>" + qiu(duo0Arr[k]) + "</h1>";
+		h += "<p class='odds peilv1'>" + peilv0 + "</p><div class='betarrow borderpink'><i class='fa fa-check'></i></div></div></div>";
+	}
+	h += "</div><div class='zuxuan-quick' data-d='" + dClass + "'><span class='zuxuan-q' data-op='all'>全</span><span class='zuxuan-q' data-op='big'>大</span><span class='zuxuan-q' data-op='small'>小</span><span class='zuxuan-q' data-op='odd'>奇</span><span class='zuxuan-q' data-op='even'>偶</span><span class='zuxuan-q' data-op='clear'>清</span></div></div></div></div>";
+	return h;
 }
 function libs(stype) {
     console.log(stype)
@@ -732,7 +750,7 @@ function libs(stype) {
 						tmpsid = m[i]['sid'];
 					}
 					str += "</div></div>";
-			}else  if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '连码'  | bname == '任选牛牛'){			
+			}else  if (bname == '合肖' | bname == '連碼' | bname == '不中' | bname == '生肖連' | bname == '尾數連' | bname == '2字组合' | bname == '2字定位' | bname == '3字组合' | bname == '3字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六' | bname == '连码'  | bname == '任选牛牛'){			
 					str += rhtmlslm(bname);
 					var pnamea,znums;
 					for (i = 0; i <ml; i++) {						
@@ -766,10 +784,31 @@ function libs(stype) {
                 var i;
                 var str1 = '';
                 var str2 = '';
+                var isZuxuan30 = (bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六');
+                if (isZuxuan30 && (!m[0]['duo'] || !m[0]['duo'][0] || m[0]['duo'][0].length < 10)) {
+                    var def = ["0","1","2","3","4","5","6","7","8","9"];
+                    m[0]['duo'] = [def.concat(def).concat(def), def.concat(def).concat(def).map(function(){return '-';}), [], []];
+                    m[0]['ifok'] = m[0]['ifok'] || 1;
+                }
                 var cd = m[0]['duo'][0].length;
+                var cd_orig = cd;
+                if (isZuxuan30 && cd == 10) { cd = 30; }
                 var j = 1;
 				var peilv=[];
-                for (i = 0; i < cd; i++) {
+                if (isZuxuan30) {
+                    str1 = '';
+                    for (var sec = 0; sec < 3; sec++) {
+                        var titles = ['百位','十位','个位'];
+                        var dClasses = ['d1','d2','d3'];
+                        var start = sec * 10;
+                        var duo0 = (cd_orig >= 30) ? m[0]['duo'][0].slice(start, start + 10) : m[0]['duo'][0];
+                        var duo1 = (cd_orig >= 30) ? m[0]['duo'][1].slice(start, start + 10) : m[0]['duo'][1];
+                        str1 += rhtmlZuxuanSection(titles[sec], dClasses[sec], duo0, duo1, m[0]['ifok']);
+                    }
+                    str1 += "<div class='row pls zuxuan-all-row'><div class='col-xs-12 padding10'><button type='button' class='btn btn-default zuxuan-all-three'>全选百十个</button></div></div>";
+                }
+                if (!isZuxuan30) for (i = 0; i < cd; i++) {
+                    var idx = (isZuxuan30 && cd_orig == 10) ? (i % 10) : i;
                     if (bname == '2字定位') {
                         if (i == 0) {
                             str1 += rhtmlslmhm("选择" + pnamea.substr(0, 1) + "位(多选自动组合)");
@@ -791,6 +830,20 @@ function libs(stype) {
                         } else if (i == 20) {
 							str1 += "</div></div>";
                             str1 += rhtmlslmhm("选择" + pnames.substr(2, 1) + "位");
+                            j = 3
+                        }
+                    }
+                    if (bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+                        if (i == 0) {
+                            str1 += rhtmlslmhm("百位");
+                            j = 1
+                        } else if (i == 10) {
+							str1 += "</div></div>";
+                            str1 += rhtmlslmhm("十位");
+                            j = 2
+                        } else if (i == 20) {
+							str1 += "</div></div>";
+                            str1 += rhtmlslmhm("个位");
                             j = 3
                         }
                     }
@@ -832,25 +885,25 @@ function libs(stype) {
                             j = 3
                         }
                     }
-					str2 += rhtmllmhm2(m[0]['duo'][0][i],m[0]['duo'][0][i]);
+					str2 += rhtmllmhm2(m[0]['duo'][0][idx],m[0]['duo'][0][idx]);
 					
-                    peilv[0] = rpeilv(m[0]['duo'][1][i], m[0]['ifok']);
+                    peilv[0] = rpeilv(m[0]['duo'][1][idx], m[0]['ifok']);
                     var p=1;
                     if (bname == '2字组合' | bname == '三中二' | bname == '二中特') {
                          p=2;
-						 peilv[1] = rpeilv(m[0]['duo'][2][i], m[0]['ifok']);
+						 peilv[1] = rpeilv(m[0]['duo'][2][idx], m[0]['ifok']);
                     }
                     if (bname == '3字组合') {
                          p=3;
-						 peilv[1] = rpeilv(m[0]['duo'][2][i], m[0]['ifok']);
-						 peilv[2] = rpeilv(m[0]['duo'][3][i], m[0]['ifok']);
+						 peilv[1] = rpeilv(m[0]['duo'][2][idx], m[0]['ifok']);
+						 peilv[2] = rpeilv(m[0]['duo'][3][idx], m[0]['ifok']);
                     }
 					if(j==2){
-					    str1 += rhtmllmhm(m[0]['duo'][0][i],peilv,m[0]['duo'][0][i],p).replace(/d1/g, 'd2');
+					    str1 += rhtmllmhm(m[0]['duo'][0][idx],peilv,m[0]['duo'][0][idx],p).replace(/d1/g, 'd2');
 					}else if(j==3){
-					    str1 += rhtmllmhm(m[0]['duo'][0][i],peilv,m[0]['duo'][0][i],p).replace(/d1/g, 'd3');
+					    str1 += rhtmllmhm(m[0]['duo'][0][idx],peilv,m[0]['duo'][0][idx],p).replace(/d1/g, 'd3');
 					}else{
-					    str1 += rhtmllmhm(m[0]['duo'][0][i],peilv,m[0]['duo'][0][i],p);  
+					    str1 += rhtmllmhm(m[0]['duo'][0][idx],peilv,m[0]['duo'][0][idx],p);  
 					}
 					
                     
@@ -873,15 +926,15 @@ function libs(stype) {
                     str += rhtmlslmhm("第3个投注号码");
                     str += str2.replace(/d2/g, 'd3');
                     str += "</div></div>";
+                } else if (pnamea == '选三前直' | pnamea == '选前三直选'  | pnamea == '选前二直选'  | pnamea == '3字定位' | pnamea == '2字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+                    str += str1;
+                    str += "</div></div>";
                 } else if (pnamea == '选二连直') {
                     str += rhtmlslmhm("第1球");
                     str += str1;
 					str += "</div></div>";
                     str += rhtmlslmhm("第2球");
                     str += str2;
-                    str += "</div></div>";
-                } else if (pnamea == '选三前直' | pnamea == '选前三直选'  | pnamea == '选前二直选'  | pnamea == '3字定位' | pnamea == '2字定位') {
-                    str += str1;
                     str += "</div></div>";
                 } else {
 					str += rhtmlslmhm("号码选择");
@@ -890,7 +943,9 @@ function libs(stype) {
                 }
 			}
             $(".make .abcdab").after(str);
-			
+            if ($(".zuxuan-section").length && !$("#zuxuan-style").length) {
+                $("head").append("<style id='zuxuan-style'>.zuxuan-section-inner{display:flex;flex-wrap:wrap;align-items:flex-start}.zuxuan-label{width:52px;font-weight:bold;color:#333;padding:8px 8px 0 0}.zuxuan-balls{flex:1;min-width:0}.zuxuan-quick{width:100%;display:flex;border-top:1px solid #ddd;padding:8px 0 0;margin-top:8px}.zuxuan-quick .zuxuan-q{cursor:pointer;text-align:center;flex:1;border-right:1px solid #ddd;padding:6px 0;font-size:14px}.zuxuan-quick .zuxuan-q:last-child{border-right:none}.zuxuan-quick .zuxuan-q:hover{background:#f0f0f0}.zuxuan-all-row .btn{margin:5px 0}</style>");
+            }
 			$(".ball h1.name span").addClass("resultitem");
             tu = m[0]['tu'];
             $(".tuid").val(m[0]['t']);
@@ -899,9 +954,40 @@ function libs(stype) {
 			str1 = null;
 			str2 = null;
             m = null;
-            addfunc()
+            addfunc();
+            if ($(".zuxuan-quick").length) bindZuxuanQuickButtons();
         }
     })
+}
+function bindZuxuanQuickButtons() {
+    $(".zuxuan-quick .zuxuan-q").off("click").on("click", function() {
+        var $row = $(this).closest(".zuxuan-section");
+        var d = $(this).closest(".zuxuan-quick").attr("data-d");
+        var $balls = $row.find(".duo." + d);
+        var op = $(this).attr("data-op");
+        if (op === "all") {
+            $balls.addClass("betlistactive").find(".betarrow").show();
+            return;
+        }
+        if (op === "clear") {
+            $balls.removeClass("betlistactive").find(".betarrow").hide();
+            return;
+        }
+        $balls.removeClass("betlistactive").find(".betarrow").hide();
+        var m, n;
+        $balls.each(function() {
+            m = $(this).attr("m");
+            n = parseInt(m, 10);
+            if (isNaN(n)) return;
+            if (op === "big" && n >= 5) { $(this).addClass("betlistactive").find(".betarrow").show(); }
+            if (op === "small" && n <= 4) { $(this).addClass("betlistactive").find(".betarrow").show(); }
+            if (op === "odd" && (n % 2 === 1)) { $(this).addClass("betlistactive").find(".betarrow").show(); }
+            if (op === "even" && (n % 2 === 0)) { $(this).addClass("betlistactive").find(".betarrow").show(); }
+        });
+    });
+    $(".zuxuan-all-three").off("click").on("click", function() {
+        $(".make .duo.d1, .make .duo.d2, .make .duo.d3").addClass("betlistactive").find(".betarrow").show();
+    });
 }
 function rpeilv(peilv, ifok) {
     if (Number(ifok) != 1) return '-';
@@ -1164,12 +1250,21 @@ function updatel() {
 	var qs = obj.find("strong").attr('v');
     if (m1 == 'undefind' | m1 == undefined) m1 = '';
 
+    // 请求开奖结果必须传 gid，否则后端无法按彩种返回；优先从页面 data-gid 取，再 ngid、select
+    var bodyEl = document.body || document.querySelector('body');
+    var gidParam = (bodyEl && bodyEl.getAttribute('data-gid')) ? bodyEl.getAttribute('data-gid') : '';
+    if (!gidParam && typeof ngid !== 'undefined' && (ngid || ngid === 0)) gidParam = String(ngid);
+    if (!gidParam) {
+        var sel = document.querySelector('select.game');
+        if (sel && sel.value) gidParam = sel.value;
+    }
+    var gidSuffix = gidParam ? "&gid=" + gidParam : "";
     $.ajax({
         type: 'POST',
         url: 'make.php',
         cache: false,
         dataType: "json",
-        data: "xtype=upl&qishu=" + $(".preqishu").html() + "&m1=" + m1 + "&tu=" + tustr,
+        data: "xtype=upl&qs=" + ($(".preqishu").attr("v") || $(".preqishu").html()) + "&qishu=" + $(".preqishu").html() + "&m1=" + m1 + "&tu=" + tustr + gidSuffix,
         success: function(m) {
 			getusermoney();
             if (m[0] != 'A') {
