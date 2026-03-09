@@ -972,8 +972,8 @@ function libs(stype) {
                             var zrate = (zi == zj)
                                 ? rpeilv(m[0]['duo'][1][zi], zifok)
                                 : rpeilv(m[0]['duo'][2][zi], zifok);
-                            str += "<a class='sc-1csyyul-1 qiuc dds ztoucell' m='" + duo0[zi] + "," + duo0[zj] + "' pid='" + zpid + "'>" +
-                                   "<div class='b_text sc-1csyyul-0 hokpMe name'>" + duo0[zi] + duo0[zj] + "</div>" +
+                            str += "<a class='dds ztoucell' m='" + duo0[zi] + "," + duo0[zj] + "' pid='" + zpid + "'>" +
+                                   "<div class='name'>" + duo0[zi] + duo0[zj] + "</div>" +
                                    "<div class='b_odds peilv1'>" + zrate + "</div></a>";
                         }
                         str += "</div></div></div></div><div class='rough_lines items'></div>";
