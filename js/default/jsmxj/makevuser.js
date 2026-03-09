@@ -1014,12 +1014,23 @@ function addfunc(duo){
     var bname = $(".menuplay a.lrm_back span").html();
     if(duo==1){
         $(".plays").click(function(){
-            $(".plays.qiuselect").removeClass("qiuselect");
-            $(this).addClass("qiuselect");
-            pidduo=$(this).attr("pid");
-            lib();
-            $(".tz").animate({height:'0px'});
-            $(".tz").hide();
+            var bname = $(".menuplay a.lrm_back span").html();
+            if (bname == '2字组合' || bname == '3字组合') {
+                $(this).toggleClass("qiuselect");
+                if ($(".plays.qiuselect").length > 0) {
+                    tzstatus(1);
+                } else {
+                    tzstatus(0);
+                }
+                totalje();
+            } else {
+                $(".plays.qiuselect").removeClass("qiuselect");
+                $(this).addClass("qiuselect");
+                pidduo=$(this).attr("pid");
+                lib();
+                $(".tz").animate({height:'0px'});
+                $(".tz").hide();
+            }
         });
         $(".dds").click(function(){
             $(this).toggleClass("qiuselect");
@@ -1126,13 +1137,17 @@ function totalje(){
         var pname = $(".plays.qiuselect").attr("mname");
         var bname = $(".menuplay a.lrm_back span").html();
         //console.log(bname)
-        if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
+        if (bname == '2字组合') {
+            zs = $(".plays.qiuselect").length;
+        }else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
             var dnum1 = $(".d1.qiuselect").length;
             var dnum2 = $(".d2.qiuselect").length;
             zs = dnum1*dnum2;
             //console.log(dnum1+"-"+dnum2)
-        
-        }else if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前组' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+
+        }else if (bname == '3字组合') {
+            zs = $(".plays.qiuselect").length;
+        }else if (bname == '3字定位' | pname == '选前三直选' | pname == '选三前组' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
             var dnum1 = $(".d1.qiuselect").length;
             var dnum2 = $(".d2.qiuselect").length;
             var dnum3 = $(".d3.qiuselect").length;
@@ -1202,7 +1217,22 @@ function exe() {
         var pone = [];
         var ptwo = [];
         var pid = $(".plays.qiuselect").attr("pid");
-        if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
+        if (bname == '2字组合' || bname == '3字组合') {
+            // 3D individual combo betting: each .plays cell is a standalone bet
+            $(".plays.qiuselect").each(function(idx) {
+                play[idx] = [];
+                play[idx]['gid'] = ngid;
+                play[idx]['pid'] = $(this).attr('pid');
+                play[idx]['bid'] = $(this).attr('bid');
+                play[idx]['je'] = je;
+                play[idx]['name'] = $(this).attr('mname');
+                play[idx]['peilv1'] = $(this).find(".peilv1").html();
+                play[idx]['con'] = $(this).attr('mname');
+                play[idx]['bz'] = '';
+                play[idx]['sname'] = $(this).attr('sname');
+                play[idx]['cname'] = $(this).attr('cname');
+            });
+        } else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
             var nl;
             ashree = [];
             if (bname == '2字定位' | bname == '2字组合' | bname == '3字定位' | bname == '3字组合') {
