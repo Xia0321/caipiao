@@ -597,7 +597,7 @@ switch ($_REQUEST['xtype']) {
                 $pself = $msql->f('pself');
             }
             if ($layer == 1) {
-                $msql->query("select name,pl from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
+                $msql->query("select name,pl,peilv1,peilv2,mp1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                 $msql->next_record();
                 if($config['fenlei'] == 100){
                       $duo[0] = getduoarr($msql->f('name'));
@@ -606,9 +606,21 @@ switch ($_REQUEST['xtype']) {
                 }
                 $pl     = json_decode($msql->f('pl'), true);
                 $pname  = $msql->f('name');
+                // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
+                if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
+                    $pv1 = (float)$msql->f('peilv1');
+                    $pv2 = (float)$msql->f('peilv2');
+                    $pv3 = (float)$msql->f('mp1');
+                    $cnt = count($duo[0]);
+                    if ($pname == '2字组合') {
+                        $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
+                    } else {
+                        $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
+                    }
+                }
             } else {
                 if ($ifexe == 0) {
-                    $msql->query("select name,pl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
+                    $msql->query("select name,pl,cid,peilv1,peilv2,mp1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                     $msql->next_record();
                 if($config['fenlei'] == 100){
                       $duo[0] = getduoarr($msql->f('name'));
@@ -618,8 +630,20 @@ switch ($_REQUEST['xtype']) {
                     $pl     = json_decode($msql->f('pl'), true);
                     $cid    = $msql->f('cid');
                     $pname  = $msql->f('name');
+                    // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
+                    if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
+                        $pv1 = (float)$msql->f('peilv1');
+                        $pv2 = (float)$msql->f('peilv2');
+                        $pv3 = (float)$msql->f('mp1');
+                        $cnt = count($duo[0]);
+                        if ($pname == '2字组合') {
+                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
+                        } else {
+                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
+                        }
+                    }
                 } else {
-                    $msql->query("select name,pl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
+                    $msql->query("select name,pl,cid,peilv1,peilv2,mp1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                     $msql->next_record();
                                     if($config['fenlei'] == 100){
                       $duo[0] = getduoarr($msql->f('name'));
@@ -629,6 +653,18 @@ switch ($_REQUEST['xtype']) {
                     $pl     = json_decode($msql->f('pl'), true);
                     $cid    = $msql->f('cid');
                     $pname  = $msql->f('name');
+                    // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
+                    if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
+                        $pv1 = (float)$msql->f('peilv1');
+                        $pv2 = (float)$msql->f('peilv2');
+                        $pv3 = (float)$msql->f('mp1');
+                        $cnt = count($duo[0]);
+                        if ($pname == '2字组合') {
+                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
+                        } else {
+                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
+                        }
+                    }
                     $fsql->query("select pl from `{$tb_play_user}` where userid='{$fid1}' and gid='{$gid}' and pid='{$pid}'");
                     $fsql->next_record();
                     $pl2 = json_decode($fsql->f('pl'), true);

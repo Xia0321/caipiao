@@ -961,12 +961,23 @@ function libs(stype) {
 
                 
                 if (bname == '2字组合') {
-                    str += rhtmls("第1个投注号码");
-                    str += str1;
-                    str += "</div></div></div></div><div class='rough_lines items'></div>";
-                    str += rhtmls("第2个投注号码");
-                    str += str2;
-                    str += "</div></div></div></div><div class='rough_lines items'></div>";
+                    // 按字头分组显示全部2位组合，赔率从接口动态获取
+                    var duo0 = m[0]['duo'][0];
+                    var duolen = duo0.length;
+                    var zpid = m[m[0]['index']]['pid'];
+                    var zifok = m[m[0]['index']]['ifok'];
+                    for (var zi = 0; zi < duolen; zi++) {
+                        str += rhtmls(duo0[zi] + "字头");
+                        for (var zj = 0; zj < duolen; zj++) {
+                            var zrate = (zi == zj)
+                                ? rpeilv(m[0]['duo'][1][zi], zifok)
+                                : rpeilv(m[0]['duo'][2][zi], zifok);
+                            str += "<a class='sc-1csyyul-1 qiuc dds ztoucell' m='" + duo0[zi] + "," + duo0[zj] + "' pid='" + zpid + "'>" +
+                                   "<div class='b_text sc-1csyyul-0 hokpMe name'>" + duo0[zi] + duo0[zj] + "</div>" +
+                                   "<div class='b_odds peilv1'>" + zrate + "</div></a>";
+                        }
+                        str += "</div></div></div></div><div class='rough_lines items'></div>";
+                    }
                 } else if (bname == '3字组合') {
                     str += rhtmls("第1个投注号码");
                     str += str1;
@@ -1021,14 +1032,21 @@ function addfunc(duo){
             
             if (pname=="三中二") znum1 = 3;
             
-            if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
+            if (bname == '2字组合') {
+                // 字头模式：有选中的组合即可下注
+                if ($(".ztoucell.qiuselect").length > 0) {
+                    tzstatus(1);
+                } else {
+                    tzstatus(0);
+                }
+            } else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
 
                 var dnum1 = $(".d1.qiuselect").length;
                 var dnum2 = $(".d2.qiuselect").length;
                 if(dnum1>0 && dnum2>0){
-                    tzstatus(1);                       
+                    tzstatus(1);
                 }else{
-                    tzstatus(0);  
+                    tzstatus(0);
                 }
 
             }else if (bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前组') {
@@ -1195,10 +1213,29 @@ function exe() {
         var pone = [];
         var ptwo = [];
         var pid = $(".plays.qiuselect").attr("pid");
-        if (bname == '2字组合' | bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
+        if (bname == '2字组合') {
+            // 字头模式：直接读取选中的2位组合
+            var i = 0;
+            $(".ztoucell.qiuselect").each(function() {
+                play[i] = [];
+                play[i]['gid'] = ngid;
+                play[i]['pid'] = pid;
+                play[i]['name'] = pname;
+                play[i]['je'] = je;
+                var parts = $(this).attr('m').split(',');
+                play[i]['con'] = parts.sort();
+                play[i]['peilv1'] = Number($(this).find(".peilv1").html());
+                i++;
+            });
+            if (i == 0) {
+                alert("请选择号码");
+                window._makevSubmitting = false;
+                return false;
+            }
+        } else if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直' | bname == '3字组合' | bname == '3字定位' | pname == '选前三直选' | pname == '选三前直') {
             var nl;
             ashree = [];
-            if (bname == '2字定位' | bname == '2字组合' | bname == '3字定位' | bname == '3字组合') {
+            if (bname == '2字定位' | bname == '3字定位' | bname == '3字组合') {
                 nl = 10;
             } else if (pname == '选前二直选' | pname == '选前三直选') {
                 nl = 11;
@@ -1273,7 +1310,7 @@ function exe() {
                 });
             }
             var aall = 0;
-            if (bname == '2字定位' | bname == '2字组合' | pname == '选前二直选' | pname == '选二连直') {
+            if (bname == '2字定位' | pname == '选前二直选' | pname == '选二连直') {
                 aall = Ctwo(aone, atwo, bname, pname);
             } else if (bname == '3字定位' | bname == '3字组合' | pname == '选前三直选' | pname == '选三前直') {
                 aall = Cshree(aone, atwo, ashree, bname, pname);
