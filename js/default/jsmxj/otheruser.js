@@ -33,8 +33,7 @@ function myready(){
     });
     $(".pn_back_link").on("click", function(e) {
         e.preventDefault();
-        var t = $(this).attr("data-type");
-        if (t) window.location.href = t;
+        history.back();
     });
     if(type=='kj'){
 	    $(".gamemenu").click(function(){
