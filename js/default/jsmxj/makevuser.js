@@ -1227,7 +1227,7 @@ function exe() {
                 play[idx]['je'] = je;
                 play[idx]['name'] = $(this).attr('mname');
                 play[idx]['peilv1'] = $(this).find(".peilv1").html();
-                play[idx]['con'] = $(this).attr('mname');
+                play[idx]['con'] = '';
                 play[idx]['bz'] = '';
                 play[idx]['sname'] = $(this).attr('sname');
                 play[idx]['cname'] = $(this).attr('cname');
