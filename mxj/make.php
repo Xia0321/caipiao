@@ -203,7 +203,7 @@ switch ($_REQUEST['xtype']) {
             if ($pname == '三中二' | $pname == '二中特' | strpos($pname, '字组合')) {
                 $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha - $config['patt'][$ftype][strtolower($abcd)]);
             }
-            if (strpos($pname, '2字组合')) {
+            if (strpos($pname, '3字组合') !== false) {
                 $duo[3][$i] = (double) (pr3($pl[2][$i]) - $peilvcha - $config['patt'][$ftype][strtolower($abcd)]);
             }
         }
