@@ -75,24 +75,13 @@ function kj() {
 }
 function updatel() {
 	clearTimeout(upl);
-	var mm = $(".upqishu").attr("m").split(',');
-	var uplData = "xtype=upl&qishu=" + $(".upqishu").html() + "&m1=" + mm[0];
-	var gid = $("body").attr("data-gid") || (typeof ngid !== 'undefined' && (ngid || ngid === 0) ? String(ngid) : '');
-	if (!gid) {
-		var lab = $(".game3 label.s").attr("gid");
-		if (lab) gid = lab;
-	}
-	if (!gid) {
-		var sel = $("select.game");
-		if (sel.length && sel.val()) gid = sel.val();
-	}
-	if (gid) uplData += "&gid=" + gid;
+	var mm= $(".upqishu").attr("m").split(',');
 	$.ajax({
 		type: 'POST',
 		url: mulu + 'top.php',
 		dataType: 'json',
 		cache: false,
-		data: uplData,
+		data: "xtype=upl&qishu=" + $(".upqishu").html() + "&m1=" +mm[0] ,
 		success: function(m) {
 			if (m[0] != 'A') {
 				$(".upqishu").html(m[0]);

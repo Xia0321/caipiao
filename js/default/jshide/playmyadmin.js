@@ -233,6 +233,47 @@ function myready() {
 
     });
 
+    // 每行「提交」：只提交当前行玩法信息，成功用 layer.msg 提示并刷新数据
+    $(".editone").click(function() {
+        var $tr = $(this).closest("tr");
+        var bid = $tr.find("td:eq(2)").find("input:text").val();
+        var sid = $tr.find("td:eq(3)").find("input:text").val();
+        var cid = $tr.find("td:eq(4)").find("input:text").val();
+        var name = $tr.find(".names").val();
+        var peilv1 = $tr.find(".peilv1").val();
+        var peilv2 = $tr.find(".peilv2").val();
+        var ztype = $tr.find(".ztype").val();
+        var znum1 = $tr.find(".znum1").val();
+        var znum2 = $tr.find(".znum2").val();
+        var pid = $tr.find("td:eq(1)").html();
+        var xsort = $tr.find(".xsort").val();
+        var ptype = $tr.find(".ptype").val();
+        var ifok = $tr.find(".ifok").prop("checked") ? 1 : 0;
+        if (!name || name === "") {
+            alert("请输入名称");
+            return;
+        }
+        var str = '{"0":{"name":"' + name + '","cid":"' + cid + '","xs":"' + xsort + '","bid":"' + bid + '","sid":"' + sid + '","ztype":"' + ztype + '","peilv1":"' + peilv1 + '","ifok":"' + ifok + '","znum1":"' + znum1 + '","znum2":"' + znum2 + '","peilv2":"' + peilv2 + '","pid":"' + pid + '","ptype":"' + ptype + '"}}';
+        $.ajax({
+            type: "POST",
+            url: mulu + "play.php",
+            data: "xtype=editplay&str=" + str,
+            success: function(m) {
+                if (Number(m) === 1) {
+                    var layerObj = (typeof parent !== "undefined" && parent.layer) ? parent.layer : (typeof layer !== "undefined" ? layer : null);
+                    if (layerObj && layerObj.msg) {
+                        layerObj.msg("成功");
+                    } else {
+                        alert("成功");
+                    }
+                } else {
+                    alert("保存失败，请重试");
+                }
+            },
+            error: function() { alert("请求失败"); }
+        });
+    });
+
     $(".bid:eq(0)").change(function() {
         var bid = $(this).val();
        window.location.href = mulu + "play.php?xtype=show&bid=" + bid;

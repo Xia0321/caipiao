@@ -142,7 +142,6 @@ function mch_get_top_api_agent($userid) {
             );
         }
     }
-die;
     // 兼容：用户自身即为 API 代理（ifagent=1 且 is_api=1，如 API 注册），直接从 $tb_user 取 callback_url、mch_secret
     $msql->query("SELECT userid, username, mch_code, mch_secret, callback_url FROM `$tb_user` WHERE userid='" . addslashes($userid) . "' AND ifagent='1' AND is_api='1' AND status='1' AND mch_code!=''");
     $msql->next_record();

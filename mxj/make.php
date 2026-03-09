@@ -51,9 +51,6 @@ switch ($_REQUEST['xtype']) {
             $tpl->assign('defaultpan', $msql->f('defaultpan'));
         }
         $tpl->assign('thisqishu', substr($config['thisqishu'], -8));
-        $msql->query("select qishu from `{$tb_kj}` where gid='{$gid}' and qishu<'" . addslashes($config['thisqishu']) . "' order by qishu desc limit 1");
-        $upqishu = $msql->next_record() ? $msql->f('qishu') : '';
-        $tpl->assign('upqishu', $upqishu !== '' && $upqishu !== null ? substr($upqishu, -8) : '');
         $tpl->assign('gname', $config['gname']);
         $gamecs = getgamecs($userid);
         $gamecs = getgamename($gamecs);
@@ -203,7 +200,7 @@ switch ($_REQUEST['xtype']) {
             if ($pname == '三中二' | $pname == '二中特' | strpos($pname, '字组合')) {
                 $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha - $config['patt'][$ftype][strtolower($abcd)]);
             }
-            if (strpos($pname, '3字组合') !== false) {
+            if (strpos($pname, '2字组合')) {
                 $duo[3][$i] = (double) (pr3($pl[2][$i]) - $peilvcha - $config['patt'][$ftype][strtolower($abcd)]);
             }
         }
@@ -468,7 +465,6 @@ switch ($_REQUEST['xtype']) {
                 break;
             case "d":
             case "d2":
-            // 玩法与赔率均来自 x_play（含 3D gid=251/252）
             if($config["fenlei"]==100){
             $sid  = $bid;
             $bid='';
@@ -606,7 +602,7 @@ switch ($_REQUEST['xtype']) {
                 $pself = $msql->f('pself');
             }
             if ($layer == 1) {
-                $msql->query("select name,pl,peilv1,peilv2,mp1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
+                $msql->query("select name,pl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                 $msql->next_record();
                 if($config['fenlei'] == 100){
                       $duo[0] = getduoarr($msql->f('name'));
@@ -615,21 +611,16 @@ switch ($_REQUEST['xtype']) {
                 }
                 $pl     = json_decode($msql->f('pl'), true);
                 $pname  = $msql->f('name');
-                // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
-                if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
-                    $pv1 = (float)$msql->f('peilv1');
-                    $pv2 = (float)$msql->f('peilv2');
-                    $pv3 = (float)$msql->f('mp1');
-                    $cnt = count($duo[0]);
-                    if ($pname == '2字组合') {
-                        $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
-                    } else {
-                        $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
-                    }
+                $cid    = $msql->f('cid');
+                $ftype  = transc('ftype', $cid);
+                if ($ifexe == 1 & $pself == 1) {
+                    $peilvcha = getuserpeilvcha2($userid, $ftype);
+                } else {
+                    $peilvcha = getuserpeilvcha($userid, $ftype);
                 }
             } else {
                 if ($ifexe == 0) {
-                    $msql->query("select name,pl,cid,peilv1,peilv2,mp1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
+                    $msql->query("select name,pl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                     $msql->next_record();
                 if($config['fenlei'] == 100){
                       $duo[0] = getduoarr($msql->f('name'));
@@ -639,20 +630,8 @@ switch ($_REQUEST['xtype']) {
                     $pl     = json_decode($msql->f('pl'), true);
                     $cid    = $msql->f('cid');
                     $pname  = $msql->f('name');
-                    // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
-                    if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
-                        $pv1 = (float)$msql->f('peilv1');
-                        $pv2 = (float)$msql->f('peilv2');
-                        $pv3 = (float)$msql->f('mp1');
-                        $cnt = count($duo[0]);
-                        if ($pname == '2字组合') {
-                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
-                        } else {
-                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
-                        }
-                    }
                 } else {
-                    $msql->query("select name,pl,cid,peilv1,peilv2,mp1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
+                    $msql->query("select name,pl,cid from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                     $msql->next_record();
                                     if($config['fenlei'] == 100){
                       $duo[0] = getduoarr($msql->f('name'));
@@ -662,18 +641,6 @@ switch ($_REQUEST['xtype']) {
                     $pl     = json_decode($msql->f('pl'), true);
                     $cid    = $msql->f('cid');
                     $pname  = $msql->f('name');
-                    // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
-                    if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
-                        $pv1 = (float)$msql->f('peilv1');
-                        $pv2 = (float)$msql->f('peilv2');
-                        $pv3 = (float)$msql->f('mp1');
-                        $cnt = count($duo[0]);
-                        if ($pname == '2字组合') {
-                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
-                        } else {
-                            $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
-                        }
-                    }
                     $fsql->query("select pl from `{$tb_play_user}` where userid='{$fid1}' and gid='{$gid}' and pid='{$pid}'");
                     $fsql->next_record();
                     $pl2 = json_decode($fsql->f('pl'), true);
@@ -718,7 +685,6 @@ switch ($_REQUEST['xtype']) {
                     $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
                 }
             }
-            // duo/pl 来自 x_play 表（含 252 二字组合/三字组合赔率），前端按字头展示
             $play[0]['duo']    = $duo;
             $play[0]['pidduo'] = $pid;
         }
@@ -777,40 +743,14 @@ switch ($_REQUEST['xtype']) {
         unset($arr);
         break;
     case 'upl':
-        // 与 hide/top.php upl 一致：先确定当前彩种，再查该彩种上一期已开奖结果
-        $qs   = isset($_POST['qs']) && $_POST['qs'] !== '' ? trim($_POST['qs']) : (isset($_POST['qishu']) ? trim($_POST['qishu']) : '');
-        $tu   = 1;
-        $news = isset($_POST['news']) ? $_POST['news'] : '';
-        $m1   = isset($_POST['m1']) ? $_POST['m1'] : '';
+        $qishu = $config['thisqishu'];
+        $qs = $_POST['qs'];
+        $tu = 1;
+        $news = $_POST['news'];
+        $m1 = $_POST['m1'];
         $time = sqltime(time());
-        $upl_gid = $gid;
-        if (isset($_POST['gid']) && $_POST['gid'] !== '' && is_numeric($_POST['gid'])) {
-            $req_gid = (int)$_POST['gid'];
-            $msql->query("select gid from `{$tb_game}` where gid='{$req_gid}' and ifopen=1 limit 1");
-            if ($msql->next_record()) {
-                $upl_gid = (string)$req_gid;
-            }
-        }
-        if ($upl_gid == $gid && $qs !== '') {
-            $qs_safe = addslashes($qs);
-            $msql->query("select gid from `{$tb_kj}` where gid='{$req_gid}' and qishu='{$qs_safe}' limit 1");
-            if ($msql->next_record()) {
-                $by_qishu_gid = $msql->f('gid');
-                $msql->query("select gid from `{$tb_game}` where gid='{$by_qishu_gid}' and ifopen=1 limit 1");
-                if ($msql->next_record()) {
-                    $upl_gid = (string)$by_qishu_gid;
-                }
-            }
-        }
-        $upl_mnum = (int)transgame($upl_gid, 'mnum');
-        if ($upl_mnum < 1) $upl_mnum = (int)$config['mnum'];
-        // 当前彩种上一期：已关盘、开奖时间已过、且有开奖号，按期号倒序取一条（与 hide/top.php 一致）
-        $msql->query("select * from `{$tb_kj}` where gid='{$upl_gid}' and m1!='' and closetime<'{$time}' and kjtime is not null and kjtime!='' and kjtime<'{$time}' order by qishu desc limit 1");
-        $has_row = $msql->next_record();
-        if (!$has_row) {
-            echo json_encode(array("A", "B", $news));
-            exit;
-        }
+        $msql->query("select * from `{$tb_kj}` where gid='{$gid}' and m1!='' and closetime<'{$time}' order by gid,qishu desc limit 1");
+        $msql->next_record();
         if ($m1 == $msql->f('m1') && $qs == $msql->f('qishu')) {
             echo json_encode(array("A", "B", $news));
             exit;
@@ -820,15 +760,13 @@ switch ($_REQUEST['xtype']) {
             $mm = 0;
         }
         $ma = array();
-        $sx = array();
-        $upl_fenlei = (int)transgame($upl_gid, 'fenlei');
-        for ($i = 1; $i <= $upl_mnum; $i++) {
+        $sx=[];
+        for ($i = 1; $i <= $config['mnum']; $i++) {
             $ma[] = $msql->f('m' . $i);
-            $upl_fenlei == 100 && $sx[] = shengxiaos($msql->f('m'.$i), $msql->f("bml"));
+            $config['fenlei']==100 && $sx[] = shengxiaos($msql->f('m'.$i),$msql->f("bml"));
         }
         $mqishu = $msql->f('qishu');
-        $fenlei = $upl_fenlei;
-        $upl_gname = transgame($upl_gid, 'sgname') ?: $config['gname'];
+        $fenlei = $config['fenlei'];
         $tu = tu($gid, $config['mnum'], $fenlei, $tu);
         $longl = "";
         $longr = "";
@@ -864,7 +802,7 @@ switch ($_REQUEST['xtype']) {
                 $ftlu[$k2*10+$k1] = $zh;          
             }
         }
-        echo json_encode(array($longl, $longr, $tu, $mm, $ma, $mqishu, $upl_gname, $qs, $zlong, $bzlong, $news,$config['cs']['ft'],$ftlu,$sx));
+        echo json_encode(array($longl, $longr, $tu, $mm, $ma, $mqishu, $config['gname'], $qs, $zlong, $bzlong, $news,$config['cs']['ft'],$ftlu,$sx));
         unset($longl);
         unset($longr);
         break;
@@ -1021,7 +959,7 @@ function getsm($bid, $ab, $abcd, $sid, $smtype)
                             if ($gid == 251) {
                                 $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(251001,251005) and bid<>26000000 order by bid,sid,xsort";
                             } elseif ($gid == 252) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(252001,252005) and bid<>26000000 order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(252001,252002,252003,252004,252005,252006,252007,252008) and bid<>26000000 order by bid,sid,xsort";
                             } else {
                                 $sql = "select * from `{$tb_play}` where gid='{$gid}' and ( name in('单','双','大','小','质','合') or bid='23378858') and bid<>23378857 and bid<>26000000 order by bid,sid,xsort";
                             }

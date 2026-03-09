@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2026-03-03 21:22:47
+<?php /* Smarty version 2.6.18, created on 2026-03-08 10:25:42
          compiled from makes.html */ ?>
 <!DOCTYPE html>
 <html lang="zh-CN" <?php if ($this->_tpl_vars['rkey'] == 0): ?>oncontextmenu="return false"<?php endif; ?>><head>
@@ -52,6 +52,7 @@ var ustatus = <?php echo $this->_tpl_vars['status']; ?>
             data: {xtype: 'getbalance'},
             dataType: 'json',
             timeout: 8000,
+            xhrFields: { withCredentials: true },
             success: function(d){
                 if(d && d.code === 0){
                     var b = (typeof d.kmoney !== 'undefined') ? d.kmoney : d.money;
@@ -616,4 +617,4 @@ var menu= "<?php echo $this->_tpl_vars['menu']; ?>
 <div id=test></div>
 <iframe name=sfrm id=sfrm style="display:none;"  ></iframe>
 </body>
-</html>
+</html>

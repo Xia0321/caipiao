@@ -28,11 +28,11 @@ $xiaoshu = array(
     4
 );
 function nndaxiao($v){
-    if($v>=1 & $v<=5){
-        return '小';
-    }else{
-        return '大';
-    }
+   if($v>=1 & $v<=5){
+      return '小';
+   }else{
+	   return '大';
+	  }
 }
 function niuniu($arr)
 {
@@ -57,64 +57,64 @@ function niuniu($arr)
         }
     }
     $arr = [$t1,$t2,$t3%10,max($arr[0],$arr[1],$arr[2],$arr[3],$arr[4])];
-    //print_r($arr);
+	//print_r($arr);
     return $arr;
 }
 function suoha($arr){
-    $r=0;//散号
-    $a=array();
-    foreach($arr as $v){
-        $a[$v] += 1;
-    }
-    array_merge($a);
-    $ca = count($a);
-    switch($ca){
-        case 1:
-            $r=1;//五梅
-            break;
-        case 2:
-            sort($a);
-            if($a[0]==1 | $a[1]==1){
-                $r=2;//炸弹
-            }else{
-                $r=3;//葫芦
-            }
-            break;
-        case 3:
-            if($a[0]==3 | $a[1]==3 | $a[2]==3){
-                $r=4;//三条
-            }else{
-                $r=5;//两对
-            }
-            break;
-        case 4:
-            $r=6;//单对
-            break;
-        case 5:
-            sort($arr);
-            if($arr[4]-$arr[0]==4){
-                $r=7;//顺子
-            }else{
-                $kao1 = array(1,3,5,7,9);
-                $kao2 = array(0,2,4,6,8);
-                if($arr==$kao1 | $arr==$kao2){
-                    $r=8;//五不靠
-                }
-            }
-            break;
-    }
-    $arr = array("散号","五梅","炸弹","葫芦","三条","两对","单对","顺子","五不靠");
-    return $arr[$r];
+	$r=0;//散号
+	$a=array();
+	foreach($arr as $v){
+		$a[$v] += 1;
+	}
+	array_merge($a);
+	$ca = count($a);
+	switch($ca){
+		case 1: 
+		   $r=1;//五梅
+		break;
+		case 2:
+		   sort($a);
+		   if($a[0]==1 | $a[1]==1){
+		       $r=2;//炸弹
+		   }else{
+		       $r=3;//葫芦
+		   }
+		break;
+		case 3:
+		   if($a[0]==3 | $a[1]==3 | $a[2]==3){
+		      $r=4;//三条
+		   }else{
+		      $r=5;//两对
+		   }
+		break;
+		case 4:
+		   $r=6;//单对
+		break;
+		case 5:
+		   sort($arr);
+		   if($arr[4]-$arr[0]==4){
+		        $r=7;//顺子
+		   }else{
+			   $kao1 = array(1,3,5,7,9);	
+			   $kao2 = array(0,2,4,6,8);
+			   if($arr==$kao1 | $arr==$kao2){
+			      $r=8;//五不靠
+			   }		   
+		   }
+		break;
+	}
+	$arr = array("散号","五梅","炸弹","葫芦","三条","两对","单对","顺子","五不靠");
+	return $arr[$r];
 }
 function qita($v1,$v2,$v3){
-    $v=9;
-    if(baozhi($v1,$v2,$v3)==1) $v=0;
-    else if(shunzhi($v1,$v2,$v3)==1) $v=1;
-    else if(duizhi($v1,$v2,$v3)==1) $v=2;
-    else if(banshun($v1,$v2,$v3)==1) $v=3;
-    else $v=4;
-    $arr = array("豹子","顺子","对子","半顺","杂六");
-    return $arr[$v];
+	$v=9;
+	if(baozhi($v1,$v2,$v3)==1) $v=0;
+	else if(shunzhi($v1,$v2,$v3)==1) $v=1;
+	else if(duizhi($v1,$v2,$v3)==1) $v=2;
+	else if(banshun($v1,$v2,$v3)==1) $v=3;
+	else $v=4;
+	$arr = array("豹子","顺子","对子","半顺","杂六");
+	return $arr[$v];
 }
 function danshuang($v)
 {
@@ -236,7 +236,7 @@ function heshudaxiao_100($v){
     }else if($v<=6){
         return "合小";
     }else{
-        return "合大";
+        return "合大";  
     }
 }
 function longhuhe($v0, $v4)
@@ -587,49 +587,24 @@ function getkj($mnum, $gid, $thisqishu, $page, $psize)
     }
     return $kj;
 }
-/**
- * 获取指定彩种的开奖记录，支持任意 gid。
- * @param int|string $gid 彩种ID
- * @param int $mnum 号码个数(列数)
- * @param int $num 返回条数
- * @param string $time 截止时间(closetime&lt;此时间)
- * @param int|null $fenlei 玩法分类，不传或未知时只返回期号+开奖号(m1..mnum)
- */
-function getkjs($gid, $mnum, $num, $time = 0, $fenlei = null)
+function getkjs($gid, $mnum, $num, $time = 0,$fenlei)
 {
-    global $tb_kj, $psql, $msql;
-    if ($gid === '' || $gid === null || !is_numeric($gid)) {
-        return array();
-    }
-    $query_gid = (string)(int)$gid;
-    $gid = $query_gid;
-    $mnum = (int)$mnum;
-    if ($mnum < 1) $mnum = 1;
-    $num = (int)$num;
-    $time_safe = addslashes($time);
-    $db = isset($msql) ? $msql : $psql;
-    // 只查该 gid 已开奖：m1 有号；按 id 倒序取最新（与 make 用同一连接 $msql，避免读到别库）
-    $sql = "select * from `{$tb_kj}` where gid='" . $query_gid . "' and m1!='' and closetime<'{$time_safe}' order by id desc limit {$num}";
-    $db->query($sql);
+    global $tb_kj, $psql;
+    $psql->query("select * from `{$tb_kj}` where gid='{$gid}' and  closetime<'$time' order by gid,qishu desc limit {$num}");
     $i  = 0;
     $kj = array();
-    if ($fenlei !== null && $fenlei !== '' && (int)$fenlei === 151) {
-        $seen_qishu = array();
-        while ($db->next_record()) {
-            if ((string)(int)$db->f('gid') !== $query_gid) continue;
-            $qishu = $db->f('qishu');
-            if (isset($seen_qishu[$qishu])) continue;
-            $seen_qishu[$qishu] = true;
-            $kj[$i]['qishu'] = $qishu;
-            $kj[$i]['qs']    = substr($qishu, -2);
-            if ($db->f('m1') == '') {
+    if ( $fenlei==151) {
+        while ($psql->next_record()) {
+            $kj[$i]['qishu'] = $psql->f('qishu');
+            $kj[$i]['qs']    = substr($psql->f('qishu'), -2);
+            if ($psql->f('m1') == '') {
                 $i++;
                 continue;
             }
-            $he           = $db->f('m1') + $db->f('m2') + $db->f('m3');
-            $kj[$i]['m1'] = $db->f('m1');
-            $kj[$i]['m2'] = $db->f('m2');
-            $kj[$i]['m3'] = $db->f('m3');
+            $he           = $psql->f('m1') + $psql->f('m2') + $psql->f('m3');
+            $kj[$i]['m1'] = $psql->f('m1');
+            $kj[$i]['m2'] = $psql->f('m2');
+            $kj[$i]['m3'] = $psql->f('m3');
             if ($kj[$i]['m1'] == $kj[$i]['m2'] & $kj[$i]['m1'] == $kj[$i]['m3']) {
                 $kj[$i]['dx'] = '通吃';
             } else {
@@ -644,16 +619,11 @@ function getkjs($gid, $mnum, $num, $time = 0, $fenlei = null)
         }
         return $kj;
     }
-    if ($fenlei !== null && $fenlei !== '' && (int)$fenlei === 161) {
-        $seen_qishu = array();
-        while ($db->next_record()) {
-            if ((string)(int)$db->f('gid') !== $query_gid) continue;
-            $qishu = $db->f('qishu');
-            if (isset($seen_qishu[$qishu])) continue;
-            $seen_qishu[$qishu] = true;
-            $kj[$i]['qishu'] = $qishu;
-            $kj[$i]['qs']    = substr($qishu, -2);
-            if ($db->f('m1') == '') {
+    if ($fenlei == 161 ) {
+        while ($psql->next_record()) {
+            $kj[$i]['qishu'] = $psql->f('qishu');
+            $kj[$i]['qs']    = substr($psql->f('qishu'), -2);
+            if ($psql->f('m1') == '') {
                 $i++;
                 continue;
             }
@@ -661,14 +631,14 @@ function getkjs($gid, $mnum, $num, $time = 0, $fenlei = null)
             $zq = 0;
             $he = 0;
             for ($h = 1; $h <= 20; $h++) {
-                if (danshuang($db->f('m' . $h)) == '单') {
+                if (danshuang($psql->f('m' . $h)) == '单') {
                     $zd++;
                 }
-                if ($db->f('m' . $h) <= 40) {
+                if ($psql->f('m' . $h) <= 40) {
                     $zq++;
                 }
-                $he += $db->f('m' . $h);
-                $kj[$i]['m'][] = $db->f('m' . $h);
+                $he += $psql->f('m' . $h);
+                $kj[$i]['m'][] = $psql->f('m' . $h);
             }
             if ($he == 810) {
                 $kj[$i]['zds'] = '和';
@@ -705,98 +675,107 @@ function getkjs($gid, $mnum, $num, $time = 0, $fenlei = null)
         }
         return $kj;
     }
-    // 通用分支：只处理传入 gid 的行，并按 qishu 去重
-    $seen_qishu = array();
-    while ($db->next_record()) {
-        $row_gid = $db->f('gid');
-        if ($row_gid !== '' && $row_gid !== null && (string)(int)$row_gid !== $query_gid) {
-            continue;
-        }
-        $qishu = $db->f('qishu');
-        if (isset($seen_qishu[$qishu])) {
-            continue;
-        }
-        $seen_qishu[$qishu] = true;
-        $kj[$i]['qishu'] = $qishu;
-        $kj[$i]['qs']    = substr($qishu, -2);
+    while ($psql->next_record()) {
+        $kj[$i]['qishu'] = $psql->f('qishu');
+        $kj[$i]['qs']    = substr($psql->f('qishu'), -2);
         $zfs             = 0;
         for ($j = 1; $j <= $mnum; $j++) {
-            $mv = $db->f('m' . $j);
-            $kj[$i]['m' . $j] = ($gid == 107 && $mv !== '' && is_numeric($mv)) ? (int)$mv : $mv;
-            if ($mv !== '' && is_numeric($mv)) {
-                $zfs += $mv;
-            }
-            if ($fenlei === null || $fenlei === '') {
+            if ($psql->f('m' . $j) == '' | !is_numeric($psql->f('m' . $j))) {
                 continue;
             }
-            $f = (int)$fenlei;
-            if ($f == 101 || $f == 163) {
-                $kj[$i]['m' . $j . 'ds'] = danshuang($mv);
-                $kj[$i]['m' . $j . 'dx'] = daxiao($mv);
-                $kj[$i]['m' . $j . 'zh'] = zhihe($mv);
-            } else if ($f == 103) {
-                $kj[$i]['m' . $j . 'ds'] = danshuang($mv);
-                $kj[$i]['m' . $j . 'dx'] = ($mv !== '' && is_numeric($mv) && $mv <= 10) ? '小' : '大';
-                $hes                      = heshu($mv);
-                $kj[$i]['m' . $j . 'hds'] = '合' . danshuang($hes);
-                $kj[$i]['m' . $j . 'wdx'] = daxiao($mv !== '' && is_numeric($mv) ? $mv % 10 : 0);
-                $kj[$i]['m' . $j . 'fw']  = fangwei($mv);
-                $kj[$i]['m' . $j . 'wh']  = wuhang($mv);
-                $kj[$i]['m' . $j . 'sj']  = siji($mv);
-                $kj[$i]['m' . $j . 'zfb'] = zhongfabai($mv);
-            } else if ($f == 121) {
-                $kj[$i]['m' . $j . 'ds'] = danshuang($mv);
-                if ($mv === '' || !is_numeric($mv)) {
-                    $kj[$i]['m' . $j . 'dx'] = '';
-                } else if ($mv <= 5) {
-                    $kj[$i]['m' . $j . 'dx'] = '小';
-                } else if ($mv <= 10) {
-                    $kj[$i]['m' . $j . 'dx'] = '大';
+            $zfs += $psql->f('m' . $j);
+            if ($gid == 107) {
+                if ($psql->f('m' . $j) == '') {
+                    $kj[$i]['m' . $j] = $psql->f('m' . $j);
                 } else {
-                    $kj[$i]['m' . $j . 'dx'] = '和';
+                    $kj[$i]['m' . $j] = (int) $psql->f('m' . $j);
                 }
-            } else if ($f == 107) {
-                $kj[$i]['m' . $j . 'ds'] = danshuang($mv);
-                $kj[$i]['m' . $j . 'zh'] = zhihe($mv);
-                $kj[$i]['m' . $j . 'dx'] = ($mv !== '' && is_numeric($mv) && $mv <= 5) ? '小' : '大';
-            } else if ($f == 162) {
-                $kj[$i]['m' . $j . 'zds'] = danshuang($mv);
-                $kj[$i]['m' . $j . 'zdx'] = zhihe($mv);
-                $kj[$i]['m' . $j . 'dx'] = ($mv !== '' && is_numeric($mv) && $mv <= 5) ? '小' : '大';
+            } else {
+                $kj[$i]['m' . $j] = $psql->f('m' . $j);
+            }
+            if ($fenlei==101 | $fenlei==163 ) {
+                $kj[$i]['m' . $j . 'ds'] = danshuang($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'dx'] = daxiao($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'zh'] = zhihe($psql->f('m' . $j));
+            } else if ($fenlei==103) {
+                $kj[$i]['m' . $j . 'ds'] = danshuang($psql->f('m' . $j));
+                if ($psql->f('m' . $j) <= 10) {
+                    $kj[$i]['m' . $j . 'dx'] = '小';
+                } else {
+                    $kj[$i]['m' . $j . 'dx'] = '大';
+                }
+                $hes                      = heshu($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'hds'] = '合' . danshuang($hes);
+                $kj[$i]['m' . $j . 'wdx'] = daxiao($psql->f('m' . $j) % 10);
+                $kj[$i]['m' . $j . 'fw']  = fangwei($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'wh']  = wuhang($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'sj']  = siji($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'zfb'] = zhongfabai($psql->f('m' . $j));
+            } else if ($fenlei==121) {
+                $kj[$i]['m' . $j . 'ds'] = danshuang($psql->f('m' . $j));
+                // $kj[$i]['m' . $j . 'ds'] = danshuang121($psql->f('m' . $j));
+                if ($psql->f('m' . $j) <= 5) {
+                    $kj[$i]['m' . $j . 'dx'] = '小';
+                } else {
+                    if ($psql->f('m' . $j) <= 10) {
+                        $kj[$i]['m' . $j . 'dx'] = '大';
+                    } else {
+                        $kj[$i]['m' . $j . 'dx'] = '和';
+                    }
+                }
+            } else if ($fenlei == 107) {
+                $kj[$i]['m' . $j . 'ds'] = danshuang($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'zh'] = zhihe($psql->f('m' . $j));
+                if ($psql->f('m' . $j) <= 5) {
+                    $kj[$i]['m' . $j . 'dx'] = '小';
+                } else {
+                    $kj[$i]['m' . $j . 'dx'] = '大';
+                }
+            } else if ($fenlei == 162 ) {
+                $kj[$i]['m' . $j . 'zds'] = danshuang($psql->f('m' . $j));
+                $kj[$i]['m' . $j . 'zdx'] = zhihe($psql->f('m' . $j));
+                if ($psql->f('m' . $j) <= 5) {
+                    $kj[$i]['m' . $j . 'dx'] = '小';
+                } else {
+                    $kj[$i]['m' . $j . 'dx'] = '大';
+                }
             }
         }
-        if ($fenlei !== null && $fenlei !== '' && (int)$fenlei == 163 && $db->f('m1') !== '' && is_numeric($db->f('m1'))) {
+        if (($fenlei==163) & is_numeric($psql->f('m1'))) {
             $kj[$i]['zf']   = $zfs;
             $kj[$i]['zfds'] = danshuang($zfs);
-            $kj[$i]['zfdx'] = ($zfs <= 13) ? '小' : '大';
+            if ($zfs <= 13)
+                $kj[$i]['zfdx'] = "小";
+            else
+                $kj[$i]['zfdx'] = "大";
         }
         $i++;
     }
     return $kj;
 }
-function phpC($a, $m) {
-    $r = array();
-
-    $n = count($a);
-    if ($m <= 0 || $m > $n) {
-        return $r;
-    }
-
-    for ($i=0; $i<$n; $i++) {
-        $t = array($a[$i]);
-        if ($m == 1) {
-            $r[] = $t;
-        } else {
-            $b = array_slice($a, $i+1);
-            $c = phpC($b, $m-1);
-            foreach ($c as $v) {
-                $r[] = array_merge($t, $v);
-            }
-        }
-    }
-
-    return $r;
-}
+function phpC($a, $m) {  
+    $r = array();  
+  
+    $n = count($a);  
+    if ($m <= 0 || $m > $n) {  
+        return $r;  
+    }  
+  
+    for ($i=0; $i<$n; $i++) {  
+        $t = array($a[$i]);  
+        if ($m == 1) {  
+            $r[] = $t;  
+        } else {  
+            $b = array_slice($a, $i+1);  
+            $c = phpC($b, $m-1);  
+            foreach ($c as $v) {  
+                $r[] = array_merge($t, $v);  
+            }  
+        }  
+    }  
+  
+    return $r;  
+}  
 function phpC2(array $elements, $chosen)
 {
     $result = array();
@@ -849,18 +828,18 @@ function zhdx($gid, $v)
         else
             return "大";
     } else if (in_array($gid, array(
-        117,
-        163
-    ))) {
+            117,
+            163
+        ))) {
         if ($v <= 13)
             return "小";
         else
             return "大";
     } else if (in_array($gid, array(
-        121,
-        123,
-        125
-    ))) {
+            121,
+            123,
+            125
+        ))) {
         if ($v < 30)
             return "小";
         else if ($v > 30)
@@ -868,10 +847,10 @@ function zhdx($gid, $v)
         else
             return "和";
     } else if (in_array($gid, array(
-        103,
-        133,
-        135
-    ))) {
+            103,
+            133,
+            135
+        ))) {
         if ($v < 84)
             return "小";
         else if ($v > 84)
@@ -879,17 +858,17 @@ function zhdx($gid, $v)
         else
             return "和";
     } else if (in_array($gid, array(
-        151,
-        152
-    ))) {
+            151,
+            152
+        ))) {
         if ($v <= 10)
             return "小";
         else
             return "大";
     } else if (in_array($gid, array(
-        161,
-        162
-    ))) {
+            161,
+            162
+        ))) {
         if ($v < 810)
             return "小";
         else if ($v > 810)
@@ -921,10 +900,10 @@ function dx($gid, $v)
         else
             return "大";
     } else if (in_array($gid, array(
-        121,
-        123,
-        125
-    ))) {
+            121,
+            123,
+            125
+        ))) {
         if ($v < 6)
             return "小";
         else if ($v < 10)
@@ -932,25 +911,25 @@ function dx($gid, $v)
         else
             return "和";
     } else if (in_array($gid, array(
-        103,
-        133,
-        135
-    ))) {
+            103,
+            133,
+            135
+        ))) {
         if ($v < 11)
             return "小";
         return "大";
     } else if (in_array($gid, array(
-        151,
-        152
-    ))) {
+            151,
+            152
+        ))) {
         if ($v <= 3)
             return "小";
         else
             return "大";
     } else if (in_array($gid, array(
-        161,
-        162
-    ))) {
+            161,
+            162
+        ))) {
         if ($v < 41)
             return "小";
         else
@@ -971,55 +950,55 @@ function dx($gid, $v)
 }
 function getbuz($gid,$whi){
     global $psql,$tb_play;
-    $carr = implode($carr);
-    $sql = "select buzqishu,name from `$tb_play` where gid='$gid' $whi order by xsort";
-    $arr = $psql->arr($sql,1);
-    return $arr;
+	$carr = implode($carr);
+	$sql = "select buzqishu,name from `$tb_play` where gid='$gid' $whi order by xsort";	
+	$arr = $psql->arr($sql,1);
+	return $arr;
 }
 
 function getpk10nium($kj,$arr){
-    $a = [];
-    $arr = explode('-',$arr);
-    foreach($arr as $v){
-        $a[] = $kj[$v-1];
-    }
-    return $a;
+	$a = [];
+	$arr = explode('-',$arr);
+	foreach($arr as $v){
+		$a[] = $kj[$v-1];
+	}
+	return $a;
 }
 
 function bjniuniu($a1,$a2,$pk10ts){
-    //echo $a1[0];
-    if(!$a1[0] & $a2[0]){
-        return 1;
-    }
-    if($a1[0] & !$a2[0]){
-        return 0;
-    }
-    if($a1[0] & $a2[0]){
-        if($a1[2]==0) $a1[2]=10;
-        if($a2[2]==0) $a2[2]=10;
-        if($a1[2]>$a2[2]){
-            return 0;
-        }else if($a1[2]==$a2[2]){
-            return 2;
-        }else if($a1[2]<$a2[2]){
-            return 1;
-        }
-    }
-
-    if(!$a1[0] & !$a2[0]){
-        if($a2[3]<$pk10ts){
-            return 0;
-        }
-        if($a1[3]>$a2[3]){
-            return 0;
-        }else if($a1[3]==$a2[3]){
-            return 2;
-        }else if($a1[3]<$a2[3]){
-            return 1;
-        }
-    }
-    return 0;
-
+	//echo $a1[0];
+	if(!$a1[0] & $a2[0]){
+		return 1;
+	}
+	if($a1[0] & !$a2[0]){
+		return 0;
+	}
+	if($a1[0] & $a2[0]){
+		if($a1[2]==0) $a1[2]=10;
+		if($a2[2]==0) $a2[2]=10;
+		if($a1[2]>$a2[2]){
+			return 0;
+		}else if($a1[2]==$a2[2]){
+			return 2;
+		}else if($a1[2]<$a2[2]){
+			return 1;
+		}
+	}
+	
+	if(!$a1[0] & !$a2[0]){
+		if($a2[3]<$pk10ts){
+			return 0;
+		}
+		if($a1[3]>$a2[3]){
+			return 0;
+		}else if($a1[3]==$a2[3]){
+			return 2;
+		}else if($a1[3]<$a2[3]){
+			return 1;
+		}
+	}
+	return 0;
+	
 }
 
 

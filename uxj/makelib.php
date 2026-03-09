@@ -218,7 +218,7 @@ switch ($_REQUEST['xtype']) {
                 continue;
             }
             $ytparr[] = $play[$i]['pid'];
-            $msql->query("select bid,sid,cid,peilv1,peilv2,mp1,ifok,name,pl,yautocs,ystart,ztype from `$tb_play` where gid='$gid' and pid='" . $play[$i]['pid'] . "'");
+            $msql->query("select bid,sid,cid,peilv1,peilv2,ifok,name,pl,yautocs,ystart,ztype from `$tb_play` where gid='$gid' and pid='" . $play[$i]['pid'] . "'");
             $msql->next_record();
             $bid     = $msql->f('bid');
             $sid     = $msql->f('sid');
@@ -260,18 +260,6 @@ switch ($_REQUEST['xtype']) {
                     $duo = getduoarrssuser($config["fenlei"], $pname);
                 }
                 $pl = json_decode($pl, true);
-                // 3D字组合始终用peilv1/peilv2/mp1动态构建pl，确保与后台设置同步
-                if ($config['fenlei'] == 163 && ($pname == '2字组合' || $pname == '3字组合')) {
-                    $pv1 = (float)$msql->f('peilv1');
-                    $pv2 = (float)$msql->f('peilv2');
-                    $pv3 = (float)$msql->f('mp1');
-                    $cnt = count($duo);
-                    if ($pname == '2字组合') {
-                        $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv2)];
-                    } else {
-                        $pl = [array_fill(0, $cnt, $pv1), array_fill(0, $cnt, $pv3), array_fill(0, $cnt, $pv2)];
-                    }
-                }
                 if ($thelayer > 1 & $ifexe == 1) {
                     $fsql->query("select pl,ystart,yautocs from `$tb_play_user` where  userid='$fid1' and gid='$gid' and pid='" . $play[$i]['pid'] . "' ");
                     $fsql->next_record();
@@ -279,7 +267,7 @@ switch ($_REQUEST['xtype']) {
                     $yautocs = $msql->f('yautocs');
                     $ystart  = $msql->f('ystart');
                 }
-
+                
                 if (strpos($pname, '字组合')) {
                     $pcl = count($play[$i]['con']);
                     
@@ -371,26 +359,6 @@ switch ($_REQUEST['xtype']) {
             } else {
                 $peilv1 = $msql->f('peilv1');
                 $peilv2 = $msql->f('peilv2');
-                // 字组合且pl为空时，处理con数组并根据号码类型选择正确赔率
-                if (is_array($play[$i]['con']) && strpos($pname, '字组合') !== false) {
-                    $pcl = count($play[$i]['con']);
-                    if ($pcl == 2) {
-                        if ($play[$i]['con'][0] != $play[$i]['con'][1]) {
-                            $peilv1 = (float)$msql->f('peilv2');
-                        }
-                    } else if ($pcl == 3) {
-                        if ($play[$i]['con'][0] == $play[$i]['con'][1] && $play[$i]['con'][0] == $play[$i]['con'][2]) {
-                            // 三重，用peilv1（已设置）
-                        } else if ($play[$i]['con'][0] != $play[$i]['con'][1] && $play[$i]['con'][0] != $play[$i]['con'][2] && $play[$i]['con'][1] != $play[$i]['con'][2]) {
-                            $peilv1 = (float)$msql->f('peilv2');
-                        } else {
-                            $peilv1 = (float)$msql->f('mp1');
-                        }
-                    }
-                    $play[$i]['con'] = implode('-', $play[$i]['con']);
-                } else if (is_array($play[$i]['con'])) {
-                    $play[$i]['con'] = implode('-', $play[$i]['con']);
-                }
                 if ($thelayer > 1 & $ifexe == 1) {
                     $fsql->query("select peilv1,peilv2,ystart,yautocs from `$tb_play_user` where userid='$fid1' and gid='$gid' and  pid='" . $play[$i]['pid'] . "' ");
                     $fsql->next_record();

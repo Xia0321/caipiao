@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2026-02-11 20:17:20
+<?php /* Smarty version 2.6.18, created on 2026-03-09 21:09:14
          compiled from baonew.html */ ?>
 <?php $_smarty_tpl_vars = $this->_tpl_vars;
 $this->_smarty_include(array('smarty_include_tpl_file' => 'header2.html', 'smarty_include_vars' => array()));

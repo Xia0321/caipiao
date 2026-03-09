@@ -150,26 +150,20 @@ function shengxiaos($ma, $bml)
     return $arr[$in];
 }
 
-    $req_gid = isset($input['gid']) ? trim($input['gid']) : $gid;
-    if ($req_gid === '' || !is_numeric($req_gid)) {
-        $msql->query("select gid from `$tb_game` where ifopen=1 order by xsort limit 1");
-        $req_gid = $msql->next_record() && $msql->f('gid') !== '' ? $msql->f('gid') : '107';
-    }
-    $msql->query("select cs,mtype,ztype,fenlei,mnum from `$tb_game` where gid='" . addslashes($req_gid) . "'");
+    $msql->query("select cs,mtype,ztype,fenlei from `$tb_game` where gid='$gid'");
     $msql->next_record();
     $fenlei = $msql->f("fenlei");
-    $mnum_kj = (int)$msql->f('mnum');
-    if ($mnum_kj < 1) $mnum_kj = isset($config['mnum']) ? (int)$config['mnum'] : 5;
         
-    $where = " gid='" . addslashes($req_gid) . "' ";
-    $where .= " AND kjtime like '%" . addslashes(isset($input['dates']) ? $input['dates'] : date('Y-m-d')) . "%'";
+    $where = '1 = 1';
+    $where .= " AND gid = {$input['gid']}";
+    $where .= " AND kjtime like '%{$input['dates']}%'";
     $where .= ' AND js = 1';
     $array = [];
-    $res = $msql->query("select * from `$tb_kj` where $where order by qishu desc, id desc limit 1500");
+    $res = $msql->query("select * from `x_kj` where $where  order by id desc limit 1500");
     while ($msql->next_record()) {
         $expect = [];
         $sx=[];
-        for ($j = 1; $j <= $mnum_kj; $j++) {
+        for ($j = 1; $j <= $config['mnum']; $j++) {
             $expect[] = $msql->f('m' . $j);
             $fenlei ==100 && $sx[] = shengxiaos( $msql->f('m' . $j) ,$msql->f("bml"));
         }
@@ -203,7 +197,7 @@ function shengxiaos($ma, $bml)
         echo json_encode(array(
             "kj" => $array,
             'fenlei' => $fenlei,
-            'rcount' => count($array),
-            'mnum' => $mnum_kj
+            'rcount' => 1,
+            'mnum' => $config['mnum']
         ));
         

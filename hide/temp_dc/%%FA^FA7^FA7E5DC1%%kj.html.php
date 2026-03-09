@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2026-02-10 05:17:11
+<?php /* Smarty version 2.6.18, created on 2026-03-09 21:12:03
          compiled from kj.html */ ?>
 <?php $_smarty_tpl_vars = $this->_tpl_vars;
 $this->_smarty_include(array('smarty_include_tpl_file' => 'header2.html', 'smarty_include_vars' => array()));
@@ -95,7 +95,7 @@ $this->_sections['i']['last']       = ($this->_sections['i']['iteration'] == $th
 ?>
          <option value="<?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['gid']; ?>
 " fast='<?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['fast']; ?>
-'<?php if ($this->_tpl_vars['game'][$this->_sections['i']['index']]['gid'] == $this->_tpl_vars['game'][0]['gid']) { ?> selected="selected"<?php } ?>><?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['gname']; ?>
+'<?php if ($this->_tpl_vars['game'][$this->_sections['i']['index']]['gid'] == $this->_tpl_vars['game'][0]['gid']): ?> selected="selected"<?php endif; ?>><?php echo $this->_tpl_vars['game'][$this->_sections['i']['index']]['gname']; ?>
 </option>
          <?php endfor; endif; ?>
        </select></td>  <td><label><?php echo $this->_tpl_vars['game'][0]['thisqishu']; ?>
@@ -350,9 +350,9 @@ sdate[<?php echo $this->_tpl_vars['key']; ?>
 ]="<?php echo $this->_tpl_vars['i']; ?>
 ";
 <?php endforeach; endif; unset($_from); ?>
-var fenlei = <?php echo $this->_tpl_vars['config']['fenlei']; ?>
+var fenlei = <?php echo $this->_tpl_vars['game'][0]['fenlei']; ?>
 ;
-var ngid = <?php echo $this->_tpl_vars['config']['fenlei']; ?>
+var ngid = <?php echo $this->_tpl_vars['game'][0]['gid']; ?>
 ;
 </script>
 </body>

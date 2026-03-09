@@ -15,14 +15,15 @@ switch ($_REQUEST['xtype']) {
         $config['ztype'] = json_decode(transgame($gid,"ztype"),true);
         $config['ptype'] = json_decode(transgame($gid,"ptype"),true);
         //print_r($config['ptype']);
+        // 显示当前游戏完整玩法列表，不再限制 200 条
         if ($bid != '' & $sid != '' & $cid != '') {
-            $msql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and sid='$sid' and cid='$cid' order by bid,sid,cid,xsort limit 200");
+            $msql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and sid='$sid' and cid='$cid' order by bid,sid,cid,xsort");
         } else if ($bid != '' & $sid != '') {
-            $msql->query("select * from `$tb_play` where gid='$gid' and  bid='$bid' and sid='$sid'  order by bid,sid,cid,xsort  limit 200");
+            $msql->query("select * from `$tb_play` where gid='$gid' and  bid='$bid' and sid='$sid'  order by bid,sid,cid,xsort");
         } else if ($bid != '') {
-            $msql->query("select * from `$tb_play` where gid='$gid' and  bid='$bid'   order by bid,sid,cid,xsort  limit 200");
+            $msql->query("select * from `$tb_play` where gid='$gid' and  bid='$bid'   order by bid,sid,cid,xsort");
         } else {
-            $msql->query("select * from `$tb_play` where gid='$gid' order by bid,sid,cid,xsort limit 200");
+            $msql->query("select * from `$tb_play` where gid='$gid' order by bid,sid,cid,xsort");
         }
         $i = 0;
         $p = array();
@@ -108,8 +109,11 @@ switch ($_REQUEST['xtype']) {
         $znum1  = $_POST['znum1'];
         $znum2  = $_POST['znum2'];
         $pid    = setupid($tb_play, 'pid');
-        $sql    = "insert into `$tb_play` set gid='$gid',bid='$bid',sid='$sid',cid='$cid',name='$name',ztype='$ztype',znum1='$znum1',znum2='$znum2'";
+        $sql    = "insert into `$tb_play` set gid='$gid',bid='$bid',sid='$sid',cid='$cid',name='$name',ztype='$ztype',znum1='$znum1',znum2='$znum2',mp1=0,mp2=0";
         $sql .= ",pid='$pid',ifok=1,xsort=0";
+        $sql .= is_numeric($peilv1) ? ",peilv1='$peilv1'" : ",peilv1='0'";
+        $sql .= is_numeric($peilv2) ? ",peilv2='$peilv2'" : ",peilv2='0'";
+        echo $sql;die;
         if ($msql->query($sql)) {
             echo 1;
         }
@@ -134,7 +138,8 @@ switch ($_REQUEST['xtype']) {
             $xsort  = $arr[$i]['xs'];
             $ptype = $arr[$i]['ptype'];
             
-            $sql = "update `$tb_play` set bid='$bid',sid='$sid',cid='$cid',name='$name',ztype='$ztype',znum1='$znum1',znum2='$znum2',peilv1='$peilv1',peilv2='$peilv2'";
+            // 同时更新 mp1/mp2，避免触发器 updateplay（peilv1>mp1 时把 peilv1 改为 mp1）因 mp1=0 把赔率改成 0
+            $sql = "update `$tb_play` set bid='$bid',sid='$sid',cid='$cid',name='$name',ztype='$ztype',znum1='$znum1',znum2='$znum2',peilv1='$peilv1',peilv2='$peilv2',mp1='$peilv1',mp2='$peilv2'";
             $sql .= ",ifok='$ifok',xsort='$xsort',ptype='$ptype' where pid='$pid' and gid='$gid'";
 		
             $msql->query($sql);

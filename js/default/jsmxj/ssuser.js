@@ -1250,21 +1250,12 @@ function updatel() {
 	var qs = obj.find("strong").attr('v');
     if (m1 == 'undefind' | m1 == undefined) m1 = '';
 
-    // 请求开奖结果必须传 gid，否则后端无法按彩种返回；优先从页面 data-gid 取，再 ngid、select
-    var bodyEl = document.body || document.querySelector('body');
-    var gidParam = (bodyEl && bodyEl.getAttribute('data-gid')) ? bodyEl.getAttribute('data-gid') : '';
-    if (!gidParam && typeof ngid !== 'undefined' && (ngid || ngid === 0)) gidParam = String(ngid);
-    if (!gidParam) {
-        var sel = document.querySelector('select.game');
-        if (sel && sel.value) gidParam = sel.value;
-    }
-    var gidSuffix = gidParam ? "&gid=" + gidParam : "";
     $.ajax({
         type: 'POST',
         url: 'make.php',
         cache: false,
         dataType: "json",
-        data: "xtype=upl&qs=" + ($(".preqishu").attr("v") || $(".preqishu").html()) + "&qishu=" + $(".preqishu").html() + "&m1=" + m1 + "&tu=" + tustr + gidSuffix,
+        data: "xtype=upl&qishu=" + $(".preqishu").html() + "&m1=" + m1 + "&tu=" + tustr,
         success: function(m) {
 			getusermoney();
             if (m[0] != 'A') {

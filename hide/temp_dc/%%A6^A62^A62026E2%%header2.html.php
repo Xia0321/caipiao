@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2024-12-23 15:36:46
+<?php /* Smarty version 2.6.18, created on 2026-03-09 19:54:12
          compiled from header2.html */ ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" <?php if ($this->_tpl_vars['rkey'] == 0): ?>oncontextmenu="return false"<?php endif; ?>>

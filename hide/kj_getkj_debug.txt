@@ -141,3 +141,523 @@
 2026-02-12 05:09:57 sql_list select * from `x_kj` where gid='251'  and dates='2026-02-11' and kjtime<'2026-02-12 05:24:57'   order by gid,dates desc,kjtime desc  limit 0,120
 2026-02-12 05:09:57 rows_count 120
 2026-02-12 05:09:57 === getkj end rcount=1075 kj_count=120 error=no ===
+2026-03-06 18:22:50 === getkj start ===
+2026-03-06 18:22:50 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-06 18:22:50 fast 1
+2026-03-06 18:22:50 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-06 18:37:50'  
+2026-03-06 18:22:50 rcount 557
+2026-03-06 18:22:50 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-06 18:37:50'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-06 18:22:50 rows_count 120
+2026-03-06 18:22:50 === getkj end rcount=557 kj_count=120 error=no ===
+2026-03-06 18:33:04 === getkj start ===
+2026-03-06 18:33:04 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-06 18:33:04 fast 1
+2026-03-06 18:33:04 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-06 18:48:04'  
+2026-03-06 18:33:04 rcount 566
+2026-03-06 18:33:04 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-06 18:48:04'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-06 18:33:04 rows_count 120
+2026-03-06 18:33:04 === getkj end rcount=566 kj_count=120 error=no ===
+2026-03-06 23:51:28 === getkj start ===
+2026-03-06 23:51:28 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-06 23:51:28 fast 1
+2026-03-06 23:51:28 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:06:28'  
+2026-03-06 23:51:28 rcount 820
+2026-03-06 23:51:28 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:06:28'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-06 23:51:28 rows_count 120
+2026-03-06 23:51:28 === getkj end rcount=820 kj_count=120 error=no ===
+2026-03-06 23:54:11 === getkj start ===
+2026-03-06 23:54:11 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-06 23:54:11 fast 1
+2026-03-06 23:54:11 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:09:11'  
+2026-03-06 23:54:11 rcount 822
+2026-03-06 23:54:11 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:09:11'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-06 23:54:11 rows_count 120
+2026-03-06 23:54:11 === getkj end rcount=822 kj_count=120 error=no ===
+2026-03-06 23:54:44 === getkj start ===
+2026-03-06 23:54:44 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-06 23:54:44 fast 1
+2026-03-06 23:54:44 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:09:44'  
+2026-03-06 23:54:44 rcount 823
+2026-03-06 23:54:44 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:09:44'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-06 23:54:44 rows_count 120
+2026-03-06 23:54:45 === getkj end rcount=823 kj_count=120 error=no ===
+2026-03-06 23:55:49 === getkj start ===
+2026-03-06 23:55:49 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-06 23:55:49 fast 1
+2026-03-06 23:55:49 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:10:49'  
+2026-03-06 23:55:49 rcount 824
+2026-03-06 23:55:49 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:10:49'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-06 23:55:49 rows_count 120
+2026-03-06 23:55:49 === getkj end rcount=824 kj_count=120 error=no ===
+2026-03-07 00:02:03 === getkj start ===
+2026-03-07 00:02:03 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:03 fast 1
+2026-03-07 00:02:03 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:03'  
+2026-03-07 00:02:03 rcount 829
+2026-03-07 00:02:03 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:03'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:03 rows_count 120
+2026-03-07 00:02:03 === getkj end rcount=829 kj_count=120 error=no ===
+2026-03-07 00:02:06 === getkj start ===
+2026-03-07 00:02:06 params {"gid":"252","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:06 fast 1
+2026-03-07 00:02:06 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:06'  
+2026-03-07 00:02:06 rcount 830
+2026-03-07 00:02:06 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:06'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:06 rows_count 120
+2026-03-07 00:02:06 === getkj end rcount=830 kj_count=120 error=no ===
+2026-03-07 00:02:26 === getkj start ===
+2026-03-07 00:02:26 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:26 fast 1
+2026-03-07 00:02:26 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:26'  
+2026-03-07 00:02:26 rcount 829
+2026-03-07 00:02:26 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:26'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:26 rows_count 120
+2026-03-07 00:02:27 === getkj end rcount=829 kj_count=120 error=no ===
+2026-03-07 00:02:35 === getkj start ===
+2026-03-07 00:02:35 params {"gid":"252","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:35 fast 1
+2026-03-07 00:02:35 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:35'  
+2026-03-07 00:02:35 rcount 830
+2026-03-07 00:02:35 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:35'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:35 rows_count 120
+2026-03-07 00:02:35 === getkj end rcount=830 kj_count=120 error=no ===
+2026-03-07 00:02:43 === getkj start ===
+2026-03-07 00:02:43 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:43 fast 1
+2026-03-07 00:02:43 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:43'  
+2026-03-07 00:02:43 rcount 829
+2026-03-07 00:02:43 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:43'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:43 rows_count 120
+2026-03-07 00:02:43 === getkj end rcount=829 kj_count=120 error=no ===
+2026-03-07 00:02:51 === getkj start ===
+2026-03-07 00:02:51 params {"gid":"200","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:51 fast 1
+2026-03-07 00:02:51 sql_count select count(id) from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:51'  
+2026-03-07 00:02:51 rcount 103
+2026-03-07 00:02:51 sql_list select * from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:51'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:51 rows_count 103
+2026-03-07 00:02:51 === getkj end rcount=103 kj_count=103 error=no ===
+2026-03-07 00:02:56 === getkj start ===
+2026-03-07 00:02:56 params {"gid":"252","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:02:56 fast 1
+2026-03-07 00:02:56 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:56'  
+2026-03-07 00:02:56 rcount 830
+2026-03-07 00:02:56 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:17:56'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:02:56 rows_count 120
+2026-03-07 00:02:56 === getkj end rcount=830 kj_count=120 error=no ===
+2026-03-07 00:04:05 === getkj start ===
+2026-03-07 00:04:05 params {"gid":"151","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:04:05 fast 1
+2026-03-07 00:04:05 sql_count select count(id) from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 00:19:05'  
+2026-03-07 00:04:05 rcount 41
+2026-03-07 00:04:05 sql_list select * from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 00:19:05'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:04:05 rows_count 41
+2026-03-07 00:04:05 === getkj end rcount=41 kj_count=41 error=no ===
+2026-03-07 00:12:39 === getkj start ===
+2026-03-07 00:12:39 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:12:39 fast 1
+2026-03-07 00:12:39 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:39'  
+2026-03-07 00:12:39 rcount 837
+2026-03-07 00:12:39 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:39'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:12:39 rows_count 120
+2026-03-07 00:12:39 === getkj end rcount=837 kj_count=120 error=no ===
+2026-03-07 00:12:42 === getkj start ===
+2026-03-07 00:12:42 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:12:42 fast 1
+2026-03-07 00:12:42 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:42'  
+2026-03-07 00:12:42 rcount 837
+2026-03-07 00:12:42 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:42'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:12:42 rows_count 120
+2026-03-07 00:12:42 === getkj end rcount=837 kj_count=120 error=no ===
+2026-03-07 00:12:44 === getkj start ===
+2026-03-07 00:12:44 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:12:44 fast 1
+2026-03-07 00:12:44 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:44'  
+2026-03-07 00:12:44 rcount 837
+2026-03-07 00:12:44 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:44'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:12:44 rows_count 120
+2026-03-07 00:12:44 === getkj end rcount=837 kj_count=120 error=no ===
+2026-03-07 00:12:46 === getkj start ===
+2026-03-07 00:12:46 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:12:46 fast 1
+2026-03-07 00:12:46 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:46'  
+2026-03-07 00:12:46 rcount 837
+2026-03-07 00:12:46 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:46'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:12:46 rows_count 120
+2026-03-07 00:12:46 === getkj end rcount=837 kj_count=120 error=no ===
+2026-03-07 00:12:54 === getkj start ===
+2026-03-07 00:12:54 params {"gid":"200","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:12:54 fast 1
+2026-03-07 00:12:54 sql_count select count(id) from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:54'  
+2026-03-07 00:12:54 rcount 104
+2026-03-07 00:12:54 sql_list select * from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:54'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:12:54 rows_count 104
+2026-03-07 00:12:54 === getkj end rcount=104 kj_count=104 error=no ===
+2026-03-07 00:12:57 === getkj start ===
+2026-03-07 00:12:57 params {"gid":"151","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:12:57 fast 1
+2026-03-07 00:12:57 sql_count select count(id) from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:57'  
+2026-03-07 00:12:57 rcount 41
+2026-03-07 00:12:57 sql_list select * from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 00:27:57'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:12:57 rows_count 41
+2026-03-07 00:12:57 === getkj end rcount=41 kj_count=41 error=no ===
+2026-03-07 00:13:00 === getkj start ===
+2026-03-07 00:13:00 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:13:00 fast 1
+2026-03-07 00:13:00 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 00:28:00'  
+2026-03-07 00:13:00 rcount 837
+2026-03-07 00:13:00 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 00:28:00'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:13:00 rows_count 120
+2026-03-07 00:13:00 === getkj end rcount=837 kj_count=120 error=no ===
+2026-03-07 00:13:05 === getkj start ===
+2026-03-07 00:13:05 params {"gid":"252","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:13:05 fast 1
+2026-03-07 00:13:05 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:28:05'  
+2026-03-07 00:13:05 rcount 839
+2026-03-07 00:13:05 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 00:28:05'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:13:05 rows_count 120
+2026-03-07 00:13:05 === getkj end rcount=839 kj_count=120 error=no ===
+2026-03-07 00:17:29 === getkj start ===
+2026-03-07 00:17:29 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:17:29 fast 1
+2026-03-07 00:17:29 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:29'  
+2026-03-07 00:17:30 rcount 841
+2026-03-07 00:17:30 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:29'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:17:30 rows_count 120
+2026-03-07 00:17:30 === getkj end rcount=841 kj_count=120 error=no ===
+2026-03-07 00:17:35 === getkj start ===
+2026-03-07 00:17:35 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:17:35 fast 1
+2026-03-07 00:17:35 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:35'  
+2026-03-07 00:17:35 rcount 841
+2026-03-07 00:17:35 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:35'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:17:35 rows_count 120
+2026-03-07 00:17:35 === getkj end rcount=841 kj_count=120 error=no ===
+2026-03-07 00:17:40 === getkj start ===
+2026-03-07 00:17:40 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:17:40 fast 1
+2026-03-07 00:17:40 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:40'  
+2026-03-07 00:17:40 rcount 841
+2026-03-07 00:17:40 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:40'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:17:40 rows_count 120
+2026-03-07 00:17:40 === getkj end rcount=841 kj_count=120 error=no ===
+2026-03-07 00:17:44 === getkj start ===
+2026-03-07 00:17:44 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:17:44 fast 1
+2026-03-07 00:17:44 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:44'  
+2026-03-07 00:17:44 rcount 841
+2026-03-07 00:17:44 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 00:32:44'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:17:44 rows_count 120
+2026-03-07 00:17:44 === getkj end rcount=841 kj_count=120 error=no ===
+2026-03-07 00:45:07 === getkj start ===
+2026-03-07 00:45:07 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:45:07 fast 1
+2026-03-07 00:45:07 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:00:07'  
+2026-03-07 00:45:07 rcount 863
+2026-03-07 00:45:07 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:00:07'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:45:07 rows_count 120
+2026-03-07 00:45:07 === getkj end rcount=863 kj_count=120 error=no ===
+2026-03-07 00:45:29 === getkj start ===
+2026-03-07 00:45:29 params {"gid":"200","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:45:29 fast 1
+2026-03-07 00:45:29 sql_count select count(id) from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 01:00:29'  
+2026-03-07 00:45:29 rcount 108
+2026-03-07 00:45:29 sql_list select * from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 01:00:29'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:45:29 rows_count 108
+2026-03-07 00:45:29 === getkj end rcount=108 kj_count=108 error=no ===
+2026-03-07 00:45:31 === getkj start ===
+2026-03-07 00:45:31 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:45:31 fast 1
+2026-03-07 00:45:31 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:00:31'  
+2026-03-07 00:45:31 rcount 864
+2026-03-07 00:45:31 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:00:31'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:45:31 rows_count 120
+2026-03-07 00:45:31 === getkj end rcount=864 kj_count=120 error=no ===
+2026-03-07 00:46:03 === getkj start ===
+2026-03-07 00:46:03 params {"gid":"151","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:46:03 fast 1
+2026-03-07 00:46:03 sql_count select count(id) from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 01:01:03'  
+2026-03-07 00:46:03 rcount 41
+2026-03-07 00:46:03 sql_list select * from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 01:01:03'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:46:03 rows_count 41
+2026-03-07 00:46:03 === getkj end rcount=41 kj_count=41 error=no ===
+2026-03-07 00:46:09 === getkj start ===
+2026-03-07 00:46:09 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:46:09 fast 1
+2026-03-07 00:46:09 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:01:09'  
+2026-03-07 00:46:09 rcount 864
+2026-03-07 00:46:09 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:01:09'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:46:09 rows_count 120
+2026-03-07 00:46:09 === getkj end rcount=864 kj_count=120 error=no ===
+2026-03-07 00:49:35 === getkj start ===
+2026-03-07 00:49:35 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:49:35 fast 1
+2026-03-07 00:49:35 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:04:35'  
+2026-03-07 00:49:35 rcount 867
+2026-03-07 00:49:35 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:04:35'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:49:35 rows_count 120
+2026-03-07 00:49:35 === getkj end rcount=867 kj_count=120 error=no ===
+2026-03-07 00:49:40 === getkj start ===
+2026-03-07 00:49:40 params {"gid":"151","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:49:40 fast 1
+2026-03-07 00:49:40 sql_count select count(id) from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 01:04:40'  
+2026-03-07 00:49:40 rcount 41
+2026-03-07 00:49:40 sql_list select * from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 01:04:40'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:49:40 rows_count 41
+2026-03-07 00:49:40 === getkj end rcount=41 kj_count=41 error=no ===
+2026-03-07 00:49:42 === getkj start ===
+2026-03-07 00:49:42 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:49:42 fast 1
+2026-03-07 00:49:42 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:04:42'  
+2026-03-07 00:49:42 rcount 867
+2026-03-07 00:49:42 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:04:42'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:49:42 rows_count 120
+2026-03-07 00:49:42 === getkj end rcount=867 kj_count=120 error=no ===
+2026-03-07 00:50:02 === getkj start ===
+2026-03-07 00:50:02 params {"gid":"252","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:50:02 fast 1
+2026-03-07 00:50:02 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 01:05:02'  
+2026-03-07 00:50:02 rcount 868
+2026-03-07 00:50:02 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 01:05:02'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:50:02 rows_count 120
+2026-03-07 00:50:03 === getkj end rcount=868 kj_count=120 error=no ===
+2026-03-07 00:50:15 === getkj start ===
+2026-03-07 00:50:15 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:50:15 fast 1
+2026-03-07 00:50:15 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:05:15'  
+2026-03-07 00:50:15 rcount 867
+2026-03-07 00:50:15 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:05:15'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:50:15 rows_count 120
+2026-03-07 00:50:15 === getkj end rcount=867 kj_count=120 error=no ===
+2026-03-07 00:50:17 === getkj start ===
+2026-03-07 00:50:17 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:50:17 fast 1
+2026-03-07 00:50:17 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:05:17'  
+2026-03-07 00:50:17 rcount 867
+2026-03-07 00:50:17 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:05:17'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:50:17 rows_count 120
+2026-03-07 00:50:17 === getkj end rcount=867 kj_count=120 error=no ===
+2026-03-07 00:55:30 === getkj start ===
+2026-03-07 00:55:30 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 00:55:30 fast 1
+2026-03-07 00:55:30 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:10:30'  
+2026-03-07 00:55:30 rcount 871
+2026-03-07 00:55:30 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:10:30'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 00:55:30 rows_count 120
+2026-03-07 00:55:30 === getkj end rcount=871 kj_count=120 error=no ===
+2026-03-07 01:01:35 === getkj start ===
+2026-03-07 01:01:35 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:01:35 fast 1
+2026-03-07 01:01:35 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:16:35'  
+2026-03-07 01:01:35 rcount 876
+2026-03-07 01:01:35 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:16:35'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:01:35 rows_count 120
+2026-03-07 01:01:35 === getkj end rcount=876 kj_count=120 error=no ===
+2026-03-07 01:01:41 === getkj start ===
+2026-03-07 01:01:41 params {"gid":"131","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:01:41 fast 1
+2026-03-07 01:01:41 sql_count select count(id) from `x_kj` where gid='131'  and dates='2026-03-06' and kjtime<'2026-03-07 01:16:41'  
+2026-03-07 01:01:41 rcount 218
+2026-03-07 01:01:41 sql_list select * from `x_kj` where gid='131'  and dates='2026-03-06' and kjtime<'2026-03-07 01:16:41'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:01:41 rows_count 120
+2026-03-07 01:01:41 === getkj end rcount=218 kj_count=120 error=no ===
+2026-03-07 01:02:00 === getkj start ===
+2026-03-07 01:02:00 params {"gid":"175","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:02:00 fast 1
+2026-03-07 01:02:00 sql_count select count(id) from `x_kj` where gid='175'  and dates='2026-03-06' and kjtime<'2026-03-07 01:17:00'  
+2026-03-07 01:02:00 rcount 218
+2026-03-07 01:02:00 sql_list select * from `x_kj` where gid='175'  and dates='2026-03-06' and kjtime<'2026-03-07 01:17:00'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:02:00 rows_count 120
+2026-03-07 01:02:00 === getkj end rcount=218 kj_count=120 error=no ===
+2026-03-07 01:03:31 === getkj start ===
+2026-03-07 01:03:31 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:03:31 fast 1
+2026-03-07 01:03:31 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:18:31'  
+2026-03-07 01:03:31 rcount 878
+2026-03-07 01:03:31 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:18:31'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:03:31 rows_count 120
+2026-03-07 01:03:31 === getkj end rcount=878 kj_count=120 error=no ===
+2026-03-07 01:03:35 === getkj start ===
+2026-03-07 01:03:35 params {"gid":"163","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:03:35 fast 1
+2026-03-07 01:03:35 sql_count select count(id) from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:18:35'  
+2026-03-07 01:03:35 rcount 0
+2026-03-07 01:03:35 sql_list select * from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:18:35'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:03:35 rows_count 0
+2026-03-07 01:03:35 === getkj end rcount=0 kj_count=0 error=no ===
+2026-03-07 01:04:31 === getkj start ===
+2026-03-07 01:04:31 params {"gid":"163","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:04:31 fast 1
+2026-03-07 01:04:31 sql_count select count(id) from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:19:31'  
+2026-03-07 01:04:31 rcount 0
+2026-03-07 01:04:31 sql_list select * from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:19:31'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:04:31 rows_count 0
+2026-03-07 01:04:31 === getkj end rcount=0 kj_count=0 error=no ===
+2026-03-07 01:04:51 === getkj start ===
+2026-03-07 01:04:51 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:04:51 fast 1
+2026-03-07 01:04:51 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:19:51'  
+2026-03-07 01:04:51 rcount 879
+2026-03-07 01:04:51 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:19:51'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:04:51 rows_count 120
+2026-03-07 01:04:51 === getkj end rcount=879 kj_count=120 error=no ===
+2026-03-07 01:05:21 === getkj start ===
+2026-03-07 01:05:21 params {"gid":"163","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:05:21 fast 1
+2026-03-07 01:05:21 sql_count select count(id) from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:20:21'  
+2026-03-07 01:05:21 rcount 0
+2026-03-07 01:05:21 sql_list select * from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:20:21'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:05:21 rows_count 0
+2026-03-07 01:05:21 === getkj end rcount=0 kj_count=0 error=no ===
+2026-03-07 01:06:34 === getkj start ===
+2026-03-07 01:06:34 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:06:34 fast 1
+2026-03-07 01:06:34 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:21:34'  
+2026-03-07 01:06:34 rcount 880
+2026-03-07 01:06:34 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:21:34'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:06:34 rows_count 120
+2026-03-07 01:06:34 === getkj end rcount=880 kj_count=120 error=no ===
+2026-03-07 01:06:41 === getkj start ===
+2026-03-07 01:06:41 params {"gid":"200","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:06:41 fast 1
+2026-03-07 01:06:41 sql_count select count(id) from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 01:21:41'  
+2026-03-07 01:06:41 rcount 110
+2026-03-07 01:06:41 sql_list select * from `x_kj` where gid='200'  and dates='2026-03-06' and kjtime<'2026-03-07 01:21:41'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:06:41 rows_count 110
+2026-03-07 01:06:41 === getkj end rcount=110 kj_count=110 error=no ===
+2026-03-07 01:06:43 === getkj start ===
+2026-03-07 01:06:43 params {"gid":"175","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:06:43 fast 1
+2026-03-07 01:06:43 sql_count select count(id) from `x_kj` where gid='175'  and dates='2026-03-06' and kjtime<'2026-03-07 01:21:43'  
+2026-03-07 01:06:43 rcount 219
+2026-03-07 01:06:43 sql_list select * from `x_kj` where gid='175'  and dates='2026-03-06' and kjtime<'2026-03-07 01:21:43'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:06:43 rows_count 120
+2026-03-07 01:06:43 === getkj end rcount=219 kj_count=120 error=no ===
+2026-03-07 01:15:20 === getkj start ===
+2026-03-07 01:15:20 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:15:20 fast 1
+2026-03-07 01:15:20 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:30:20'  
+2026-03-07 01:15:20 rcount 887
+2026-03-07 01:15:20 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 01:30:20'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:15:20 rows_count 120
+2026-03-07 01:15:20 === getkj end rcount=887 kj_count=120 error=no ===
+2026-03-07 01:22:00 === getkj start ===
+2026-03-07 01:22:00 params {"gid":"172","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:22:00 fast 1
+2026-03-07 01:22:00 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:37:00'  
+2026-03-07 01:22:00 rcount 893
+2026-03-07 01:22:00 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-06' and kjtime<'2026-03-07 01:37:00'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:22:00 rows_count 120
+2026-03-07 01:22:00 === getkj end rcount=893 kj_count=120 error=no ===
+2026-03-07 01:27:06 === getkj start ===
+2026-03-07 01:27:06 params {"gid":"233","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:27:06 fast 1
+2026-03-07 01:27:06 sql_count select count(id) from `x_kj` where gid='233'  and dates='2026-03-06' and kjtime<'2026-03-07 01:42:06'  
+2026-03-07 01:27:06 rcount 1091
+2026-03-07 01:27:06 sql_list select * from `x_kj` where gid='233'  and dates='2026-03-06' and kjtime<'2026-03-07 01:42:06'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:27:06 rows_count 120
+2026-03-07 01:27:06 === getkj end rcount=1091 kj_count=120 error=no ===
+2026-03-07 01:31:49 === getkj start ===
+2026-03-07 01:31:49 params {"gid":"163","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:31:49 fast 1
+2026-03-07 01:31:49 sql_count select count(id) from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:46:49'  
+2026-03-07 01:31:49 rcount 0
+2026-03-07 01:31:49 sql_list select * from `x_kj` where gid='163'  and dates='2026-03-06' and kjtime<'2026-03-07 01:46:49'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:31:49 rows_count 0
+2026-03-07 01:31:49 === getkj end rcount=0 kj_count=0 error=no ===
+2026-03-07 01:36:35 === getkj start ===
+2026-03-07 01:36:35 params {"gid":"108","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:36:35 fast 1
+2026-03-07 01:36:35 sql_count select count(id) from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:51:35'  
+2026-03-07 01:36:35 rcount 904
+2026-03-07 01:36:35 sql_list select * from `x_kj` where gid='108'  and dates='2026-03-06' and kjtime<'2026-03-07 01:51:35'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:36:35 rows_count 120
+2026-03-07 01:36:35 === getkj end rcount=904 kj_count=120 error=no ===
+2026-03-07 01:39:06 === getkj start ===
+2026-03-07 01:39:06 params {"gid":"151","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:39:06 fast 1
+2026-03-07 01:39:06 sql_count select count(id) from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 01:54:06'  
+2026-03-07 01:39:06 rcount 41
+2026-03-07 01:39:06 sql_list select * from `x_kj` where gid='151'  and dates='2026-03-06' and kjtime<'2026-03-07 01:54:06'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:39:06 rows_count 41
+2026-03-07 01:39:06 === getkj end rcount=41 kj_count=41 error=no ===
+2026-03-07 01:56:07 === getkj start ===
+2026-03-07 01:56:07 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:56:07 fast 1
+2026-03-07 01:56:07 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 02:11:07'  
+2026-03-07 01:56:07 rcount 920
+2026-03-07 01:56:07 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 02:11:07'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:56:07 rows_count 120
+2026-03-07 01:56:07 === getkj end rcount=920 kj_count=120 error=no ===
+2026-03-07 01:56:09 === getkj start ===
+2026-03-07 01:56:09 params {"gid":"131","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:56:09 fast 1
+2026-03-07 01:56:09 sql_count select count(id) from `x_kj` where gid='131'  and dates='2026-03-06' and kjtime<'2026-03-07 02:11:09'  
+2026-03-07 01:56:09 rcount 229
+2026-03-07 01:56:09 sql_list select * from `x_kj` where gid='131'  and dates='2026-03-06' and kjtime<'2026-03-07 02:11:09'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:56:09 rows_count 120
+2026-03-07 01:56:09 === getkj end rcount=229 kj_count=120 error=no ===
+2026-03-07 01:56:11 === getkj start ===
+2026-03-07 01:56:11 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 01:56:11 fast 1
+2026-03-07 01:56:11 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 02:11:11'  
+2026-03-07 01:56:11 rcount 920
+2026-03-07 01:56:11 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 02:11:11'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 01:56:11 rows_count 120
+2026-03-07 01:56:12 === getkj end rcount=920 kj_count=120 error=no ===
+2026-03-07 02:04:22 === getkj start ===
+2026-03-07 02:04:22 params {"gid":"252","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 02:04:22 fast 1
+2026-03-07 02:04:22 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 02:19:22'  
+2026-03-07 02:04:22 rcount 928
+2026-03-07 02:04:22 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-06' and kjtime<'2026-03-07 02:19:22'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 02:04:23 rows_count 120
+2026-03-07 02:04:23 === getkj end rcount=928 kj_count=120 error=no ===
+2026-03-07 02:04:33 === getkj start ===
+2026-03-07 02:04:33 params {"gid":"251","psize":120,"page":1,"start":"2026-03-06","end":"2026-03-06","ze":"0","debug":0}
+2026-03-07 02:04:33 fast 1
+2026-03-07 02:04:33 sql_count select count(id) from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 02:19:33'  
+2026-03-07 02:04:33 rcount 927
+2026-03-07 02:04:33 sql_list select * from `x_kj` where gid='251'  and dates='2026-03-06' and kjtime<'2026-03-07 02:19:33'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-07 02:04:33 rows_count 120
+2026-03-07 02:04:33 === getkj end rcount=927 kj_count=120 error=no ===
+2026-03-08 22:27:09 === getkj start ===
+2026-03-08 22:27:09 params {"gid":"172","psize":120,"page":1,"start":"2026-03-08","end":"2026-03-08","ze":"0","debug":0}
+2026-03-08 22:27:09 fast 1
+2026-03-08 22:27:09 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-08' and kjtime<'2026-03-08 22:42:09'  
+2026-03-08 22:27:09 rcount 753
+2026-03-08 22:27:09 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-08' and kjtime<'2026-03-08 22:42:09'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-08 22:27:09 rows_count 120
+2026-03-08 22:27:09 === getkj end rcount=753 kj_count=120 error=no ===
+2026-03-08 22:27:12 === getkj start ===
+2026-03-08 22:27:12 params {"gid":"252","psize":120,"page":1,"start":"2026-03-08","end":"2026-03-08","ze":"0","debug":0}
+2026-03-08 22:27:12 fast 1
+2026-03-08 22:27:12 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-08' and kjtime<'2026-03-08 22:42:12'  
+2026-03-08 22:27:12 rcount 1504
+2026-03-08 22:27:12 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-08' and kjtime<'2026-03-08 22:42:12'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-08 22:27:12 rows_count 120
+2026-03-08 22:27:12 === getkj end rcount=1504 kj_count=60 error=no ===
+2026-03-09 21:12:04 === getkj start ===
+2026-03-09 21:12:04 params {"gid":"172","psize":120,"page":1,"start":"2026-03-09","end":"2026-03-09","ze":"0","debug":0}
+2026-03-09 21:12:04 fast 1
+2026-03-09 21:12:04 sql_count select count(id) from `x_kj` where gid='172'  and dates='2026-03-09' and kjtime<'2026-03-09 21:27:04'  
+2026-03-09 21:12:04 rcount 693
+2026-03-09 21:12:04 sql_list select * from `x_kj` where gid='172'  and dates='2026-03-09' and kjtime<'2026-03-09 21:27:04'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-09 21:12:04 rows_count 120
+2026-03-09 21:12:04 === getkj end rcount=693 kj_count=120 error=no ===
+2026-03-09 22:56:01 === getkj start ===
+2026-03-09 22:56:01 params {"gid":"233","psize":120,"page":1,"start":"2026-03-09","end":"2026-03-09","ze":"0","debug":0}
+2026-03-09 22:56:01 fast 1
+2026-03-09 22:56:01 sql_count select count(id) from `x_kj` where gid='233'  and dates='2026-03-09' and kjtime<'2026-03-09 23:11:01'  
+2026-03-09 22:56:01 rcount 940
+2026-03-09 22:56:01 sql_list select * from `x_kj` where gid='233'  and dates='2026-03-09' and kjtime<'2026-03-09 23:11:01'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-09 22:56:01 rows_count 120
+2026-03-09 22:56:01 === getkj end rcount=940 kj_count=120 error=no ===
+2026-03-09 22:56:03 === getkj start ===
+2026-03-09 22:56:03 params {"gid":"252","psize":120,"page":1,"start":"2026-03-09","end":"2026-03-09","ze":"0","debug":0}
+2026-03-09 22:56:03 fast 1
+2026-03-09 22:56:03 sql_count select count(id) from `x_kj` where gid='252'  and dates='2026-03-09' and kjtime<'2026-03-09 23:11:03'  
+2026-03-09 22:56:03 rcount 776
+2026-03-09 22:56:03 sql_list select * from `x_kj` where gid='252'  and dates='2026-03-09' and kjtime<'2026-03-09 23:11:03'   order by gid,dates desc,kjtime desc  limit 0,120
+2026-03-09 22:56:03 rows_count 120
+2026-03-09 22:56:03 === getkj end rcount=776 kj_count=120 error=no ===

@@ -1,0 +1,95 @@
+<?php /* Smarty version 2.6.18, created on 2026-03-08 10:07:25
+         compiled from bottom_menu.html */ ?>
+<!-- 公共底部导航（参考图）：游戏 / 结果 / 记录 / 我的。icon 在上、文字在下，选中蓝色、未选浅灰。bottom_menu_active: game|result|report|me -->
+<style type="text/css">
+.mxj-bottom-nav {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: 56px;
+    background: #fff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 8px 0 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0));
+    box-sizing: border-box;
+    z-index: 100;
+}
+.mxj-bottom-nav a {
+    flex: 1;
+    min-height: 48px;
+    color: #9e9e9e;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 4px;
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+    transition: color .2s;
+}
+.mxj-bottom-nav a .mxj-nav-icon {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 4px;
+    flex-shrink: 0;
+    background: url(/css/mobi/img/icon_step.png) no-repeat;
+    background-size: 520px 74px;
+}
+.mxj-bottom-nav a .mxj-nav-cell {
+    font-size: 12px;
+    line-height: 1.3;
+    color: inherit;
+}
+/* 游戏 - 圆形/几何图标 */
+.mxj-bottom-nav a.betting_shortcut .mxj-nav-icon { background-position: 39px -38px; }
+/* 结果 - 柱状图 */
+.mxj-bottom-nav a.result_shortcut .mxj-nav-icon { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2'%3E%3Crect x='4' y='14' width='4' height='6'/%3E%3Crect x='10' y='10' width='4' height='10'/%3E%3Crect x='16' y='6' width='4' height='14'/%3E%3C/svg%3E") no-repeat center; background-size: 22px 22px; }
+/* 记录 - 文档/列表 */
+.mxj-bottom-nav a.not_settlement_shortcut .mxj-nav-icon { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cline x1='10' y1='9' x2='8' y2='9'/%3E%3C/svg%3E") no-repeat center; background-size: 22px 22px; }
+/* 我的 - 人头像 */
+.mxj-bottom-nav a.my_shortcut .mxj-nav-icon { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E") no-repeat center; background-size: 22px 22px; }
+
+.mxj-bottom-nav a.bottom-nav-active {
+    color: #03a9f4;
+}
+.mxj-bottom-nav a.bottom-nav-active .mxj-nav-cell {
+    color: #03a9f4;
+}
+.mxj-bottom-nav a.bottom-nav-active .mxj-nav-icon {
+    filter: none;
+    -webkit-filter: none;
+}
+/* 选中时 SVG 图标改为蓝色（通过 mask 或内联） */
+.mxj-bottom-nav a.betting_shortcut.bottom-nav-active .mxj-nav-icon {
+    background-position: 39px -38px;
+    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(166deg);
+    -webkit-filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(166deg);
+}
+.mxj-bottom-nav a.result_shortcut.bottom-nav-active .mxj-nav-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2303a9f4' stroke-width='2'%3E%3Crect x='4' y='14' width='4' height='6'/%3E%3Crect x='10' y='10' width='4' height='10'/%3E%3Crect x='16' y='6' width='4' height='14'/%3E%3C/svg%3E"); }
+.mxj-bottom-nav a.not_settlement_shortcut.bottom-nav-active .mxj-nav-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2303a9f4' stroke-width='2'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cline x1='10' y1='9' x2='8' y2='9'/%3E%3C/svg%3E"); }
+.mxj-bottom-nav a.my_shortcut.bottom-nav-active .mxj-nav-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2303a9f4' stroke-width='2'%3E%3Ccircle cx='12' cy='8' r='4'/%3E%3Cpath d='M4 20c0-4 4-6 8-6s8 2 8 6'/%3E%3C/svg%3E"); }
+</style>
+<div class="sc-1ng8zp5-0 iBBuud menulist mxj-bottom-nav">
+    <a class="betting_shortcut<?php if ($this->_tpl_vars['bottom_menu_active'] == 'game'): ?> bottom-nav-active<?php endif; ?>" type="/creditmobile/home" href="javascript:void(0)">
+        <span class="mxj-nav-icon"></span>
+        <span class="mxj-nav-cell">游戏</span>
+    </a>
+    <a class="result_shortcut<?php if ($this->_tpl_vars['bottom_menu_active'] == 'result'): ?> bottom-nav-active<?php endif; ?>" type="/creditmobile/dresult" href="javascript:void(0)">
+        <span class="mxj-nav-icon"></span>
+        <span class="mxj-nav-cell">结果</span>
+    </a>
+    <a class="not_settlement_shortcut<?php if ($this->_tpl_vars['bottom_menu_active'] == 'report'): ?> bottom-nav-active<?php endif; ?>" type="/creditmobile/report" href="javascript:void(0)">
+        <span class="mxj-nav-icon"></span>
+        <span class="mxj-nav-cell">记录</span>
+    </a>
+    <a class="my_shortcut<?php if ($this->_tpl_vars['bottom_menu_active'] == 'me'): ?> bottom-nav-active<?php endif; ?>" type="/creditmobile/userinfo" href="javascript:void(0)">
+        <span class="mxj-nav-icon"></span>
+        <span class="mxj-nav-cell">我的</span>
+    </a>
+</div>

@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.18, created on 2024-12-22 01:47:20
+<?php /* Smarty version 2.6.18, created on 2026-03-09 19:54:11
          compiled from top.html */ ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -66,7 +66,8 @@ var globalpath = "<?php echo $this->_tpl_vars['globalpath']; ?>
 </style>
 <link href="/css/default/ball.css" rel="stylesheet" type="text/css" />
 </head>
-<body id="topbody">
+<body id="topbody" data-gid="<?php echo $this->_tpl_vars['gid']; ?>
+">
 <script id=myjs language="javascript">var mulu='<?php echo $this->_tpl_vars['mulu']; ?>
 ';var js=1;var sss='top';</script>
 <ul class="games" id='nav'>
@@ -125,7 +126,8 @@ $this->_sections['i']['last']       = ($this->_sections['i']['iteration'] == $th
                 <a href="javascript:void(0);" target="frame" x="longs">开奖结果</a>
                 <a href="javascript:void(0);" target="frame"  i=3 x="caopan">系统功能</a>
                 <a href="javascript:void(0);" target="frame" i=4 class='xjgl'  x="money" <?php if ($this->_tpl_vars['money'] != 1): ?>style='display:none;'<?php endif; ?>>现金管理</a>
-                <?php if ($this->_tpl_vars['hide'] == 1): ?> <a href="javascript:void(0);" target="frame"  i=5 x="check">高级功能</a><?php endif; ?>                
+                <?php if ($this->_tpl_vars['hide'] == 1): ?> <a href="javascript:void(0);" target="frame"  i=5 x="mch">商户管理</a><?php endif; ?>
+                <?php if ($this->_tpl_vars['hide'] == 1): ?> <a href="javascript:void(0);" target="frame"  i=6 x="check">高级功能</a><?php endif; ?>                
                 <a href="javascript:void(0);" target="frame" x="changepass2">密码修改</a>
                 <a href="javascript:void(0);">退出</a>
             </li>
@@ -240,7 +242,14 @@ $this->_sections['i']['last']       = ($this->_sections['i']['iteration'] == $th
         </ul>
 
 
-       <?php if ($this->_tpl_vars['hide'] == 1): ?>
+        <?php if ($this->_tpl_vars['hide'] == 1): ?>
+        <ul class="menu_sub">
+            <li class="menu_sub_title">当前选中：<span>商户管理</span></li>
+            <li class="menu_sub_link">
+            <a href="javascript:void(0);" target="frame" u="mch" type='show'>商户列表</a> |
+            <a href="javascript:void(0);" target="frame" u="mch" type='add'>添加商户</a>
+            </li>
+        </ul>
         <ul class="menu_sub">             
             <li class="menu_sub_title">当前选中：<span>高级功能</span></li>
             <li class="menu_sub_link">    
