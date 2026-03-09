@@ -1338,9 +1338,9 @@ function exe() {
                 play[i]['name'] = pname;
                 play[i]['je'] = je;
                 if(dw==1){
-                    play[i]['con'] = aall[i]['n'];
+                    play[i]['con'] = aall[i]['n'].join('-');
                 }else{
-                    play[i]['con'] = aall[i]['n'].sort();
+                    play[i]['con'] = aall[i]['n'].sort().join('-');
                 }
                 play[i]['peilv1'] = aall[i]['p'];
             }
