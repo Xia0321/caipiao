@@ -1609,7 +1609,7 @@ function rhtmlduo(arr,bname,flag) {
     var qiuselect="";
     if(flag==1) qiuselect = " qiuselect";
     if(bname=="2字组合" || bname=="3字组合"){
-        var str = "<a class='sc-1csyyul-1"+qiuselect+" qiue plays p" + arr['pid'] + "' bid='" + arr['bid'] + "' pid='" + arr['pid'] + "' sname='" + arr['sname'] + "' cname='" + arr['cname'] + "' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' znum2='" + arr['znum2'] + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + arr['name'] + "</div></a>";
+        var str = "<a class='sc-1csyyul-1"+qiuselect+" qiue plays p" + arr['pid'] + "' bid='" + arr['bid'] + "' pid='" + arr['pid'] + "' sname='" + arr['sname'] + "' cname='" + arr['cname'] + "' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' znum2='" + arr['znum2'] + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + arr['name'] + "</div><div class='b_odds peilv1'>" + rpeilv(arr['peilv1'], arr['ifok']) + "</div></a>";
     }else{
         var str = "<a class='sc-1csyyul-1"+qiuselect+" qiud plays p" + arr['pid'] + "' bid='" + arr['bid'] + "' pid='" + arr['pid'] + "' sname='" + arr['sname'] + "' cname='" + arr['cname'] + "' mname='" + arr['name'] + "' maxje='" + arr['maxje'] + "' minje='" + arr['minje'] + "' znum1='" + arr['znum1'] + "' znum2='" + arr['znum2'] + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + arr['name'] + "</div></a>";
     }
