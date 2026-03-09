@@ -992,6 +992,8 @@ function libs(stype) {
                 } else if (pnamea == '选三前直' | pnamea == '选前三直选'  | pnamea == '选前二直选'  | bname == '3字定位' | bname == '2字定位' | bname == '组选3' | bname == '组选6' | bname == '组选三' | bname == '组选六') {
                     str += str1;
                     str += "</div></div></div></div><div class='rough_lines items'></div>";
+                } else if (bname == '2字组合' || bname == '3字组合') {
+                    // 3D独立组合：每个组合已有peilv1，无需号码选择duo grid
                 } else {
                     str += rhtmls("号码选择");
                     str += str1;
