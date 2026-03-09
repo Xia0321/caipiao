@@ -1650,19 +1650,18 @@ function moni_101($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
             $arr = [];
             if (strpos($p['name'], '前三') !== false) {
                 $arr = [$kj[0], $kj[1], $kj[2]];
-            } else {
-                if (strpos($p['name'], '中三') !== false) {
-                    $arr = [$kj[1], $kj[2], $kj[3]];
-                } else {
-                    if (strpos($p['name'], '后三') !== false) {
-                        $arr = [$kj[2], $kj[3], $kj[4]];
-                    }
-                }
+            } else if (strpos($p['name'], '中三') !== false) {
+                $arr = [$kj[1], $kj[2], $kj[3]];
+            } else if (strpos($p['name'], '后三') !== false) {
+                $arr = [$kj[2], $kj[3], $kj[4]];
+            } else if ($gid == 251 || $gid == 252) {
+                // 3D/排列3：百十个三码，二字组合 00-99 中两号在开奖号中出现即中奖
+                $arr = [$kj[0], $kj[1], $kj[2]];
             }
             $cons = explode('-', $con);
             $cons = array_unique($cons);
             $cc = count($cons);
-            if (in_array($cons[0], $arr) && in_array($cons[1], $arr) && $cc == 2) {
+            if (!empty($arr) && in_array($cons[0], $arr) && in_array($cons[1], $arr) && $cc == 2) {
                 $v = 1;
             } else {
                 $v = 0;
@@ -1754,19 +1753,18 @@ function moni_101($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
         case '3字组合':
             if (strpos($p['name'], '前三') !== false) {
                 $arr = [$kj[0], $kj[1], $kj[2]];
-            } else {
-                if (strpos($p['name'], '中三') !== false) {
-                    $arr = [$kj[1], $kj[2], $kj[3]];
-                } else {
-                    if (strpos($p['name'], '后三') !== false) {
-                        $arr = [$kj[2], $kj[3], $kj[4]];
-                    }
-                }
+            } else if (strpos($p['name'], '中三') !== false) {
+                $arr = [$kj[1], $kj[2], $kj[3]];
+            } else if (strpos($p['name'], '后三') !== false) {
+                $arr = [$kj[2], $kj[3], $kj[4]];
+            } else if ($gid == 251 || $gid == 252) {
+                // 3D/排列3：百十个三码，三字组合 000-999 与开奖号一致(顺序不限)即中奖
+                $arr = [$kj[0], $kj[1], $kj[2]];
             }
             $cons = explode('-', $con);
             $cons = array_unique($cons);
             $cc = count($cons);
-            if (in_array($cons[0], $arr) && in_array($cons[1], $arr) && in_array($cons[2], $arr) && $cc == 3) {
+            if (!empty($arr) && in_array($cons[0], $arr) && in_array($cons[1], $arr) && in_array($cons[2], $arr) && $cc == 3) {
                 $v = 1;
             } else {
                 $v = 0;

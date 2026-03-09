@@ -468,6 +468,7 @@ switch ($_REQUEST['xtype']) {
                 break;
             case "d":
             case "d2":
+            // 玩法与赔率均来自 x_play（含 3D gid=251/252）
             if($config["fenlei"]==100){
             $sid  = $bid;
             $bid='';
@@ -681,6 +682,7 @@ switch ($_REQUEST['xtype']) {
                     $duo[2][$i] = (double) (pr3($pl[1][$i]) - $peilvcha-$config['patt'][$ftype][strtolower($abcd)]);
                 }
             }
+            // duo/pl 来自 x_play 表（含 252 二字组合/三字组合赔率），前端按字头展示
             $play[0]['duo']    = $duo;
             $play[0]['pidduo'] = $pid;
         }
