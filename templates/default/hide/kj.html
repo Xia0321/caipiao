@@ -277,8 +277,8 @@ sdate=new Array();
 {+foreach item=i from=$sdate key=key+}
 sdate[{+$key+}]="{+$i+}";
 {+/foreach+}
-var fenlei = {+$config.fenlei+};
-var ngid = {+$config.fenlei+};
+var fenlei = {+$game[0].fenlei+};
+var ngid = {+$game[0].gid+};
 </script>
 </body>
 </html>

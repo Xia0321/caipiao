@@ -98,28 +98,50 @@ switch ($_REQUEST['xtype']) {
         echo 1;
         break;
     case "upl":
-        $qishu = $config['thisqishu'];
-        $qs    = $_POST['qishu'];
-        $m1    = $_POST['m1'];
-        $time  = sqltime(time());
-        $msql->query("select * from `{$tb_kj}` where gid='{$gid}' and m1!='' and closetime<'{$time}' order by gid,qishu desc limit 1");
-        $msql->next_record();
-        $m=[];
-        if ($m1 == $msql->f('m1')) {
-            $m = ["A","B"];
+        $qs   = isset($_POST['qishu']) ? trim($_POST['qishu']) : '';
+        $m1   = isset($_POST['m1']) ? $_POST['m1'] : '';
+        $time = sqltime(time());
+        // 彩种：1) 请求带 gid 且有效则用；2) 未带 gid 则用请求的 qishu 在 tb_kj 反查彩种；3) 否则用 session
+        $upl_gid = $gid;
+        if (isset($_POST['gid']) && $_POST['gid'] !== '' && is_numeric($_POST['gid'])) {
+            $req_gid = (int)$_POST['gid'];
+            $msql->query("select gid from `{$tb_game}` where gid='{$req_gid}' and ifopen=1 limit 1");
+            if ($msql->next_record()) {
+                $upl_gid = (string)$req_gid;
+            }
+        }
+        if ($upl_gid == $gid && $qs !== '') {
+            $qs_safe = addslashes($qs);
+            $msql->query("select gid from `{$tb_kj}` where gid='{$req_gid}' and qishu='{$qs_safe}' limit 1");
+            if ($msql->next_record()) {
+                $by_qishu_gid = $msql->f('gid');
+                $msql->query("select gid from `{$tb_game}` where gid='{$by_qishu_gid}' and ifopen=1 limit 1");
+                if ($msql->next_record()) {
+                    $upl_gid = (string)$by_qishu_gid;
+                }
+            }
+        }
+        $upl_mnum = (int)transgame($upl_gid, 'mnum');
+        if ($upl_mnum < 1) $upl_mnum = (int)$config['mnum'];
+        // 只查已开奖的期：已关盘、开奖时间已过、且有开奖号，按期号倒序取一条（避免返回未开奖的最大期）
+        $msql->query("select * from `{$tb_kj}` where gid='{$upl_gid}' and m1!='' and closetime<'{$time}' and kjtime is not null and kjtime!='' and kjtime<'{$time}' order by qishu desc limit 1");
+        $has_row = $msql->next_record();
+        $m = array();
+        if (!$has_row) {
+            $m = ["A", "B"];
+        } elseif ($m1 !== '' && $m1 == $msql->f('m1')) {
+            $m = ["A", "B"];
         } else {
-            $m    = [];
             $m[0] = $msql->f('qishu');
-            for ($i = 1; $i <= $config['mnum']; $i++) {
-                if ($i > 1)
-                    $m[1] .= ',';
+            $m[1] = '';
+            for ($i = 1; $i <= $upl_mnum; $i++) {
+                if ($i > 1) $m[1] .= ',';
                 $m[1] .= $msql->f('m' . $i);
             }
         }
-
         $m[2] = getjrsy($userid);
         $online = $msql->arr("select count(id) from `$tb_user` where online=1", 0);
-		$m[3] = $online[0][0];
+        $m[3] = isset($online[0][0]) ? $online[0][0] : '0';
         echo json_encode($m);
         break;
     case "getnews":

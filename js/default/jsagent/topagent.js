@@ -236,12 +236,24 @@ function kj() {
 function updatel() {
     clearTimeout(upl);
     var mm = $(".upqishu").attr("m").split(',');
+    var uplData = "xtype=upl&qishu=" + $(".upqishu").html() + "&m1=" + mm[0];
+    try {
+        var cgid = $(".games a.xz").attr("gid");
+        if (cgid) uplData += "&gid=" + cgid;
+        else {
+            var frameUrl = (window.frames && window.frames['frame'] && window.frames['frame'].location && window.frames['frame'].location.href) ? window.frames['frame'].location.href : '';
+            if (frameUrl.indexOf('gid=') !== -1) {
+                var match = frameUrl.match(/[?&]gid=(\d+)/);
+                if (match && match[1]) uplData += "&gid=" + match[1];
+            }
+        }
+    } catch (e) {}
     $.ajax({
         type: 'POST',
         url: mulu + 'top.php',
         dataType: 'json',
         cache: false,
-        data: "xtype=upl&qishu=" + $(".upqishu").html() + "&m1=" + mm[0],
+        data: uplData,
         success: function (m) {
             //document.write(m)
             if (m[0] != 'A') {

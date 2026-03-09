@@ -18,13 +18,25 @@ if($msql->f(0)=='x_lib_total'){
 
 switch ($_REQUEST['xtype']) {
     case "show":
-        if ($_REQUEST['gid'] != '')
+        if (isset($_REQUEST['gid']) && $_REQUEST['gid'] !== '' && is_numeric($_REQUEST['gid'])) {
             $gid = $_REQUEST['gid'];
+            $_SESSION['kj_gid'] = $gid;
+        } elseif (isset($_SESSION['kj_gid']) && $_SESSION['kj_gid'] !== '' && is_numeric($_SESSION['kj_gid'])) {
+            $gid = $_SESSION['kj_gid'];
+        } else {
+            $msql->query("select gid from `$tb_game` where ifopen=1 order by xsort limit 1");
+            if ($msql->next_record() && $msql->f('gid') !== '' && $msql->f('gid') !== null) {
+                $gid = $msql->f('gid');
+                $_SESSION['kj_gid'] = $gid;
+            }
+        }
+        if (empty($gid)) $gid = '107';
         $msql->query("select * from `$tb_game` where gid='$gid' ");
         $msql->next_record();
         $game                   = array();
         $game[0]['gid']         = $msql->f('gid');
         $game[0]['gname']       = $msql->f('gname');
+        $game[0]['fenlei']      = $msql->f('fenlei');
         $game[0]['fast']        = $msql->f('fast');
         $game[0]['baostatus']   = $msql->f('baostatus');
         $game[0]['autokj']      = $msql->f('autokj');
@@ -185,6 +197,20 @@ switch ($_REQUEST['xtype']) {
 
         $req      = array_merge($_GET, $_POST);
         $gid      = isset($req['gid']) ? trim($req['gid']) : '';
+        if ($gid === '' || !is_numeric($gid)) {
+            if (isset($_SESSION['kj_gid']) && $_SESSION['kj_gid'] !== '' && is_numeric($_SESSION['kj_gid'])) {
+                $gid = $_SESSION['kj_gid'];
+            } else {
+                $msql->query("select gid from `$tb_game` where ifopen=1 order by xsort limit 1");
+                if ($msql->next_record() && $msql->f('gid') !== '' && $msql->f('gid') !== null) {
+                    $gid = $msql->f('gid');
+                } else {
+                    $gid = '107';
+                }
+            }
+        } else {
+            $_SESSION['kj_gid'] = $gid;
+        }
         $jsstatus = isset($req['jsstatus']) ? $req['jsstatus'] : '';
         $psize    = isset($req['psize']) ? intval($req['psize']) : 10;
         $page     = isset($req['page']) ? intval($req['page']) : 1;
@@ -252,8 +278,12 @@ switch ($_REQUEST['xtype']) {
 
             $i              = 0;
             $kj             = array();
+            $seen_qishu     = array();
             $otherclosetime = isset($config['otherclosetime']) ? $config['otherclosetime'] : 0;
             foreach ($rows as $row) {
+                $row_key = $row['gid'] . '_' . $row['qishu'];
+                if (isset($seen_qishu[$row_key])) continue;
+                $seen_qishu[$row_key] = true;
                 if ($ze == 1) {
                     $fsql->query("select 1 from `$tb_lib` where gid='" . $row['gid'] . "' and qishu='" . $row['qishu'] . "' limit 1");
                     $fsql->next_record();

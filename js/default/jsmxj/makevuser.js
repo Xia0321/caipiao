@@ -1876,12 +1876,23 @@ function updatel() {
     var qs = $(".upqishu").attr("q");
     if (m1 == 'undefined' || m1 == undefined) m1 = '';
 
+    var gidParam = (typeof ngid !== 'undefined' && (ngid || ngid === 0)) ? String(ngid) : '';
+    if (!gidParam) {
+        var bodyEl = document.body || document.querySelector('body');
+        if (bodyEl && bodyEl.getAttribute('data-gid')) gidParam = bodyEl.getAttribute('data-gid');
+    }
+    if (!gidParam) {
+        var sel = document.querySelector('select.game');
+        if (sel && sel.value) gidParam = sel.value;
+    }
+    var gidSuffix = gidParam ? "&gid=" + gidParam : "";
+
     $.ajax({
         type: 'POST',
         url:mulu+'make.php',
         cache: false,
         dataType: "json",
-        data: "xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + tustr,
+        data: "xtype=upl&qs=" + qs + "&m1=" + m1 + "&tu=" + tustr + gidSuffix,
         success: function(m) {
             getusermoney();
             //console.log(m);
