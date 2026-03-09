@@ -80,23 +80,40 @@ ul {
     transition: all 0.2s ease-in-out 0s;
 }
 
+/* 侧滑菜单展开态 - 大气样式 */
 .efUsXr {
     position: fixed;
     width: 80%;
+    max-width: 320px;
     height: 100%;
     top: 0px;
+    left: 0;
     transform: translate3d(0px, 0px, 0px);
     z-index: 999;
-    box-shadow: rgba(55, 55, 55, 0.5) 0px 0px 16px;
-    background-color: rgb(255, 255, 255) !important;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12), 4px 0 48px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(180deg, #fafbfc 0%, #ffffff 12%, #ffffff 100%) !important;
     overflow: hidden;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s ease;
+    border-radius: 0 16px 16px 0;
 }
 .efUsXr .menu_navigation {
     position: relative;
     width: 100%;
-    height: 50px;
-    background: linear-gradient(135deg, rgb(19, 46, 123) 0%, rgb(0, 201, 202) 100%);
+    height: 56px;
+    min-height: 56px;
+    background: linear-gradient(145deg, #0d2d6e 0%, #13448e 40%, #0a8a8c 100%);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+}
+.efUsXr .menu_navigation::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+    pointer-events: none;
+    border-radius: 0 16px 0 0;
 }
 
 .efUsXr .menu_navigation .naviga2,
@@ -106,50 +123,81 @@ ul {
     width: 10rem;
     height: 50px;
     text-align: center;
-    font-weight: bold;
+    font-weight: 600;
     line-height: 50px;
-    color: rgb(255, 255, 255);
+    color: rgba(255, 255, 255, 0.98);
     margin: 0px auto;
+    letter-spacing: 0.03em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .efUsXr .menu_navigation.menu_nav_with_back .naviga2,
 .iJamhB .menu_navigation.menu_nav_with_back .naviga2 {
-    border-bottom: 1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,0.12);
 }
 
 .efUsXr .menu_type {
     position: relative;
     width: 100%;
     height: calc(100% - 56px);
-    -webkit-tap-highlight-color: rgba(55, 55, 55, 0.3);
+    -webkit-tap-highlight-color: transparent;
     overflow: auto;
+    background: #fff;
+    padding: 8px 0 24px;
 }
-
 .efUsXr .menu_type .mt_div {
-    min-height: 50px;
+    min-height: 56px;
     height: auto;
     display: block;
-    border-bottom: 1px solid #eee;
-    padding: 14px 12px;
+    border-bottom: none;
+    margin: 0 12px 4px;
+    padding: 14px 16px;
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
+    border-radius: 12px;
+    transition: background 0.2s ease, transform 0.15s ease;
+}
+.efUsXr .menu_type .mt_div:active {
+    background: #f0f4f8;
+    transform: scale(0.99);
 }
 .efUsXr .menu_type .mt_div .mtd_icon div {
-    width: 30px;
-    height: 30px;
-    margin: 11px auto 0;
+    width: 32px;
+    height: 32px;
+    margin: 10px auto 0;
     background: url(/css/mobi/img/icon_menu.png);
     background-size: 457px 30px;
+    border-radius: 8px;
 }
 .efUsXr .menu_type .mt_div .mtd_icon {
     float: left;
     height: 100%;
-    width: 60px;
+    width: 56px;
 }
 .efUsXr .menu_type .mt_div .mtd_font .mtdf_1 {
     float: left;
-    color: #999;
-    line-height: 50px;
+    color: #2c3e50;
+    line-height: 52px;
     font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+}
+.efUsXr .menu_navigation .menu_back_lobby {
+    display: block;
+    padding: 12px 16px;
+    color: rgba(255,255,255,0.95);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.efUsXr .menu_navigation .menu_back_lobby:active {
+    background: rgba(0,0,0,0.1);
+}
+.menulist.efUsXr .rough_lines {
+    height: 8px;
+    background: linear-gradient(180deg, #e8ecf0 0%, #f2f4f6 100%);
+    box-shadow: none;
 }
 .efUsXr .menu_type .mt_div .mtd_icon1 div {
     background-position: 0px 0px;
@@ -271,21 +319,22 @@ ul {
 .iJamhB {
     position: fixed;
     width: 80%;
+    max-width: 320px;
     height: 100%;
     overflow: hidden;
     top: 0px;
+    left: 0;
     -webkit-transform: translate3d(-110%, 0px, 0px);
     -ms-transform: translate3d(-110%,0,0);
     transform: translate3d(-110%, 0px, 0px);
     background-color: #fff !important;
     z-index: 999;
-    -webkit-box-shadow: 0 0 16px rgba(55,55,55,0.5);
-    box-shadow: 0px 0px 16px rgba(55,55,55,0.5);
-    -webkit-transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
-    -o-transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
-    -webkit-transition: -webkit-transform 0.2s cubic-bezier(0.4,0,0.2,1);
-    -webkit-transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
-    transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+    -webkit-box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+    box-shadow: 4px 0 24px rgba(0,0,0,0.12);
+    -webkit-transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    -o-transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    border-radius: 0 16px 16px 0;
 }
 .iJamhB .menu_navigation {
     position: relative;
@@ -309,14 +358,17 @@ ul {
 .iJamhB {
     position: fixed;
     width: 80%;
+    max-width: 320px;
     height: 100%;
     top: 0px;
+    left: 0;
     transform: translate3d(-110%, 0px, 0px);
     z-index: 999;
-    box-shadow: rgba(55, 55, 55, 0.5) 0px 0px 16px;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.12);
     background-color: rgb(255, 255, 255) !important;
     overflow: hidden;
-    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1) 0s;
+    border-radius: 0 16px 16px 0;
 }
 
 .rough_lines {
@@ -1601,6 +1653,65 @@ ul {
     -webkit-transition: height 0.4s ease-in-out;
     transition: height 0.4s ease-in-out;
     height: calc(-140px + 100%);
+}
+/* 玩法菜单显示/隐藏：隐藏时 make 占满宽度 */
+.kDGwcG.menuplay-hidden .menuplay {
+    display: none !important;
+}
+.kDGwcG.menuplay-hidden .make {
+    width: 100% !important;
+}
+.sc-1v8csmt-1.btIRSJ.make {
+    transition: width 0.25s ease;
+}
+.make.make-loading {
+    opacity: 0.72;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.make .bcn_center2.items {
+    animation: make-fadein 0.22s ease-out;
+}
+@keyframes make-fadein {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* 顶部玩法切换条 */
+.make-menuplay-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 14px;
+    margin: -8px -6px 12px -6px;
+    background: linear-gradient(180deg, #1976d2 0%, #1565c0 100%);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: 0 2px 8px rgba(21, 101, 192, 0.35);
+    border-radius: 0 0 10px 10px;
+    transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+.make-menuplay-toggle:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 4px rgba(21, 101, 192, 0.4);
+}
+.make-menuplay-toggle-icon {
+    width: 20px;
+    height: 20px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='3' y1='12' x2='21' y2='12'/%3E%3Cline x1='3' y1='6' x2='21' y2='6'/%3E%3Cline x1='3' y1='18' x2='21' y2='18'/%3E%3C/svg%3E") center/contain no-repeat;
+    flex-shrink: 0;
+}
+.kDGwcG.menuplay-hidden .make-menuplay-toggle-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Cline x1='3' y1='6' x2='3.01' y2='6'/%3E%3Cline x1='3' y1='12' x2='3.01' y2='12'/%3E%3Cline x1='3' y1='18' x2='3.01' y2='18'/%3E%3C/svg%3E");
+}
+.make-menuplay-toggle-text {
+    opacity: 0.95;
 }
 .ifxNlC {
     float: left;
@@ -3880,6 +3991,10 @@ svg:not(:root) {
                     
 
 					<div class="sc-1v8csmt-1 btIRSJ make">
+						<div class="make-menuplay-toggle" id="make-menuplay-toggle" title="显示/隐藏玩法菜单">
+							<span class="make-menuplay-toggle-icon"></span>
+							<span class="make-menuplay-toggle-text">玩法</span>
+						</div>
                         <div class="sc-jnlKLf gVBorT abcdab" style="display: none;">
                             <ul class="ab">
                                <li><span class="active" v="A">特码A</span></li>

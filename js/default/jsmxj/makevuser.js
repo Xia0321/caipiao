@@ -59,6 +59,12 @@ function myready() {
         
     });
     $(".menuplay a:eq(2)").addClass("lrm_back");
+    $(document).off("click.makeMenuplayToggle", "#make-menuplay-toggle, .make-menuplay-toggle").on("click.makeMenuplayToggle", "#make-menuplay-toggle, .make-menuplay-toggle", function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var $container = $(this).closest(".kDGwcG");
+        if ($container.length) $container.toggleClass("menuplay-hidden");
+    });
     $(".refresh div").click(function() {
         clearTimeout(setgntime);
         lib();
@@ -155,13 +161,15 @@ function myready() {
         if(menuhtml=='长龙' || menuhtml=='遗漏'){
             return false;
         }
+        if (window._menuplaySwitching) return false;
+        window._menuplaySwitching = true;
         $(".menuplay a.lrm_back").removeClass("lrm_back");
         $(this).addClass("lrm_back");
         if(menuhtml=='番摊'){
             $(".tongji").html("番路");
             $(".tongjidiv .title").html("番路");
             $(".tongjidiv .cl").hide();
-            $(".tongjidiv .lz").hide();            
+            $(".tongjidiv .lz").hide();
             $(".tongjidiv .ftlu").show();
             $(".tongjidiv .tjmenu").hide();
         }else{
@@ -173,6 +181,7 @@ function myready() {
             $(".tongjidiv .tjmenu").show();
         }
         lib();
+        return false;
     });
 
     $(".tongji").click(function(){
@@ -510,12 +519,13 @@ function libs(stype) {
     //console.log('xtype=lib&stype=' + stype + sstr + "&pid=" + pidduo)
     $(".bcn_center2.items").remove();
     $(".rough_lines.items").remove();
+    $(".make").addClass("make-loading");
     $.ajax({
         type: 'POST',
         url:mulu+'make.php',
         dataType: 'json',
         cache: false,
-        async: false,
+        async: true,
         data: 'xtype=lib&stype=' + stype + sstr + "&pid=" + pidduo,
         success: function(m) {
             //console.log(JSON.stringify(m));
@@ -1025,8 +1035,14 @@ function libs(stype) {
 
             }
             addfunc(duo);
+            $(".make").removeClass("make-loading");
+            window._menuplaySwitching = false;
+        },
+        error: function() {
+            $(".make").removeClass("make-loading");
+            window._menuplaySwitching = false;
         }
-    })
+    });
 }
 function addfunc(duo){
     var bname = $(".menuplay a.lrm_back span").html();
