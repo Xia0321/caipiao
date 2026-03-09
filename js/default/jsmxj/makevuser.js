@@ -1743,8 +1743,8 @@ function rhtmlD2ByZitou(duo, ifok) {
                 peilvNum = (p1 && p2) ? Math.min(p1, p2) : (p1 || p2);
             }
             od = peilvNum ? rpeilv(peilvNum, ifok) : '-';
-            cls = "mxj-d2zt sc-1csyyul-1 qiuc dds";
-            h += "<a class='" + cls + "' data-d1='" + k + "' data-d2='" + j + "' data-peilv='" + peilvNum + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
+            cls = "mxj-d2zt dds";
+            h += "<a class='" + cls + "' data-d1='" + k + "' data-d2='" + j + "' data-peilv='" + peilvNum + "'><div class='name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
         }
         h += "</div></div></div></div><div class='rough_lines items'></div>";
     }
@@ -1775,8 +1775,8 @@ function rhtmlD3ByZitou(duo, ifok) {
                 peilvNum = (p2a && p2b && p2c) ? Math.min(p2a, p2b, p2c) : (p2a || p2b || p2c);
             }
             od = peilvNum ? rpeilv(peilvNum, ifok) : '-';
-            cls = "mxj-d3zt sc-1csyyul-1 qiuc dds";
-            h += "<a class='" + cls + "' data-d1='" + a + "' data-d2='" + b + "' data-d3='" + c + "' data-peilv='" + peilvNum + "'><div class='b_text sc-1csyyul-0 hokpMe name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
+            cls = "mxj-d3zt dds";
+            h += "<a class='" + cls + "' data-d1='" + a + "' data-d2='" + b + "' data-d3='" + c + "' data-peilv='" + peilvNum + "'><div class='name'>" + lab + "</div><div class='b_odds peilv1'>" + od + "</div></a>";
         }
         h += "</div></div></div></div><div class='rough_lines items'></div>";
     }
