@@ -8,7 +8,7 @@ if ($_SESSION['uid'] != '' & $_SESSION['check'] == md5($config['allpass'] . $_SE
 $hurl = $config['hurl'];
 if ($check == 0) {
     sessiondel();
-    echo "<script>top.window.location.href='/';</script>";
+    echo "<script>top.window.location.href='/hide/login.php';</script>";
     exit;
 }
 
@@ -18,13 +18,13 @@ $adminid = $_SESSION['uid'];
 if ($_REQUEST['logout'] == 'yes') {
     $msql->query("delete from  `$tb_online` where userid='$adminid'");
     sessiondel();
-    echo "<script>top.window.location.href='/';</script>";
+    echo "<script>top.window.location.href='/hide/login.php';</script>";
     exit();
 }
 
 if ($_SESSION['hides'] != 1 & $config['ifopen'] == 0) {
     sessiondel();
-    echo "<script>top.window.location.href='/';</script>";
+    echo "<script>top.window.location.href='/hide/login.php';</script>";
     exit;
 }
 
@@ -75,7 +75,7 @@ if ($_SESSION['hides'] != 1) {
     $msql->next_record();
     if ($msql->f('passcode') != $_SESSION['passcode']) {
         sessiondel();
-        echo "<script>alert('登录超时!');parent.window.location.href='../';</script>";
+        echo "<script>alert('登录超时!');parent.window.location.href='/hide/login.php';</script>";
         exit;
     }
     

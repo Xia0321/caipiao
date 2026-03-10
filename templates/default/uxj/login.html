@@ -1,315 +1,108 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>会员登陆</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电脑端入口</title>
 <style type="text/css">
-@charset "UTF-8";
-
-body {
-	margin: 0;
-	padding: 0;
-	background: white;
-	color: #333;
-	font: 14px/1.231 Verdana, Arial, Helvetica, sans-serif;
-}
-
-input {
-	border: none;
-	padding: 0;
-}
-
-.header {
-	height: 100px;
-	margin: 0 auto;
-	width: 950px;
-}
-
-.header a {
-	display: block;
-	background: url("/css/login/sgwin-y.png") no-repeat;
-	width: 300px;
-	height: 72px;
-	float: right;
-	margin: 20px 0px 0 0;
-}
-
-.main {
-	background: #b63a42 url("/css/login/bg.png") no-repeat center;
-	height: 475px;
-}
-
-.panel {
-	background: url("/css/login/year_banner.png") no-repeat left;
-	width: 950px;
-	height: 475px;
-	margin: 0 auto;
-}
-
-.login {
-	float: right;
-	width: 270px;
-	height: auto;
-	margin-top: 72px;
-	background: rgba(0,0,0,0.3);
-	border-radius: 10px;
-}
-
-.login .info {
-	background: url("/css/login/input_bg.png") no-repeat left top;
-	height: 50px;
-	width: 220px;
-	margin: 10px auto;
-}
-
-.login .info label {
-	background: url("/css/login/login_ico.png") no-repeat top;
-	display: block;
-	font-size: 0;
-	text-indent: -99999px;
-	height: 35px;
-	width: 38px;
-	margin: 6px 0px 0 10px;
-	float: left;
-}
-
-.login .password label {
-	background-position: center;
-}
-
-.login .code label {
-	background-position: bottom;
-}
-
-.login .facode label {
-	background: url("/css/login/login_ico2.png") no-repeat bottom;
-}
-
-.login .info input {
-	float: left;
-	font-size: 16px;
-	margin: 12px 0 0 0;
-	width: 155px;
-	font-family: Microsoft YaHei;
-}
-
-.login .info .tip {
-	color: #999;
-}
-
-.login .code input {
-	width: 60px;
-}
-
-.login .code img {
-	cursor: pointer;
-	float: right;
-	margin: 9px 15px 0 0;
-}
-
-.login .control input {
-	background: url("/css/login/submit.png");
-	display: block;
-	height: 36px;
-	margin: 15px auto 15px auto;
-	width: 215px;
-	text-indent: -9999em;
-}
-
-.form_t {
-	height: 36px;
-    margin-top: 15px;
-    line-height: 36px;
-    margin-left: 30px;
-}
-
-.form_t span {
-	display: inline-block;
-	width: 110px;
-	height: 36px;
-	line-height: 36px;
-	color: #fff;
-	font-weight: 600;
-}
-
-span.user_t {
-	font-size: 24px;
-}
-
-span.user_f {
-	background: url("/css/login/google_auth_icon.png") top center no-repeat;
-	text-indent: 40px;
-	margin-top: 5px;
-	cursor: pointer;
-}
-
-.fl {
-	float: left;
-}
-
-.fr {
-	float: right;
-}
-
-.login .facode {
-	display: none;
-}
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; min-height: 100vh; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: linear-gradient(145deg, #1a1f35 0%, #252b48 40%, #1e2439 100%); color: #e8eaef; overflow-x: hidden; }
+.bg-shine { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,200,80,.12) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+.wrap { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+.main { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
+.card { width: 100%; max-width: 380px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; padding: 40px 36px; backdrop-filter: blur(12px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+.card-title { text-align: center; margin-bottom: 28px; }
+.card-title .tit { font-size: 20px; font-weight: 600; letter-spacing: 4px; color: #ffc850; }
+.card-title .desc { font-size: 12px; color: rgba(232,234,239,.6); margin-top: 6px; }
+.form-g { margin-bottom: 18px; }
+.form-g label { display: block; font-size: 12px; color: rgba(232,234,239,.75); margin-bottom: 6px; }
+.form-g input[type="text"], .form-g input[type="password"] { width: 100%; height: 46px; padding: 0 16px; font-size: 14px; color: #e8eaef; background: rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; outline: none; transition: border-color .2s, box-shadow .2s; }
+.form-g input::placeholder { color: rgba(232,234,239,.4); }
+.form-g input:focus { border-color: rgba(255,200,80,.5); box-shadow: 0 0 0 2px rgba(255,200,80,.15); }
+.code-wrap { display: flex; gap: 10px; align-items: flex-end; }
+.code-wrap .form-g { flex: 1; }
+.code-wrap img { height: 46px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,.15); }
+.info.facode { display: none; }
+.btn-login { width: 100%; height: 46px; margin-top: 26px; font-size: 15px; font-weight: 600; letter-spacing: 4px; color: #1a1f35; background: linear-gradient(180deg, #ffc850 0%, #e6a820 100%); border: none; border-radius: 10px; cursor: pointer; transition: opacity .2s, box-shadow .2s; }
+.btn-login:hover { opacity: .95; box-shadow: 0 6px 24px rgba(255,200,80,.35); }
+.side { width: 120px; text-align: center; }
+.side .qrcode-box { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px; }
+.side .qrcode-box img { width: 96px; height: 96px; display: block; background: #fff; border-radius: 6px; }
+.side .qrcode-box .txt { font-size: 11px; color: rgba(232,234,239,.6); margin-top: 8px; line-height: 1.4; }
+.form_t { margin-bottom: 18px; }
+.form_t .user_t { font-size: 15px; color: #ffc850; }
+.form_t .user_f { cursor: pointer; font-size: 12px; color: rgba(232,234,239,.5); }
+.fl { float: left; }
+.fr { float: right; }
 </style>
-<script language="javascript" src="/js/jquery-1.8.3.js"></script>
-<script language="javascript" src="/js/md5.js"></script>
-<script language="javascript">
-
+<script src="/js/jquery-1.8.3.js"></script>
+<script src="/js/md5.js"></script>
+<script>
 $(function(){
-
-	$("#imgcode").click(function(){
-		$(this).attr('src',"/imgcode.php?act=init&"+Math.random());
+	$("#imgcode").on("click", function(){ $(this).attr("src", "/imgcode.php?act=init&" + Math.random()); });
+	$("input:password").on("focus", function(){ $(this).attr("placeholder",""); });
+	$("#password").on("blur", function(){
+		if($(this).val()==='') $(this).attr("placeholder", $(this).attr("title"));
+		else $("#pass").val(men_md5_password($("#password").val()));
 	});
-	$("input:password").click(function(){
-	     $(this).attr("placeholder","");
-	});
-	$("#password").blur(function(){
-		 if($(this).val()==''){
-	       $(this).attr("placeholder",$(this).attr("title"));
-		 }else{
-	       $("#pass").val(men_md5_password($("#password").val()));	
-		 }
-	});
-	$("input:text").click(function(){
-	     $(this).attr("placeholder","");
-	});
-	$("input:text").blur(function(){
-		if($(this).val()==''){
-	      $(this).attr("placeholder",$(this).attr("title"));
-		}
-	});
-	$(".user_f").click(function(){
-		 $('.info.facode').slideToggle();
-	});
-	top.document.title="Welcome";
+	$("input:text").on("focus", function(){ $(this).attr("placeholder",""); });
+	$("input:text").on("blur", function(){ if($(this).val()==='') $(this).attr("placeholder", $(this).attr("title")); });
+	$(".user_f").on("click", function(){ $(".info.facode").slideToggle(); });
 	$("#username").focus();
 });
-
 function checkform(){
-    if($("#username").val()==''){
-	     alert("請輸入帳號");
-		 $("#username").focus();
-		 return false;
-	}else if($("#password").val()==''){
-	     alert("請輸入密碼");
-		 $("#password").focus();
-		 return false;
-	}else if($("#code").val()==''){
-	     alert("請輸入驗證碼");
-		 $("#code").focus();
-		 return false;
-	}else{
-		return true;
-	}
+	if(!$("#username").val()){ alert("请输入账号"); $("#username").focus(); return false; }
+	if(!$("#password").val()){ alert("请输入密码"); $("#password").focus(); return false; }
+	if(!$("#code").val()){ alert("请输入验证码"); $("#code").focus(); return false; }
+	return true;
 }
-
-function stop(){
-   return false;
-}
-
-function hideinfo(){ if(event.srcElement.tagName=="A"){
-   window.status=event.srcElement.innerText}
-}
-document.onmouseover=hideinfo; 
-document.onmousemove=hideinfo;
-
-</script> 
-
+</script>
 </head>
-
 <body>
-<div class="header"><!--<a href="#" target="_blank"></a>--></div>
-<div class="main">
-<div class="panel">
-<div class="login">
-
-<form method="post" id='form' name="form">
-	<input type="hidden" name="xtype" value="login" />
-	<input type="hidden" name='pass' id='pass' value="" />
-	<div class="form_t">
-        <span class="fl user_t">会员登录</span>
-        <span class="fr user_f"></span>
-    </div>
-	<div class="info username"><label>账号</label><input type="text" name="username" id="username" placeholder="请输入您的账号" title="请输入您的账号"></div>
-	<div class="info password"><label>密码</label><input type="password" name="password"  id="password" placeholder="您的密码" title="您的密码"></div>
-	<div class="info code"><label>验证码</label><input type="text" name="code" id='code' autocomplete="off" placeholder="验证码" title="验证码"><img src="/imgcode.php?act=init" alt="none" id="imgcode" title="看不清？点击更换一张验证图片" /></div>
-	<div class="info facode"><label>验证码</label><input type="text" name="facode" autocomplete="off" placeholder="二次验证码" maxlength="10" /></div>
-	<div class="control"><input type="submit" value="登录" ></div>
-</form>
-</div>
-
-
-<style type="text/css">
-.left_adv {
-    height: 389px;
-    width: 129px;
-    position: fixed;
-    left: 12px;
-    top: 185px;
-    z-index: 888;
-}
-.appqr-wrapper {
-    z-index: 99999;
-    width: 118px;
-}
-.appqr-wrapper .appqrcode {
-    width: 118px;
-    background-color: #d15606;
-    border-radius: 10px;
-    padding: 10px;
-    box-sizing: border-box;
-}
-.appdlurl {
-    color: #fff;
-    text-align: center;
-    font-size: 16px;
-    font-style: italic;
-    font-weight: 600;
-    margin-top: 2px;
-    letter-spacing: -0.5px;
-}
-.appqr-wrapper .appqrcode img {
-    width: 98px;
-    height: 98px;
-    background-color: #fff;
-    box-sizing: border-box;
-    padding: 6px;
-    display: block;
-}
-.appqr-wrapper .text {
-    color: #fff;
-    text-align: center;
-    font-size: 15px;
-    line-height: 21px;
-    font-style: italic;
-    margin-top: 7px;
-    font-weight: 600;
-}
-.appqr img {
-    background-color: #fff;
-    width: 90px;
-    height: 90px;
-    margin: 0 auto;
-    top: 14px;
-    position: absolute;
-    left: 14px;
-}
-</style>
-<div class="left_adv">
-  <div class="appqr-wrapper">
-    <div class="appqrcode">
-      <img src="/css/login/qrcode.png">
-      <div class="text">手机扫码安装<br>安卓苹果APP</div>
-    </div>
-  </div>
-  <div class="appqr" title="手机扫码安装苹果安卓APP"></div>
-</div>
-</div>
+<div class="bg-shine"></div>
+<div class="wrap">
+	<div class="main">
+		<div class="card">
+			<div class="card-title">
+				<div class="tit">电脑端登录</div>
+				<div class="desc">PC 端会员入口</div>
+			</div>
+			<form method="post" id="form" name="form" onsubmit="return checkform();">
+				<input type="hidden" name="xtype" value="login" />
+				<input type="hidden" name="pass" id="pass" value="" />
+				<div class="form_t">
+					<span class="fl user_t">会员登录</span>
+					<span class="fr user_f"></span>
+				</div>
+				<div class="form-g info username">
+					<label>账号</label>
+					<input type="text" name="username" id="username" placeholder="请输入您的账号" title="请输入您的账号" autocomplete="off">
+				</div>
+				<div class="form-g info password">
+					<label>密码</label>
+					<input type="password" name="password" id="password" placeholder="您的密码" title="您的密码">
+				</div>
+				<div class="form-g info code code-wrap">
+					<div class="form-g" style="flex:1;">
+						<label>验证码</label>
+						<input type="text" name="code" id="code" placeholder="验证码" title="验证码" autocomplete="off">
+					</div>
+					<img src="/imgcode.php?act=init" alt="" id="imgcode" title="看不清？点击更换">
+				</div>
+				<div class="info facode form-g">
+					<label>二次验证</label>
+					<input type="text" name="facode" placeholder="二次验证码" maxlength="10" autocomplete="off">
+				</div>
+				<button type="submit" class="btn-login">登 录</button>
+			</form>
+		</div>
+		<div class="side">
+			<div class="qrcode-box">
+				<img src="/css/login/qrcode.png" alt="">
+				<div class="txt">手机扫码<br>安装客户端</div>
+			</div>
+		</div>
+	</div>
 </div>
 </body>
 </html>

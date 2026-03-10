@@ -148,162 +148,101 @@ if($_POST['tj']==1){
 
 ?>
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Mobile</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="viewport" content="user-scalable=no, initial-scale=0.5, minimal-ui, width=360" id="viewport" />
-    <meta http-equiv="cleartype" content="on">
-    <meta name="apple-mobile-web-app-status-bar-style" content="yes" />
-    <link rel="stylesheet" href="./css/font-awesome.min.css">
-    <link rel="stylesheet" href="./css/mobile-bootstrap.css">
-    <link rel="stylesheet" href="./css/mobile-cash.css">
-    <link rel="stylesheet" href="./css/jquery-ui.css">
-    <script src="../js/jquery-1.8.3.js"></script>
-    <style type="text/css">
-    @font-face {
-        font-family: 'customiconmedium';
-        src: url('../css/mobile/fonts/customicon-webfont.eot');
-        src: url('../css/mobile/fonts/customicon-webfont.eot?#iefix') format('embedded-opentype'),
-             url('../css/mobile/fonts/customicon-webfont.woff2') format('woff2'),
-             url('../css/mobile/fonts/customicon-webfont.woff') format('woff'),
-             url('../css/mobile/fonts/customicon-webfont.ttf') format('truetype'),
-             url('../css/mobile/fonts/customicon-webfont.svg#customiconmedium') format('svg');
-        font-weight: normal;
-        font-style: normal;
-
-    }
-
-    .customico {
-      font-family: 'customiconmedium';
-      font-size: 53px;
-      line-height: 40px;
-      margin-left: -5px;
-    }
-    </style>
-  </head>
-  <script type="text/javascript">
-  $(document).ready(function() { 
-    $('.infopanelrow .accounts:first').show();
-    if (screen.width > 360 && !navigator.userAgent.match("UCBrowser") && navigator.userAgent.match("Android")) {
-      $('body').css("zoom","0.5")
-    }
-  });
-  function changeimg(){
-    $("#imgcode").attr('src',"../imgcode.php?act=init&"+Math.random());
-}
-
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>手机端注册</title>
+<script src="../js/jquery-1.8.3.js"></script>
+<style type="text/css">
+*{box-sizing:border-box;}
+body{margin:0;padding:0;min-height:100vh;font-family:"Microsoft YaHei",sans-serif;background:linear-gradient(165deg,#2d1b4e 0%,#1a0f2e 50%,#0d0818 100%);color:#e8e4f0;-webkit-tap-highlight-color:transparent;}
+.bg-m{position:fixed;inset:0;background-image:radial-gradient(rgba(180,140,255,.12) 1px,transparent 1px);background-size:20px 20px;pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;min-height:100vh;padding:16px 18px 24px;}
+.nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.nav a{color:rgba(232,228,240,.9);text-decoration:none;font-size:14px;}
+.nav .back{display:flex;align-items:center;gap:6px;}
+.nav .tit{font-size:17px;font-weight:600;color:#b48cff;}
+.reg-card{background:rgba(255,255,255,.07);border:1px solid rgba(180,140,255,.25);border-radius:16px;padding:20px 18px;box-shadow:0 12px 40px rgba(0,0,0,.25);}
+.fg{margin-bottom:14px;}
+.fg label{display:block;font-size:12px;color:rgba(232,228,240,.85);margin-bottom:5px;}
+.fg input{width:100%;height:42px;padding:0 12px;font-size:15px;color:#e8e4f0;background:rgba(0,0,0,.25);border:1px solid rgba(180,140,255,.3);border-radius:10px;outline:none;}
+.fg input:focus{border-color:#b48cff;}
+.fg .hint{font-size:11px;color:rgba(232,228,240,.5);margin-top:3px;}
+.code-wrap{display:flex;gap:10px;align-items:flex-end;}
+.code-wrap .fg{flex:1;}
+.code-wrap img{height:42px;border-radius:10px;cursor:pointer;border:1px solid rgba(180,140,255,.3);}
+.btn-reg{width:100%;height:46px;margin-top:20px;font-size:16px;font-weight:600;letter-spacing:4px;color:#1a0f2e;background:linear-gradient(180deg,#b48cff 0%,#8b5cf6 100%);border:none;border-radius:12px;cursor:pointer;}
+.btn-reg:active{opacity:.9;}
+.reg-foot{margin-top:18px;text-align:center;font-size:13px;color:rgba(232,228,240,.6);}
+.reg-foot a{color:#b48cff;text-decoration:none;}
+</style>
+<script>
+function changeimg(){ $("#imgcode").attr('src',"../imgcode.php?act=init&"+Math.random()); }
 function checkform(){
-    if($("#username").val()==''){
-	     alert("请输入帐号");
-		 $("#username").focus();
-		 return false;
-	}else if($("#password").val()==''){
-	     alert("请输入密码");
-		 $("#password").focus();
-		 return false;
-	}else if($("#password").val()!=$("#password1").val()){
-	     alert("两次密码不一样");
-		 $("#password").focus();
-		 return false;
-	}else if($("#name").val()==''){
-	     alert("请输入姓名");
-		 $("#name").focus();
-		 return false;
-	}else if($("#tel").val()==''){
-	     alert("请输入电话号码");
-		 $("#tel").focus();
-		 return false;
-	}else if($("#qq").val()==''){
-	     alert("请输入QQ");
-		 $("#qq").focus();
-		 return false;
-	}else if($("#code").val()==''){
-	     alert("请输入验证码");
-		 $("#code").focus();
-		 return false;
-	}else{
-		return true;
-	}
+	if(!$("#username").val()){ alert("请输入账号"); $("#username").focus(); return false; }
+	if(!$("#password").val()){ alert("请输入密码"); $("#password").focus(); return false; }
+	if($("#password").val()!=$("#password1").val()){ alert("两次密码不一致"); $("#password").focus(); return false; }
+	if(!$("#name").val()){ alert("请输入姓名"); $("#name").focus(); return false; }
+	if(!$("#tel").val()){ alert("请输入手机号码"); $("#tel").focus(); return false; }
+	if(!$("#qq").val()){ alert("请输入QQ"); $("#qq").focus(); return false; }
+	if(!$("#code").val()){ alert("请输入验证码"); $("#code").focus(); return false; }
+	return true;
 }
-  </script>
+</script>
+</head>
 <body>
-<div class="header">
-    <div class="graynavi">
-        <div class="graybartitle blue aligncenter cnbig1">
-            注册
-          </div>
-        <div class="graynavibtn" rel="login.html">
-            <a href="./"><div class="fl"><img src="./img/backarrow.jpg" width="23" height="35" alt="">
-              </div>
-              <div class="fl marginleft20">主页</div>
-            </a>
-          </div>
-    </div>
+<div class="bg-m"></div>
+<div class="wrap">
+	<div class="nav">
+		<a href="./" class="back">← 返回</a>
+		<span class="tit">手机端注册</span>
+		<span style="width:60px;"></span>
+	</div>
+	<div class="reg-card">
+		<form method="post" onsubmit="return checkform();">
+			<input type="hidden" name="tj" value="1" />
+			<div class="fg">
+				<label>推荐人账号</label>
+				<input type="text" id="agent" name="agent" value="<?php echo isset($_GET['agent'])?htmlspecialchars($_GET['agent']):''; ?>" placeholder="选填">
+				<div class="hint">选填</div>
+			</div>
+			<div class="fg">
+				<label>登录账号</label>
+				<input type="text" id="username" name="username" value="<?php echo isset($_POST['username'])?htmlspecialchars($_POST['username']):''; ?>" placeholder="4-10位字符">
+			</div>
+			<div class="fg">
+				<label>登录密码</label>
+				<input type="password" id="password" name="password" placeholder="6-20位字母数字组合">
+			</div>
+			<div class="fg">
+				<label>确认密码</label>
+				<input type="password" id="password1" name="password1" placeholder="再次输入密码">
+			</div>
+			<div class="fg">
+				<label>真实姓名</label>
+				<input type="text" id="name" name="name" value="<?php echo isset($_POST['name'])?htmlspecialchars($_POST['name']):''; ?>" placeholder="与提款户名一致">
+			</div>
+			<div class="fg">
+				<label>手机号码</label>
+				<input type="text" id="tel" name="tel" value="<?php echo isset($_POST['tel'])?htmlspecialchars($_POST['tel']):''; ?>" placeholder="手机号">
+			</div>
+			<div class="fg">
+				<label>QQ</label>
+				<input type="text" id="qq" name="qq" value="<?php echo isset($_POST['qq'])?htmlspecialchars($_POST['qq']):''; ?>" placeholder="QQ号">
+			</div>
+			<div class="fg code-wrap">
+				<div class="fg" style="flex:1;">
+					<label>验证码</label>
+					<input type="text" id="code" name="code" placeholder="验证码">
+				</div>
+				<img id="imgcode" src="../imgcode.php?act=init" onclick="changeimg();" alt="" title="点击更换">
+			</div>
+			<button type="submit" class="btn-reg" id="btnRegister">创建账号</button>
+			<div class="reg-foot">已有账号？<a href="./">去登录</a></div>
+		</form>
+	</div>
 </div>
- <form method="post" onSubmit="return checkform();"><input type="hidden" name='tj' value="1" />
-    <div class="container cmargin20 cmargintop2 subcontent2">
-      <h1>注册</h1>
-        <p>请在以下填写您的注册信息。</p>
-    <div class="gap10"></div>
-    <div class="rowfield clearfix">
-      
-        <div class="col1 fl margintop15">推荐人帐号：</div>
-          <div class="col2 fl"><input type="text" id="agent" name="agent" value="<?php echo $_GET['agent']; ?>" class="text field_input">
-            <div class="red cnsmall1" id='nameTips'>＊如果没有可以不写</div>
-          </div>
-    </div>  
-    <div class="rowfield clearfix">
-        <div class="col1 fl margintop15">登录账号：</div>
-          <div class="col2 fl"><input type="text" id="username" name="username" value="<?php echo $_POST['username']; ?>" class="text field_input">
-            <div class="red cnsmall1" id='nameTips'>＊帐户名由4-10个字符组成</div>
-          </div>
-    </div>
-    <div class="rowfield clearfix">
-        <div class="col1 fl margintop15">登录密码：</div>
-          <div class="col2 fl"><input type="password" id="password" name="password" class="text field_input">
-            <div class="red cnsmall1">＊6-20个字母、数字或组合组成，区分大小写</div>
-          </div>
-    </div>
-    <div class="rowfield clearfix">
-        <div class="col1 fl margintop15">确认密码：</div>
-          <div class="col2 fl"><input type="password" id="password1" name="password1" class="text field_input">
-            <div class="red cnsmall1">＊请再次输入密码以确保输入无误</div>
-          </div>
-    </div>
-    <div class="rowfield clearfix">
-        <div class="col1 fl margintop15">真实姓名：</div>
-          <div class="col2 fl"><input type="text" id="name" name="name" value="<?php echo $_POST['name']; ?>" class="text field_input">
-            <div class="red cnsmall1">＊姓名必须与您提款银行户口名字一致，否则无法提款。</div>
-          </div>
-    </div>
-    <div class="rowfield clearfix">
-        <div class="col1 fl margintop15">手机号码：</div>
-          <div class="col2 fl"><input type="text" id="tel" name="tel" value="<?php echo $_POST['tel']; ?>" class="text field_input">
-            <div class="red cnsmall1">＊</div>
-          </div>
-    </div>
-    <div class="rowfield clearfix">
-        <div class="col1 fl margintop15">QQ：</div>
-          <div class="col2 fl"><input type="text" id="qq" name="qq" value="<?php echo $_POST['qq']; ?>" class="text field_input">
-            <div class="red cnsmall1">＊</div>
-          </div>
-    </div>
-    <div class="rowfield clearfix">
-      <div class="col1 fl margintop15">验证码：</div>
-        <div class="col2 fl"><input type="text" id="code" name='code' class="field_input2 fl">
-          <div class="captcha capcha fl"><img id="imgcode" src="../imgcode.php?act=init" onclick="changeimg();" alt="none" width="178" height="64" title="看不清？点击更换一张验证图片" /></div>
-        </div>
-    </div>
-    </div>
-    <div class="rowfield clearfix">
-      <div class="col1 fl margintop15"></div>
-        <div class="col2 fl"><input type="submit" class="btnresetpass white cnbig1" id="btnRegister" value="创建帐号"></div>
-      </div>
-    </div>
-
-    </div></form>
 </body>
 </html>

@@ -111,167 +111,100 @@ if($_POST['tj']==1){
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Welcome</title>
-<meta name="keywords" content="" />
-<meta name="description" content="" />
-<link href="./css/master.css" rel="stylesheet" type="text/css">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>电脑端注册</title>
 <link href="./css/validationEngine.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="./js/jquery1.js"></script>
 <script type="text/javascript" src="./js/jquery_003.js"></script>
 <script type="text/javascript" src="./js/jquery2.js"></script>
 <script type="text/javascript" src="./js/reg.js"></script>
-<script language="javascript">
-function changeimg(){
-    $("#imgcode").attr('src',"../imgcode.php?act=init&"+Math.random());
-}
-</script>
-<style>
-.inp-txt {
-	width: 340px;
-	height: 34px;
-	font-size: 20px;
-	line-height: 34px;
-	text-indent: 5px;
-	border-top: 1px solid #b8b8b8;
-	border-left: 1px solid #b8b8b8;
-	border-right: 1px solid #cccccc;
-	border-bottom: 1px solid #cccccc;
-	margin: 0 15px 0 0;
-}
-
-.bu_reg {
-	width: 202px;
-	height: 43px;
-	margin: 0 20px 0 115px;
-}
+<script>function changeimg(){ $("#imgcode").attr('src',"../imgcode.php?act=init&"+Math.random()); }</script>
+<style type="text/css">
+*{box-sizing:border-box;}
+body{margin:0;padding:0;min-height:100vh;font-family:"Microsoft YaHei",sans-serif;background:linear-gradient(145deg,#1a1f35 0%,#252b48 50%,#1e2439 100%);color:#e8eaef;}
+.bg-pc{position:fixed;inset:0;background:radial-gradient(ellipse 70% 40% at 50% -10%,rgba(255,200,80,.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;min-height:100vh;padding:40px 20px;display:flex;flex-direction:column;align-items:center;}
+.reg-head{text-align:center;margin-bottom:28px;}
+.reg-head .tit{font-size:20px;font-weight:600;letter-spacing:4px;color:#ffc850;}
+.reg-head .desc{font-size:12px;color:rgba(232,234,239,.6);margin-top:6px;}
+.reg-card{width:100%;max-width:460px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:32px 28px;backdrop-filter:blur(12px);box-shadow:0 16px 48px rgba(0,0,0,.25);}
+.reg-row{margin-bottom:16px;}
+.reg-row label{display:block;font-size:12px;color:rgba(232,234,239,.8);margin-bottom:5px;}
+.reg-row input[type="text"],.reg-row input[type="password"]{width:100%;height:42px;padding:0 14px;font-size:14px;color:#e8eaef;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.15);border-radius:8px;outline:none;}
+.reg-row input:focus{border-color:rgba(255,200,80,.5);}
+.reg-row .hint{font-size:11px;color:rgba(232,234,239,.5);margin-top:4px;}
+.reg-row.code-row{display:flex;gap:10px;align-items:flex-end;}
+.reg-row.code-row .reg-row{flex:1;}
+.reg-row.code-row img{height:42px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,.15);}
+.btn-reg{width:100%;height:44px;margin-top:24px;font-size:15px;font-weight:600;letter-spacing:4px;color:#1a1f35;background:linear-gradient(180deg,#ffc850 0%,#e6a820 100%);border:none;border-radius:10px;cursor:pointer;}
+.btn-reg:hover{opacity:.95;}
+.reg-foot{margin-top:20px;text-align:center;font-size:13px;color:rgba(232,234,239,.7);}
+.reg-foot a{color:#ffc850;text-decoration:none;}
 </style>
 </head>
-
-<body style="background: white;">
-	<div class="header">
-		<div class="headerc">
-			<ul>
-				<li><object width="280" height="73" data="./img/logo.swf" type="application/x-shockwave-flash">
-						<param name="wmode" value="transparent" />
-						<param name="src" value="./img/logo.swf" />
-					</object></li>
-			</ul>
-		</div>
+<body>
+<div class="bg-pc"></div>
+<div class="wrap">
+	<div class="reg-head">
+		<div class="tit">电脑端注册</div>
+		<div class="desc">请填写以下信息完成注册</div>
 	</div>
-	<div class="reg_nav"></div>
-	<div class="reg_info">
-		<ul class="reg_title">
-			<li>请在以下填写您的注册信息</li>
-		</ul>
+	<div class="reg-card">
 		<script type="text/javascript">
-		jQuery(document).ready(function() {
-            var theForm = $("#main");
-            theForm.validationEngine();
-			jQuery("input:text").each(function(){
-			    jQuery(this).attr("name",jQuery(this).attr("id"));
-			});
-			jQuery("input:password").each(function(){
-			    jQuery(this).attr("name",jQuery(this).attr("id"));
-			});
-        });
+		jQuery(document).ready(function(){
+			var theForm=$("#main"); theForm.validationEngine();
+			jQuery("input:text").each(function(){ jQuery(this).attr("name",jQuery(this).attr("id")); });
+			jQuery("input:password").each(function(){ jQuery(this).attr("name",jQuery(this).attr("id")); });
+		});
 		</script>
 		<form id="main" method="post" name="main">
-           <input type="hidden" name='tj' value="1" />
-			<ul class="reg_te">
-				<fieldset>
-					<table>
-						<tbody>
-                           <tr>
-								<th>推荐人帐号：</th>
-								<td><input size="40" id="reg_agent" maxlength="15" value="<?php echo $_GET['agent']; ?>"  
-									class="inp-txt" type="text"></td>
-								<td>如果没有可以不写</td>
-							</tr>
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>会员账号：</th>
-								<td><input size="40" id="reg_username" maxlength="15" value="<?php echo $_POST['reg_username']; ?>"  
-									class="validate[required,custom[onlyLetterNumber],minSize[3],maxSize[8]] inp-txt" type="text"></td>
-								<td>账号规则：账号必须为3-8为数字和字母组合</td>
-							</tr>
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>登陆密码：</th>
-								<td><input id="reg_password" maxlength="15" size="40"
-									class="validate[required,minSize[6],maxSize[15]] inp-txt" type="password"></td>
-								<td>密码规则：密码长度要有6-15个字符，以及必须含有数字和字母组合</td>
-							</tr> 
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>确认密码：</th>
-								<td><input id="reg_password1" maxlength="15" size="40"
-									class="validate[required,equals[reg_password]] inp-txt" type="password"></td>
-								<td>确定密码</td>
-							</tr>
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>真实姓名：</th>
-								<td><input id="reg_name" size="40" maxlength="10" class="validate[required] inp-txt" value="<?php echo $_POST['reg_name']; ?>" ></td>
-								<td style="color: #ff0000;">姓名必须与你用于提款的银行户口名字一致，否则无法提款</td>
-							</tr>
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>手机号码：</th>
-								<td><input id="reg_tel" size="40" maxlength="13" class="validate[required] inp-txt" value="<?php echo $_POST['reg_tel']; ?>"></td>
-								<td style="color: #ff0000;"></td>
-							</tr>
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>QQ：</th>
-								<td><input id="reg_qq" size="40" maxlength="30"
-									class="validate[required] inp-txt" type="text" value="<?php echo $_POST['reg_qq']; ?>"></td>
-								<td style="color: #ff0000;"></td>
-							</tr>
-							<tr>
-								<th></th>
-								<th style="height: 10px;"></th>
-							</tr>
-							<tr>
-								<th>验证码：</th>
-								<td><input id="reg_code" size="40" maxlength="10" class="validate[required] inp-txt"></td>
-								<td><img id="imgcode" src="../imgcode.php?act=init" onclick="changeimg();" alt="none" title="看不清？点击更换一张验证图片" /></td>
-							</tr>
-							<tr>
-								<td colspan="2" height="5"></td>
-							</tr>
-						</tbody>
-					</table>
-				</fieldset>
-			</ul>
-			<ul class="reg_bu">
-				<li class="bu_line" style="overflow: hidden; zoom: 1;"><input type="submit" name="regBtn" value=""
-					class="bu_reg" style="margin-left: 238px; float: left;"> <span style="float: left; line-height: 42px;">如果您已有账号，可点击<a
-						href="index.php" style="float: none; display: inline; margin: 0;" class="click_to_login">登录</a>进入
-				</span></li>
-				<li></li>
-			</ul>
+			<input type="hidden" name="tj" value="1" />
+			<div class="reg-row">
+				<label>推荐人账号</label>
+				<input type="text" id="reg_agent" maxlength="15" value="<?php echo isset($_GET['agent'])?htmlspecialchars($_GET['agent']):''; ?>" class="inp-txt">
+				<div class="hint">选填</div>
+			</div>
+			<div class="reg-row">
+				<label>会员账号</label>
+				<input type="text" id="reg_username" maxlength="15" value="<?php echo isset($_POST['reg_username'])?htmlspecialchars($_POST['reg_username']):''; ?>" class="validate[required,custom[onlyLetterNumber],minSize[3],maxSize[8]] inp-txt">
+				<div class="hint">3-8位数字与字母组合</div>
+			</div>
+			<div class="reg-row">
+				<label>登录密码</label>
+				<input type="password" id="reg_password" maxlength="15" class="validate[required,minSize[6],maxSize[15]] inp-txt">
+				<div class="hint">6-15位，需含数字与字母</div>
+			</div>
+			<div class="reg-row">
+				<label>确认密码</label>
+				<input type="password" id="reg_password1" maxlength="15" class="validate[required,equals[reg_password]] inp-txt">
+			</div>
+			<div class="reg-row">
+				<label>真实姓名</label>
+				<input type="text" id="reg_name" maxlength="10" class="validate[required] inp-txt" value="<?php echo isset($_POST['reg_name'])?htmlspecialchars($_POST['reg_name']):''; ?>">
+				<div class="hint">须与提款银行户名一致</div>
+			</div>
+			<div class="reg-row">
+				<label>手机号码</label>
+				<input type="text" id="reg_tel" maxlength="13" class="validate[required] inp-txt" value="<?php echo isset($_POST['reg_tel'])?htmlspecialchars($_POST['reg_tel']):''; ?>">
+			</div>
+			<div class="reg-row">
+				<label>QQ</label>
+				<input type="text" id="reg_qq" maxlength="30" class="validate[required] inp-txt" value="<?php echo isset($_POST['reg_qq'])?htmlspecialchars($_POST['reg_qq']):''; ?>">
+			</div>
+			<div class="reg-row code-row">
+				<div class="reg-row" style="flex:1;">
+					<label>验证码</label>
+					<input type="text" id="reg_code" maxlength="10" class="validate[required] inp-txt">
+				</div>
+				<img id="imgcode" src="../imgcode.php?act=init" onclick="changeimg();" alt="" title="点击更换">
+			</div>
+			<button type="submit" name="regBtn" class="btn-reg">注 册</button>
+			<div class="reg-foot">已有账号？<a href="index.php" class="click_to_login">登录</a></div>
 		</form>
 	</div>
+</div>
 </body>
 </html>

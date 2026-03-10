@@ -1,7 +1,7 @@
 <?php 
 if($_SESSION['ip']!=getip()){
     sessiondelu();
-    echo "<script>alert('登陆超时!');top.window.location.href='/';</script>"; 
+    echo "<script>alert('登陆超时!');top.window.location.href='/creditmobile/login';</script>"; 
     exit;
 }
 
@@ -12,8 +12,7 @@ if($_SESSION['uuid']!='' && $_SESSION['ucheck']==md5($config['allpass'].$_SESSIO
 
 if($check==0 | $config['ifopen']==0 | $config['ifopens']==0){
 	 sessiondelu();
-	// echo top.window.location.href='../';exit;
-     echo "<script>top.window.location.href='/';</script>"; 
+     echo "<script>top.window.location.href='/creditmobile/login';</script>"; 
 	 exit;
 }
 
@@ -21,11 +20,9 @@ $userid=$_SESSION['uuid'];
 
 if($_REQUEST['logout']=='yes'){
 	 $msql->query("delete from `$tb_online` where userid='$userid'");
-	 $msql->query("update `$tb_user` set online=0 where userid='$userid2'");
+	 $msql->query("update `$tb_user` set online=0 where userid='$userid'");
      sessiondelu();
-
-        echo "<script>top.window.location.href='/';</script>"; 
-	 
+     echo "<script>top.window.location.href='/creditmobile/login';</script>"; 
 	 exit;
 }
 
@@ -37,7 +34,7 @@ $msql->query("select passcode,savetime from `$tb_online` where userid='$userid' 
 $msql->next_record();
 if($msql->f('passcode')!=$_SESSION['upasscode']){
 	 sessiondelu();
-     echo "<script>alert('登录超时!');top.window.location.href='/';</script>"; 
+     echo "<script>alert('登录超时!');top.window.location.href='/creditmobile/login';</script>"; 
 	 exit;
 }
 $time = time();
