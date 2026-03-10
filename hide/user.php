@@ -1199,7 +1199,7 @@ switch ($_REQUEST['xtype']) {
    case "cpass":
       $uid   = $_POST['uid'];
       $time  = time();
-      $pass1 = md5(md5($_POST['pass1']) . $config['upass']);
+      $pass1 = md5($_POST['pass1'] . $config['upass']);
       $msql->query("update `$tb_user` set userpass='$pass1',passtime=NOW() where userid='$uid'");
       userchange("更改密码", $uid);
       echo 1;

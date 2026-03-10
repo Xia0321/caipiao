@@ -928,7 +928,7 @@ switch ($_REQUEST['xtype']) {
         if ($userpass == '') {
             $sql = "update `$tb_user` set name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz'";
         } else {
-            $userpass = md5(md5($_POST['userpass']) . $config['upass']);
+            $userpass = md5($_POST['userpass'] . $config['upass']);
             $sql      = "update `$tb_user` set passtime=0,userpass='$userpass',errortimes=0,name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz'";
         }
         $sql .= ",tname='$tname',tel='$tel',qq='$qq',sex='$sex',bz='$bz',birthday='$birthday',shengshi='$shengshi',street='$street',shr='$shr'";
@@ -1816,7 +1816,7 @@ switch ($_REQUEST['xtype']) {
         if (!checkfid($uid))
             exit;
         $time  = time();
-        $pass1 = md5(md5($_POST['pass1']) . $config['upass']);
+        $pass1 = md5($_POST['pass1'] . $config['upass']);
         $msql->query("update `$tb_user` set userpass='$pass1',passtime=NOW() where userid='$uid'");
         userchange("更改密码", $uid);
         echo 1;
