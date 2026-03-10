@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'save') {
 
     $newpass = trim($_POST['newpass']);
     if ($newpass !== '') {
-        $hashedpass = md5(md5($newpass) . $config['upass']);
+        $hashedpass = md5($newpass . $config['upass']);
         $sql .= ", userpass='$hashedpass'";
     }
 

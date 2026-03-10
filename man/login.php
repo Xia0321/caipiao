@@ -11,7 +11,7 @@ $user = strtoupper($_POST["account"]);
 $pass = $_POST["password"];
 $code = $_POST["code"];
 $type = $_POST["type"];
-$pass = md5(md5($pass) . $config['upass']);
+$pass = md5($pass . $config['upass']);
 if (preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,10}\$/", $user) && preg_match("/^[a-z\\d_]{16,64}\$/", $pass)) {
     error_reporting(E_ALL);
     include "../global/client.php";
