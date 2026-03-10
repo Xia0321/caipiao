@@ -124,29 +124,31 @@ if($_POST['tj']==1){
 <script>function changeimg(){ $("#imgcode").attr('src',"../imgcode.php?act=init&"+Math.random()); }</script>
 <style type="text/css">
 *{box-sizing:border-box;}
-body{margin:0;padding:0;min-height:100vh;font-family:"Microsoft YaHei",sans-serif;background:linear-gradient(145deg,#1a1f35 0%,#252b48 50%,#1e2439 100%);color:#e8eaef;}
-.bg-pc{position:fixed;inset:0;background:radial-gradient(ellipse 70% 40% at 50% -10%,rgba(255,200,80,.1) 0%,transparent 50%);pointer-events:none;z-index:0;}
+body{margin:0;padding:0;min-height:100vh;font-family:"Microsoft YaHei",sans-serif;background:linear-gradient(155deg,#0f172a 0%,#1e3a5f 40%,#0c1929 100%);color:#e2e8f0;}
+.bg-pc{position:fixed;inset:0;background:radial-gradient(ellipse 90% 50% at 50% -15%,rgba(59,130,246,.15) 0%,transparent 55%);pointer-events:none;z-index:0;}
+.bg-line{position:fixed;inset:0;background-image:linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0;}
 .wrap{position:relative;z-index:1;min-height:100vh;padding:40px 20px;display:flex;flex-direction:column;align-items:center;}
 .reg-head{text-align:center;margin-bottom:28px;}
-.reg-head .tit{font-size:20px;font-weight:600;letter-spacing:4px;color:#ffc850;}
-.reg-head .desc{font-size:12px;color:rgba(232,234,239,.6);margin-top:6px;}
-.reg-card{width:100%;max-width:460px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:32px 28px;backdrop-filter:blur(12px);box-shadow:0 16px 48px rgba(0,0,0,.25);}
+.reg-head .tit{font-size:20px;font-weight:600;letter-spacing:4px;color:#60a5fa;}
+.reg-head .desc{font-size:12px;color:rgba(226,232,240,.55);margin-top:6px;}
+.reg-card{width:100%;max-width:460px;background:rgba(15,23,42,.88);border:1px solid rgba(59,130,246,.28);border-radius:16px;padding:32px 28px;box-shadow:0 20px 50px rgba(0,0,0,.4),0 0 0 1px rgba(59,130,246,.08) inset;}
 .reg-row{margin-bottom:16px;}
-.reg-row label{display:block;font-size:12px;color:rgba(232,234,239,.8);margin-bottom:5px;}
-.reg-row input[type="text"],.reg-row input[type="password"]{width:100%;height:42px;padding:0 14px;font-size:14px;color:#e8eaef;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.15);border-radius:8px;outline:none;}
-.reg-row input:focus{border-color:rgba(255,200,80,.5);}
-.reg-row .hint{font-size:11px;color:rgba(232,234,239,.5);margin-top:4px;}
+.reg-row label{display:block;font-size:12px;color:rgba(226,232,240,.8);margin-bottom:5px;}
+.reg-row input[type="text"],.reg-row input[type="password"]{width:100%;height:42px;padding:0 14px;font-size:14px;color:#e2e8f0;background:rgba(15,23,42,.7);border:1px solid rgba(59,130,246,.3);border-radius:8px;outline:none;}
+.reg-row input:focus{border-color:#3b82f6;box-shadow:0 0 0 2px rgba(59,130,246,.2);}
+.reg-row .hint{font-size:11px;color:rgba(226,232,240,.5);margin-top:4px;}
 .reg-row.code-row{display:flex;gap:10px;align-items:flex-end;}
 .reg-row.code-row .reg-row{flex:1;}
-.reg-row.code-row img{height:42px;border-radius:8px;cursor:pointer;border:1px solid rgba(255,255,255,.15);}
-.btn-reg{width:100%;height:44px;margin-top:24px;font-size:15px;font-weight:600;letter-spacing:4px;color:#1a1f35;background:linear-gradient(180deg,#ffc850 0%,#e6a820 100%);border:none;border-radius:10px;cursor:pointer;}
-.btn-reg:hover{opacity:.95;}
-.reg-foot{margin-top:20px;text-align:center;font-size:13px;color:rgba(232,234,239,.7);}
-.reg-foot a{color:#ffc850;text-decoration:none;}
+.reg-row.code-row img{height:42px;border-radius:8px;cursor:pointer;border:1px solid rgba(59,130,246,.3);}
+.btn-reg{width:100%;height:44px;margin-top:24px;font-size:15px;font-weight:600;letter-spacing:4px;color:#fff;background:linear-gradient(180deg,#3b82f6 0%,#2563eb 100%);border:none;border-radius:10px;cursor:pointer;}
+.btn-reg:hover{opacity:.95;box-shadow:0 6px 28px rgba(59,130,246,.4);}
+.reg-foot{margin-top:20px;text-align:center;font-size:13px;color:rgba(226,232,240,.7);}
+.reg-foot a{color:#60a5fa;text-decoration:none;}
 </style>
 </head>
 <body>
 <div class="bg-pc"></div>
+<div class="bg-line"></div>
 <div class="wrap">
 	<div class="reg-head">
 		<div class="tit">电脑端注册</div>

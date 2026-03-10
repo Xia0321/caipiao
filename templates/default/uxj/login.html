@@ -6,32 +6,36 @@
 <title>电脑端入口</title>
 <style type="text/css">
 * { box-sizing: border-box; }
-body { margin: 0; padding: 0; min-height: 100vh; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: linear-gradient(145deg, #1a1f35 0%, #252b48 40%, #1e2439 100%); color: #e8eaef; overflow-x: hidden; }
-.bg-shine { position: fixed; inset: 0; background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255,200,80,.12) 0%, transparent 50%); pointer-events: none; z-index: 0; }
+body { margin: 0; padding: 0; min-height: 100vh; font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: linear-gradient(155deg, #0f172a 0%, #1e3a5f 40%, #0c1929 100%); color: #e2e8f0; overflow-x: hidden; }
+.bg-blue { position: fixed; inset: 0; background: radial-gradient(ellipse 90% 60% at 50% -15%, rgba(59,130,246,.18) 0%, transparent 55%); pointer-events: none; z-index: 0; }
+.bg-line { position: fixed; inset: 0; background-image: linear-gradient(rgba(59,130,246,.04) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,.04) 1px, transparent 1px); background-size: 48px 48px; pointer-events: none; z-index: 0; }
 .wrap { position: relative; z-index: 1; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
 .main { display: flex; align-items: center; justify-content: center; gap: 48px; flex-wrap: wrap; }
-.card { width: 100%; max-width: 380px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); border-radius: 16px; padding: 40px 36px; backdrop-filter: blur(12px); box-shadow: 0 16px 48px rgba(0,0,0,.25); }
+.card { width: 100%; max-width: 388px; background: rgba(15,23,42,.88); border: 1px solid rgba(59,130,246,.28); border-radius: 16px; padding: 40px 36px; box-shadow: 0 20px 50px rgba(0,0,0,.4), 0 0 0 1px rgba(59,130,246,.08) inset; }
 .card-title { text-align: center; margin-bottom: 28px; }
-.card-title .tit { font-size: 20px; font-weight: 600; letter-spacing: 4px; color: #ffc850; }
-.card-title .desc { font-size: 12px; color: rgba(232,234,239,.6); margin-top: 6px; }
+.card-title .tit { font-size: 20px; font-weight: 600; letter-spacing: 4px; color: #60a5fa; text-shadow: 0 0 24px rgba(96,165,250,.35); }
+.card-title .desc { font-size: 12px; color: rgba(226,232,240,.55); margin-top: 6px; }
 .form-g { margin-bottom: 18px; }
-.form-g label { display: block; font-size: 12px; color: rgba(232,234,239,.75); margin-bottom: 6px; }
-.form-g input[type="text"], .form-g input[type="password"] { width: 100%; height: 46px; padding: 0 16px; font-size: 14px; color: #e8eaef; background: rgba(0,0,0,.2); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; outline: none; transition: border-color .2s, box-shadow .2s; }
-.form-g input::placeholder { color: rgba(232,234,239,.4); }
-.form-g input:focus { border-color: rgba(255,200,80,.5); box-shadow: 0 0 0 2px rgba(255,200,80,.15); }
+.form-g label { display: block; font-size: 12px; color: rgba(226,232,240,.8); margin-bottom: 6px; }
+.form-g input[type="text"], .form-g input[type="password"] { width: 100%; height: 46px; padding: 0 16px; font-size: 14px; color: #e2e8f0; background: rgba(15,23,42,.7); border: 1px solid rgba(59,130,246,.3); border-radius: 10px; outline: none; transition: border-color .2s, box-shadow .2s; }
+.form-g input::placeholder { color: rgba(226,232,240,.4); }
+.form-g input:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px rgba(59,130,246,.22); }
 .code-wrap { display: flex; gap: 10px; align-items: flex-end; }
 .code-wrap .form-g { flex: 1; }
-.code-wrap img { height: 46px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,.15); }
+.code-wrap img { height: 46px; border-radius: 10px; cursor: pointer; border: 1px solid rgba(59,130,246,.3); }
 .info.facode { display: none; }
-.btn-login { width: 100%; height: 46px; margin-top: 26px; font-size: 15px; font-weight: 600; letter-spacing: 4px; color: #1a1f35; background: linear-gradient(180deg, #ffc850 0%, #e6a820 100%); border: none; border-radius: 10px; cursor: pointer; transition: opacity .2s, box-shadow .2s; }
-.btn-login:hover { opacity: .95; box-shadow: 0 6px 24px rgba(255,200,80,.35); }
+.btn-login { width: 100%; height: 46px; margin-top: 26px; font-size: 15px; font-weight: 600; letter-spacing: 4px; color: #fff; background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%); border: none; border-radius: 10px; cursor: pointer; transition: opacity .2s, box-shadow .2s; }
+.btn-login:hover { opacity: .95; box-shadow: 0 6px 28px rgba(59,130,246,.45); }
 .side { width: 120px; text-align: center; }
-.side .qrcode-box { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.1); border-radius: 12px; padding: 12px; }
+.side .qrcode-box { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.2); border-radius: 12px; padding: 12px; }
 .side .qrcode-box img { width: 96px; height: 96px; display: block; background: #fff; border-radius: 6px; }
-.side .qrcode-box .txt { font-size: 11px; color: rgba(232,234,239,.6); margin-top: 8px; line-height: 1.4; }
+.side .qrcode-box .txt { font-size: 11px; color: rgba(226,232,240,.6); margin-top: 8px; line-height: 1.4; }
+.foot { margin-top: 24px; text-align: center; width: 100%; }
+.foot a { display: inline-block; padding: 10px 20px; font-size: 12px; color: rgba(226,232,240,.75); text-decoration: none; border: 1px solid rgba(59,130,246,.35); border-radius: 20px; transition: color .2s, border-color .2s, box-shadow .2s; }
+.foot a:hover { color: #60a5fa; border-color: rgba(59,130,246,.6); box-shadow: 0 0 12px rgba(59,130,246,.2); }
 .form_t { margin-bottom: 18px; }
-.form_t .user_t { font-size: 15px; color: #ffc850; }
-.form_t .user_f { cursor: pointer; font-size: 12px; color: rgba(232,234,239,.5); }
+.form_t .user_t { font-size: 15px; color: #60a5fa; }
+.form_t .user_f { cursor: pointer; font-size: 12px; color: rgba(226,232,240,.5); }
 .fl { float: left; }
 .fr { float: right; }
 </style>
@@ -59,7 +63,8 @@ function checkform(){
 </script>
 </head>
 <body>
-<div class="bg-shine"></div>
+<div class="bg-blue"></div>
+<div class="bg-line"></div>
 <div class="wrap">
 	<div class="main">
 		<div class="card">
@@ -72,7 +77,7 @@ function checkform(){
 				<input type="hidden" name="pass" id="pass" value="" />
 				<div class="form_t">
 					<span class="fl user_t">会员登录</span>
-					<span class="fr user_f"></span>
+					<span class="fr user_f">谷歌验证码（可选）</span>
 				</div>
 				<div class="form-g info username">
 					<label>账号</label>
@@ -90,18 +95,15 @@ function checkform(){
 					<img src="/imgcode.php?act=init" alt="" id="imgcode" title="看不清？点击更换">
 				</div>
 				<div class="info facode form-g">
-					<label>二次验证</label>
-					<input type="text" name="facode" placeholder="二次验证码" maxlength="10" autocomplete="off">
+					<label>谷歌验证码（可选）</label>
+					<input type="text" name="facode" placeholder="请输入谷歌验证器中的验证码" maxlength="10" autocomplete="off">
 				</div>
 				<button type="submit" class="btn-login">登 录</button>
 			</form>
 		</div>
-		<div class="side" style="display: none;">
-			<div class="qrcode-box">
-				<img src="/css/login/qrcode.png" alt="">
-				<div class="txt">手机扫码<br>安装客户端</div>
-			</div>
-		</div>
+        <div class="foot">
+            <a href="/mxj/">手机端 / 移动端入口</a>
+        </div>
 	</div>
 </div>
 </body>
