@@ -676,8 +676,8 @@ switch ($_REQUEST['xtype']) {
                     }
                 }
             }
-            // 若 pl 为空且玩法名包含"定位"，则用 peilv1 作为统一赔率填充
-            if (empty($pl[0]) && strpos($pname, '定位') !== false) {
+            // 若 pl 为空，则用 peilv1 作为统一赔率填充
+            if (empty($pl[0])) {
                 $msql->query("select peilv1 from `{$tb_play}` where gid='{$gid}' and pid='{$pid}'");
                 $msql->next_record();
                 $pl = [array_fill(0, $cd, (float)$msql->f('peilv1'))];
