@@ -82,7 +82,7 @@ function paddqishu($gid, $pdate = '') {
             $psql->query("select 1 from `$tb_kj` where gid='$gid' and qishu='$qishu'");
             $psql->next_record();
             if ($psql->f(0) != 1) {
-                $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime) . "',opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
+                $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime) . "',opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
                 $psql->query($sql);
             }
             $starttime = $kjtime;
@@ -107,7 +107,7 @@ function paddqishu($gid, $pdate = '') {
             $psql->query("select 1 from `$tb_kj` where gid='$gid' and qishu='$qishu'");
             $psql->next_record();
             if ($psql->f(0) != 1) {
-                $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime) . "',opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
+                $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime) . "',opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
                 $psql->query($sql);
             }
             $starttime = $kjtime;
@@ -142,7 +142,7 @@ function paddqishu($gid, $pdate = '') {
             $psql->query("select 1 from `$tb_kj` where gid='$gid' and qishu='$qishu'");
             $psql->next_record();
             if ($psql->f(0) != 1) {
-                $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime) . "',opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
+                $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime) . "',opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
                 $psql->query($sql);
             }
             $starttime = $kjtime;
@@ -181,7 +181,7 @@ function paddqishu($gid, $pdate = '') {
                     } else {
                         $dates = sqldate($closetime);
                     }
-                    $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
+                    $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
                     $psql->query($sql);
                 }
             }
@@ -208,7 +208,7 @@ function paddqishu($gid, $pdate = '') {
             $psql->query("select 1 from `$tb_kj` where gid='$gid' and qishu='$qishu'");
             $psql->next_record();
             if ($psql->f(0) != 1) {
-                $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='" . sqldate($closetime) . "',bml='$bml',gid='$gid',baostatus=1";
+                $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='" . sqldate($closetime) . "',bml='$bml',gid='$gid',baostatus=1";
                 $psql->query($sql);
             }
             $starttime = $kjtime;
@@ -236,7 +236,7 @@ function paddqishu($gid, $pdate = '') {
         $psql->query("select 1 from `$tb_kj` where gid='$gid' and qishu='$qishu'");
         $psql->next_record();
         if ($psql->f(0) != 1) {
-            $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='" . sqldate($closetime) . "',bml='$bml',gid='$gid',baostatus=1";
+            $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='" . sqldate($closetime) . "',bml='$bml',gid='$gid',baostatus=1";
             $psql->query($sql);
         }
     } else if ($gid == 110){
@@ -316,7 +316,7 @@ function paddqishu($gid, $pdate = '') {
                 } else {
                     $dates = sqldate($closetime);
                 }
-                $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
+                $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
                
                 $psql->query($sql);
             }
@@ -387,7 +387,7 @@ function paddqishu($gid, $pdate = '') {
                 } else {
                     $dates = sqldate($closetime);
                 }
-                $sql = "insert into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
+                $sql = "insert ignore into `$tb_kj` set kjtime='" . sqltime($kjtime + $cs['tuichi']) . "',opentime='" . sqltime($opentime + $cs['tuichikp']) . "',closetime='" . sqltime($closetime) . "',qishu='$qishu',dates='$dates',bml='$bml',gid='$gid',baostatus=1";
                 $psql->query($sql);
             }
         }

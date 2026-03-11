@@ -113,7 +113,7 @@ foreach ($rs as $k => $v) {
             $msql->next_record();
             echo 2;
             if ($msql->f(0) != 1) {
-                $msql->query("insert into `$tb_kj` set opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',kjtime='" . sqltime($kjtime) . "',baostatus='1',gid='$gid',qishu='$qishu'");
+                $msql->query("insert ignore into `$tb_kj` set opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',kjtime='" . sqltime($kjtime) . "',baostatus='1',gid='$gid',qishu='$qishu'");
                 $msql->query("update `$tb_game` set thisqishu='$qishu',panstatus=0,otherstatus=0 where gid='$gid'");
             }
         }
@@ -141,7 +141,7 @@ foreach ($rs as $k => $v) {
                     if ($jiari >= 20160207 & $jiari <= 20160213 & $jiari != '')
                         continue;
                     /*********jiari*************/
-                    $tsql->query("insert into `x_kj` set opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',kjtime='" . sqltime($kjtime) . "',qishu='$qishu',bml='$bml',gid='$gid',baostatus=1");
+                    $tsql->query("insert ignore into `x_kj` set opentime='" . sqltime($opentime) . "',closetime='" . sqltime($closetime) . "',kjtime='" . sqltime($kjtime) . "',qishu='$qishu',bml='$bml',gid='$gid',baostatus=1");
                 }
             } else if ($gid == 107 | $gid == 161 | $gid == 162 | $gid == 163 | $gid == 153  | $gid == 109  | $gid == 171  | $gid == 108  | $gid == 172 | $gid == 175) {
                 paddqishu($gid);
