@@ -1,0 +1,299 @@
+@charset "utf-8";
+/* MXJ UI Upgrade - Modern Style Override for React SPA */
+/* Targets actual class names used in creditmobile */
+
+/* === Base === */
+body, html {
+    background: #f5f7fa !important;
+}
+
+/* === Top Bar - Modern gradient === */
+.mxj-top-bar,
+.tops {
+    background: linear-gradient(135deg, #1a73e8, #4a90d9) !important;
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.3) !important;
+}
+
+.mxj-top-bar .pn_title,
+.tops .pn_title {
+    color: #fff !important;
+}
+
+/* === Info Bar (edu) - Cleaner === */
+.edu {
+    background: #fff !important;
+    border-bottom: 1px solid #e8eaed !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06) !important;
+}
+
+.edu .quota_font {
+    color: #888 !important;
+    font-size: 11px !important;
+}
+
+.edu .font_color1 {
+    color: #1a73e8 !important;
+    font-weight: 600 !important;
+}
+
+.edu .font_color2 {
+    font-weight: 600 !important;
+}
+
+.edu .synow {
+    color: #1a73e8 !important;
+}
+
+/* === Last Result Row === */
+.mxj-last-result,
+.resultother {
+    background: #3a3f47 !important;
+    color: #fff !important;
+}
+
+/* === Timer Row === */
+.mxj-timer-row {
+    background: #fff !important;
+    border-bottom: 1px solid #e8eaed !important;
+}
+
+/* === Left Menu (menuplay) === */
+.menuplay {
+    background: linear-gradient(180deg, #1a5fb4, #1a73e8) !important;
+}
+
+.menuplay a {
+    color: rgba(255,255,255,0.85) !important;
+    font-size: 14px !important;
+    letter-spacing: 0.5px !important;
+}
+
+.menuplay .lrm_back {
+    background: linear-gradient(135deg, #0d47a1, #1565c0) !important;
+    color: #fff !important;
+    font-weight: 600 !important;
+    border-left: 3px solid #ffd54f !important;
+}
+
+.menuplay .menu_lines {
+    background: rgba(255,255,255,0.1) !important;
+}
+
+/* === Betting Area (make) === */
+.make {
+    background: #f5f7fa !important;
+    padding: 6px !important;
+}
+
+/* === Play Items (betting cards) === */
+.play {
+    border: 1px solid #e0e4e8 !important;
+    border-radius: 8px !important;
+    background: #fff !important;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+    transition: all 0.15s ease !important;
+    overflow: hidden !important;
+}
+
+.play:active {
+    transform: scale(0.97) !important;
+}
+
+/* Play item name */
+.play .b_text,
+.play .name {
+    color: #333 !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+
+/* Odds */
+.play .b_odds {
+    color: #e53935 !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+}
+
+/* Selected play item */
+.play.on,
+.play.active,
+.play[class*="selected"] {
+    background: linear-gradient(135deg, #1a73e8, #4a90d9) !important;
+    color: #fff !important;
+    border-color: #1a73e8 !important;
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.35) !important;
+}
+
+.play.on .b_text,
+.play.on .name,
+.play.active .b_text,
+.play.active .name {
+    color: #fff !important;
+}
+
+.play.on .b_odds,
+.play.active .b_odds {
+    color: #ffd54f !important;
+}
+
+/* === Section Headers in make area === */
+.make .bcn_number_type {
+    background: #f0f4f8 !important;
+    color: #333 !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    border-bottom: 1px solid #e0e4e8 !important;
+}
+
+/* === Bottom Payment Footer === */
+.payment-footer {
+    background: #fff !important;
+    border-top: 1px solid #e8eaed !important;
+    box-shadow: 0 -2px 8px rgba(0,0,0,0.06) !important;
+}
+
+/* Quick amount buttons */
+.jelist .btn {
+    border: 1px solid #e0e4e8 !important;
+    border-radius: 6px !important;
+    background: #f8f9fa !important;
+    color: #333 !important;
+}
+
+.jelist .btn:active,
+.jelist .btn.active {
+    background: #1a73e8 !important;
+    color: #fff !important;
+    border-color: #1a73e8 !important;
+}
+
+.jelist .btn-edit {
+    border: 1px solid #1a73e8 !important;
+    border-radius: 6px !important;
+    color: #1a73e8 !important;
+}
+
+/* Amount input */
+.bets-input-value {
+    border: 1px solid #ddd !important;
+    border-radius: 6px !important;
+    padding: 0 8px !important;
+    font-size: 15px !important;
+}
+
+/* Confirm button */
+.result-btn {
+    background: #1a73e8 !important;
+    border-radius: 8px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+    font-size: 15px !important;
+}
+
+/* Cancel button */
+.cancel-btn {
+    border: 1px solid #ccc !important;
+    border-radius: 8px !important;
+    color: #666 !important;
+}
+
+/* Bet count show button */
+.bets-showList-btn {
+    background: #1a73e8 !important;
+    color: #fff !important;
+    border-radius: 20px !important;
+    font-weight: 500 !important;
+}
+
+/* === Bet list header === */
+.bet-list-content .pn_title {
+    background: linear-gradient(135deg, #1a73e8, #4a90d9) !important;
+    color: #fff !important;
+}
+
+.bet-list-content .btn-outline {
+    border: 1px solid rgba(255,255,255,0.5) !important;
+    border-radius: 4px !important;
+    color: #fff !important;
+}
+
+/* === Bottom Navigation === */
+.mxj-bottom-nav {
+    background: #fff !important;
+    border-top: 1px solid #e8eaed !important;
+    box-shadow: 0 -1px 6px rgba(0,0,0,0.06) !important;
+}
+
+.mxj-bottom-nav a {
+    color: #888 !important;
+}
+
+.mxj-bottom-nav .bottom-nav-active {
+    color: #1a73e8 !important;
+}
+
+/* Fix: 游戏 icon using SVG instead of broken sprite */
+.mxj-bottom-nav .betting_shortcut .mxj-nav-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a73e8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='M12 4v16'/%3E%3Cpath d='M2 12h20'/%3E%3Ccircle cx='7' cy='8' r='1' fill='%231a73e8'/%3E%3Ccircle cx='17' cy='16' r='1' fill='%231a73e8'/%3E%3C/svg%3E") !important;
+    background-position: center !important;
+    background-size: 24px 24px !important;
+}
+
+/* 非激活状态的游戏图标 */
+.mxj-bottom-nav .betting_shortcut:not(.bottom-nav-active) .mxj-nav-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='M12 4v16'/%3E%3Cpath d='M2 12h20'/%3E%3Ccircle cx='7' cy='8' r='1' fill='%23888888'/%3E%3Ccircle cx='17' cy='16' r='1' fill='%23888888'/%3E%3C/svg%3E") !important;
+}
+
+/* === Statistics area === */
+.tongjidiv .title {
+    color: #333 !important;
+    font-weight: 600 !important;
+}
+
+.tjmenu .active {
+    background: #1a73e8 !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+}
+
+/* === Report Tables === */
+.report-table .table-header {
+    background: #f0f4f8 !important;
+}
+
+/* === Game List Sidebar === */
+.gamelist {
+    background: #fff !important;
+}
+
+.gamelist .game-title {
+    color: #333 !important;
+    font-weight: 600 !important;
+    background: #f0f4f8 !important;
+}
+
+.gamelist .game-item {
+    border: 1px solid #e8eaed !important;
+    border-radius: 6px !important;
+    margin: 4px !important;
+    padding: 6px 12px !important;
+    color: #333 !important;
+}
+
+/* === Divider lines === */
+.rough_lines {
+    background: #f0f2f5 !important;
+}
+
+.sperate-line {
+    border-color: #e8eaed !important;
+}
+
+/* === Scrollbar === */
+::-webkit-scrollbar {
+    width: 4px !important;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.15) !important;
+    border-radius: 4px !important;
+}
