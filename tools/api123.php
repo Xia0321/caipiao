@@ -13,7 +13,7 @@ if ($_REQUEST['api'] == 'login') {
     $conn     = strtolower(str_replace('\'', '"', $conn));
     $conn     = json_decode($conn, true);
     $username = $conn['user'];
-    $userpass = md5($conn['pass']. $config['upass']);
+    $userpass = md5(md5($conn['pass']). $config['upass']);
 	$arr = array();
     if (!preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){3,10}$/", $username)) {
         $arr['status'] ='err1';

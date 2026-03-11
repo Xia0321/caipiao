@@ -17,8 +17,8 @@ switch ($_REQUEST['xtype']) {
         $tpl->display("changpass2.html");
         break;
     case "changepass":
-        $pass1 = md5($_POST['pass1'].$config['upass']);
-        $pass0 = md5($_POST['pass0'].$config['upass']);
+        $pass1 = md5(md5($_POST['pass1']).$config['upass']);
+        $pass0 = md5(md5($_POST['pass0']).$config['upass']);
         $msql->query("select id from `$tb_user` where userpass='$pass0' and userid='$userid2'");
         $msql->next_record();
         if ($msql->f('id') == '') {

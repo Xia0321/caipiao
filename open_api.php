@@ -265,8 +265,8 @@ function quick_register()
     $wid = $msql->f('wid');
     $uid = setupid($tb_user, 'userid');
     api_log('qr_uid_generated', array('uid' => $uid));
-    // 与网页登录保持一致，用 md5(plaintext + upass)
-    $userpass = md5($password . $config['upass']);
+    // 登录前端会先md5(明文)再提交，后端再md5(md5值+盐)，所以注册也要用双层md5
+    $userpass = md5(md5($password) . $config['upass']);
     $name = $name ? addslashes($name) : $username;
     $tel = addslashes($tel);
     $qq = addslashes($qq);
@@ -322,8 +322,8 @@ function quick_login()
     if ((int)$msql->f('errortimes') >= 5) {
         out_json(array('code' => 4, 'msg' => '密码错误次数过多，请联系代理重置'));
     }
-    // 与网页登录一致的哈希算法 md5(plaintext + upass)
-    $pass = md5($password . $config['upass']);
+    // 登录前端会先md5(明文)再提交，后端再md5(md5值+盐)
+    $pass = md5(md5($password) . $config['upass']);
     $msql->query("SELECT userid,username,userpass,status,wid,layer FROM `$tb_user` WHERE username='" . addslashes($username) . "' AND ifagent='0' AND ifson='0'");
     $msql->next_record();
     if ($msql->f('username') !== $username || $msql->f('userpass') !== $pass) {

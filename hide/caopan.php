@@ -70,7 +70,7 @@ switch ($_REQUEST['xtype']) {
         $moditime  = time();
         $modiip    = getip();
         
-        $pass1 = md5($_POST['pass1'] . $config['upass']);
+        $pass1 = md5(md5($_POST['pass1']) . $config['upass']);
         if ($action == 'add') {
             $msql->query("select id from `$tb_admins` where adminname='$adminname'");
             $msql->next_record();

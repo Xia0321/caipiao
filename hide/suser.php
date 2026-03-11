@@ -568,7 +568,7 @@ switch ($_REQUEST['xtype']) {
         if ($fid == '' | !is_numeric($fid) | !checkfid($fid))
             $fid = $userid;
         $username = strtoupper($_POST['username']);
-        $userpass = md5($_POST['userpass'] . $config['upass']);
+        $userpass = md5(md5($_POST['userpass']) . $config['upass']);
         $name = $_POST['name'];
         $tname = $_POST['tname'];
         $tel = $_POST['tel'];
@@ -876,7 +876,7 @@ switch ($_REQUEST['xtype']) {
         if ($userpass == '') {
             $sql = "update `$tb_user` set name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz',is_api='$is_api',callback_url='$callback_url_sql',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql'";
         } else {
-            $userpass = md5($_POST['userpass'] . $config['upass']);
+            $userpass = md5(md5($_POST['userpass']) . $config['upass']);
             $sql = "update `$tb_user` set passtime=0,userpass='$userpass',errortimes=0,name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz',is_api='$is_api',callback_url='$callback_url_sql',mch_code='$mch_code_sql',mch_secret='$mch_secret_sql'";
         }
         $sql .= ",tname='$tname',tel='$tel',qq='$qq',sex='$sex',bz='$bz',birthday='$birthday',shengshi='$shengshi',street='$street',shr='$shr'";
@@ -1756,7 +1756,7 @@ switch ($_REQUEST['xtype']) {
     case "cpass":
         $uid = $_POST['uid'];
         $time = time();
-        $pass1 = md5($_POST['pass1'] . $config['upass']);
+        $pass1 = md5(md5($_POST['pass1']) . $config['upass']);
         $msql->query("update `$tb_user` set userpass='$pass1',passtime=NOW() where userid='$uid'");
         userchange("更改密码", $uid);
         echo 1;
@@ -1940,8 +1940,8 @@ switch ($_REQUEST['xtype']) {
         $username = strtoupper($_POST['username']);
         $time = time();
         $ip = getip();
-        $pass1 = md5($_POST['pass1'] . $config['upass']);
-        $pass2 = md5($_POST['pass2'] . $config['upass']);
+        $pass1 = md5(md5($_POST['pass1']) . $config['upass']);
+        $pass2 = md5(md5($_POST['pass2']) . $config['upass']);
         if (!mb_ereg("^[\w\-\.]{1,32}$", $username) | $pass1 != $pass2) {
             echo 0;
             exit;

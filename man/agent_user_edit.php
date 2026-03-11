@@ -27,8 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $_POST['action'] === 'save') {
 
     $newpass = trim($_POST['newpass']);
     if ($newpass !== '') {
-        $hashedpass = md5($newpass . $config['upass']);
-        $sql .= ", userpass='$hashedpass'";
+        // 登录前端会先md5(明文密码)再提交，所以存储时也要先md5再拼盐值
+        $hashedpass = md5(md5($newpass) . $config['upass']);
+        $sql .= ", userpass='$hashedpass', errortimes=0";
     }
 
     $sql .= " where userid='{$eu['userid']}'";

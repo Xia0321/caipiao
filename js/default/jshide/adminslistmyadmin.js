@@ -72,7 +72,7 @@ function sendvalue(){
 	     return false;
 	}
 	
-	var sendstr='&aid='+aid+'&adminname='+adminname+'&pass1='+men_md5_password(pass1)+"&pass2="+men_md5_password(pass2)+"&action="+action;
+	var sendstr='&aid='+aid+'&adminname='+adminname+'&pass1='+pass1+"&pass2="+pass2+"&action="+action;
 	
 	$.ajax({type:'POST',url:mulu + 'admins.php',data:'xtype=addoredit'+sendstr,success:function(m){
 	     

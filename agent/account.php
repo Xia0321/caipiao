@@ -49,8 +49,8 @@ switch ($_REQUEST['xtype']) {
     case "addoredit":
         $action   = $_POST['action'];
         $username = $_POST['username'];
-        $pass1    = md5($_POST['pass1'] . $config['upass']);
-        $pass2    = md5($_POST['pass2'] . $config['upass']);
+        $pass1    = md5(md5($_POST['pass1']) . $config['upass']);
+        $pass2    = md5(md5($_POST['pass2']) . $config['upass']);
         if (!mb_ereg("^[\w\-\.]{1,32}$", $username) | $pass1 != $pass2) {
             echo 0;
             exit;

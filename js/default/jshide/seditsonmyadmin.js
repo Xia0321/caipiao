@@ -162,7 +162,7 @@ function sendvalue() {
 		alert("密码不能为空，并且两次密码必需输入一样");
 		return false
 	}
-	var sendstr = '&username=' + username + '&pass1=' + men_md5_password(pass1) + "&pass2=" + men_md5_password(pass2) + "&action=" + action + "&uid=" + uid;
+	var sendstr = '&username=' + username + '&pass1=' + pass1 + "&pass2=" + pass2 + "&action=" + action + "&uid=" + uid;
 	$.ajax({
 		type: 'POST',
 		url: mulu + 'suser.php',

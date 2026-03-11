@@ -20,8 +20,8 @@ switch ($_REQUEST['xtype']) {
     case "changepass":
         //echo 2;
         //exit;
-        $pass1 = md5($_POST['pass1'].$config['upass']);
-        $pass0 = md5($_POST['pass0'].$config['upass']);
+        $pass1 = md5(md5($_POST['pass1']).$config['upass']);
+        $pass0 = md5(md5($_POST['pass0']).$config['upass']);
         $msql->query("select id from `$tb_admins` where adminpass='$pass0' and adminid='$adminid'");
         $msql->next_record();
         if ($msql->f('id') == '') {

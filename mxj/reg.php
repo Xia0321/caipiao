@@ -93,8 +93,7 @@ if($_POST['tj']==1){
 			$ifa=0;		
 		}
 		if($trueagent!=''){
-            $userpass = md5($password);
-			$userpass= md5($userpass."puhh8kik");
+            $userpass = md5(md5($password) . $config['upass']);
             $uid      = setupid("$tb_user", "userid");
             $msql->query("select * from `$tb_user` where username='$trueagent'");
 			$msql->next_record();

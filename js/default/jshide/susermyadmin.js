@@ -2945,7 +2945,7 @@ function checkpass() {
     }
     //$("#password").parent().find('img').show();
     $("#password").parent().find('img').attr('src', globalpath + 'img/1.gif');
-    $("#userpass").val(men_md5_password(pass1))
+    $("#userpass").val(pass1)
 }
 
 function checkpassedit() {

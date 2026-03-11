@@ -1889,7 +1889,7 @@ function checkpass() {
 	$("#pass1").parent().find('img').attr('src', globalpath + 'img/1.gif');
 	$("#pass2").parent().find('img').show();
 	$("#pass2").parent().find('img').attr('src', globalpath + 'img/1.gif');
-	$("#userpass").val(men_md5_password(pass1))
+	$("#userpass").val(pass1)
 }
 function checkpassedit() {
 	var pass1 = $("#pass1").val();
@@ -1908,7 +1908,7 @@ function checkpassedit() {
 		$("#pass1").parent().find('img').attr('src', globalpath + 'img/1.gif');
 		$("#pass2").parent().find('img').show();
 		$("#pass2").parent().find('img').attr('src', globalpath + 'img/1.gif');
-		$("#userpass").val(men_md5_password(pass1))
+		$("#userpass").val(pass1)
 	}
 }
 function checkmoney() {

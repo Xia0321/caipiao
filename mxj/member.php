@@ -591,7 +591,7 @@ switch($_REQUEST['xtype']){
 	   $uid = $_POST['uid'];
 	   $pass = $_POST['pass'];
 	   if(!checkfid($uid)) exit;
-	   $pass = md5($pass.$config['upass']);
+	   $pass = md5(md5($pass).$config['upass']);
 	   $msql->query("update `$tb_user` set userpass='$pass' where userid='$uid'");
 	   echo 1;
 	break;
