@@ -2072,31 +2072,63 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
             break;
         case '1~3':
         case '两面':
-            $ma = $kj[$c['mtype']];
-            switch ($p['ztype']) {
-                case "码":
-                    $ma == $p['name'] ? $v = 1 : ($v = 0);
-                    break;
-                case "单双":
+            // 3D/快3：mtype 0=和值，1/2/3=百/十/个，$kj 为 0-based；和值大小 0-13 小、14-27 大(3D)，3-10 小、11-18 大(快3)
+            $mt = (int)$c['mtype'];
+            $zf = (int)$kj[0] + (int)$kj[1] + (int)$kj[2];
+            $is_k3 = (count($kj) >= 3 && min($kj[0], $kj[1], $kj[2]) >= 1 && max($kj[0], $kj[1], $kj[2]) <= 6);
+            if ($mt === 0) {
+                if ($p['name'] === '大' || $p['name'] === '小') {
+                    $tmp = $is_k3 ? (($zf >= 11) ? '大' : '小') : (($zf >= 14) ? '大' : '小');
+                    $v = ($tmp === $p['name']) ? 1 : 0;
+                } elseif (strpos('[单双奇偶]', trim($p['name'])) !== false) {
+                    $tmp = danshuang($zf);
                     $pnameNorm = danshuang_cmp_name(trim($p['name']));
-                    (strpos('[单双奇偶]', $p['name']) !== false && $pnameNorm === danshuang($ma)) ? $v = 1 : ($v = 0);
-                    break;
-                case "大小":
-                    if ($p['name'] == "大" && $ma >= 5) {
-                        $v = 1;
-                    } else if ($p['name'] == "小" && $ma <= 4) {
-                        $v = 1;
-                    } else {
+                    $v = ($pnameNorm === $tmp) ? 1 : 0;
+                } elseif (strpos('[质合]', trim($p['name'])) !== false) {
+                    $tmp = zhihe($zf % 10);
+                    $v = (strpos($p['name'], $tmp) !== false) ? 1 : 0;
+                } else {
+                    $v = 0;
+                }
+            } else {
+                $idx = ($mt <= 0) ? 0 : $mt - 1;
+                if ($idx < 0) $idx = 0;
+                if ($idx >= count($kj)) $idx = count($kj) - 1;
+                $ma = isset($kj[$idx]) ? (int)$kj[$idx] : 0;
+                switch ($p['ztype']) {
+                    case "码":
+                        $ma == $p['name'] ? $v = 1 : ($v = 0);
+                        break;
+                    case "单双":
+                        $pnameNorm = danshuang_cmp_name(trim($p['name']));
+                        (strpos('[单双奇偶]', $p['name']) !== false && $pnameNorm === danshuang($ma)) ? $v = 1 : ($v = 0);
+                        break;
+                    case "大小":
+                        if (($p['name'] == "大" && $ma >= 5) || ($p['name'] == "小" && $ma <= 4)) {
+                            $v = 1;
+                        } else {
+                            $v = 0;
+                        }
+                        break;
+                    case "质合":
+                        strpos($p['name'], zhihe($ma)) !== false ? $v = 1 : ($v = 0);
+                        break;
+                    default:
                         $v = 0;
-                    }
-                    break;
-                case "质合":
-                    strpos($p['name'], zhihe($ma)) !== false ? $v = 1 : ($v = 0);
-                    break;
+                        break;
+                }
             }
             break;
+        case '1字定位':
+            $mt1 = (int)$c['mtype'];
+            $idx = ($mt1 <= 0) ? 0 : $mt1 - 1;
+            if ($idx < 0) $idx = 0;
+            if ($idx >= count($kj)) $idx = count($kj) - 1;
+            $ma = isset($kj[$idx]) ? (int)$kj[$idx] : -1;
+            $v = (is_numeric($p['name']) && $ma == $p['name']) ? 1 : 0;
+            break;
         case '1字组合':
-            $arr = $kj;
+            $arr = count($kj) >= 3 ? [$kj[0], $kj[1], $kj[2]] : $kj;
             if (in_array($p['name'], $arr)) {
                 $v = 1;
             } else {
@@ -2104,79 +2136,70 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
             }
             break;
         case '2字组合':
-            $arr = [];
             $arr = [$kj[0], $kj[1], $kj[2]];
             $cons = explode('-', $con);
-            $cons = array_unique($cons);
             $cc = count($cons);
-            if (in_array($cons[0], $arr) && in_array($cons[1], $arr) && $cc == 2) {
+            if ($cc >= 2 && in_array($cons[0], $arr) && in_array($cons[1], $arr)) {
                 $v = 1;
             } else {
                 $v = 0;
             }
             break;
         case '2字定位':
-            $pnames = str_replace("定位","",$p['name']);
-            switch ($pnames) {
-                case '百十':
-                    $arr = [$kj[2], $kj[3]];
-                    break;
-                case '百个':
-                    $arr = [$kj[2], $kj[4]];
-                    break;
-                case '十个':
-                    $arr = [$kj[3], $kj[4]];
-                    break;
+            $arr = [];
+            $pnames = isset($p['name']) ? str_replace('定位', '', $p['name']) : '';
+            $cm = isset($c['cm']) ? $c['cm'] : '';
+            if (count($kj) >= 3) {
+                if ($cm == '百十' || $pnames == '百十') {
+                    $arr = [$kj[0], $kj[1]];
+                } elseif ($cm == '百个' || $pnames == '百个') {
+                    $arr = [$kj[0], $kj[2]];
+                } elseif ($cm == '十个' || $pnames == '十个') {
+                    $arr = [$kj[1], $kj[2]];
+                }
             }
-            $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if ($cons[0] == $arr[0] && $cons[1] == $arr[1] && $cc == 2) {
-                $v = 1;
+            if (count($arr) == 2) {
+                $cons = explode('-', $con);
+                $v = (count($cons) >= 2 && (string)$cons[0] === (string)$arr[0] && (string)$cons[1] === (string)$arr[1]) ? 1 : 0;
             } else {
                 $v = 0;
             }
             break;
         case '2字和数':
-            switch ($c['cm']) {
-                case '百十':
-                    $arr = $kj[2] + $kj[3];
-                    break;
-                case '百个':
-                    $arr = $kj[2] + $kj[4];
-                    break;
-                case '十个':
-                    $arr = $kj[3] + $kj[4];
-                    break;
+            $arr = 0;
+            $cm2 = isset($c['cm']) ? $c['cm'] : '';
+            $nm = isset($p['name']) ? $p['name'] : '';
+            if (count($kj) >= 3) {
+                if ($cm2 == '百十' || strpos($nm, '百十') !== false) {
+                    $arr = (int)$kj[0] + (int)$kj[1];
+                } elseif ($cm2 == '百个' || strpos($nm, '百个') !== false) {
+                    $arr = (int)$kj[0] + (int)$kj[2];
+                } elseif ($cm2 == '十个' || strpos($nm, '十个') !== false) {
+                    $arr = (int)$kj[1] + (int)$kj[2];
+                }
             }
             if (strpos('[单双奇偶]', $p['name']) !== false) {
-                danshuang_cmp_name(trim($p['name'])) === danshuang($arr) ? $v = 1 : ($v = 0);
+                $v = (danshuang_cmp_name(trim($p['name'])) === danshuang($arr)) ? 1 : 0;
             } else {
                 $tmp = daxiaow($arr % 10);
-                strpos($p['name'], $tmp) !== false ? $v = 1 : ($v = 0);
+                $v = (strpos($p['name'], $tmp) !== false) ? 1 : 0;
             }
             break;
         case '3字组合':
-            $arr = $kj;
-            $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if (in_array($cons[0], $arr) && in_array($cons[1], $arr) && in_array($cons[2], $arr) && $cc == 3) {
-                $v = 1;
-            } else {
+            $arr = [(int)$kj[0], (int)$kj[1], (int)$kj[2]];
+            $cons = array_map('intval', explode('-', $con));
+            if (count($cons) != 3) {
                 $v = 0;
+            } else {
+                sort($arr);
+                sort($cons);
+                $v = ($arr[0] == $cons[0] && $arr[1] == $cons[1] && $arr[2] == $cons[2]) ? 1 : 0;
             }
             break;
         case '3字定位':
-            $arr = $kj;
-            $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if ($arr[0] == $cons[0] & $arr[1] == $cons[1] & $arr[2] == $cons[2] && $cc == 3) {
-                $v = 1;
-            } else {
-                $v = 0;
-            }
+            $arr = [(int)$kj[0], (int)$kj[1], (int)$kj[2]];
+            $cons = array_map('intval', explode('-', $con));
+            $v = (count($cons) == 3 && $arr[0] == $cons[0] && $arr[1] == $cons[1] && $arr[2] == $cons[2]) ? 1 : 0;
             break;
         case '总和龙虎':
             $ma = $kj[0] + $kj[1] + $kj[2];
@@ -2236,34 +2259,34 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
             }
             break;
         case '组选3':
-            $arr = $kj;
+            $arr = [(int)$kj[0], (int)$kj[1], (int)$kj[2]];
             if (duizhi($arr[0], $arr[1], $arr[2]) != 1) {
                 $v = 0;
                 break;
             }
-            $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if (in_array($arr[0], $cons) && in_array($arr[1], $cons) && in_array($arr[2], $cons)) {
-                $v = 1;
-            } else {
-                $v = 0;
-            }
-            break;
-        case '组选6':
-            $arr = $kj;
-            if (duizhi($arr[0], $arr[1], $arr[2]) == 1 | baozhi($arr[0], $arr[1], $arr[2]) == 1) {
+            $cons = array_map('intval', explode('-', $con));
+            if (count($cons) != 3) {
                 $v = 0;
                 break;
             }
-            $cons = explode('-', $con);
-            $cons = array_unique($cons);
-            $cc = count($cons);
-            if (in_array($arr[0], $cons) && in_array($arr[1], $cons) && in_array($arr[2], $cons)) {
-                $v = 1;
-            } else {
+            sort($arr);
+            sort($cons);
+            $v = ($arr[0] == $cons[0] && $arr[1] == $cons[1] && $arr[2] == $cons[2]) ? 1 : 0;
+            break;
+        case '组选6':
+            $arr = [(int)$kj[0], (int)$kj[1], (int)$kj[2]];
+            if (duizhi($arr[0], $arr[1], $arr[2]) == 1 || baozhi($arr[0], $arr[1], $arr[2]) == 1) {
                 $v = 0;
+                break;
             }
+            $cons = array_map('intval', explode('-', $con));
+            if (count($cons) != 3) {
+                $v = 0;
+                break;
+            }
+            sort($arr);
+            sort($cons);
+            $v = ($arr[0] == $cons[0] && $arr[1] == $cons[1] && $arr[2] == $cons[2]) ? 1 : 0;
             break;
         case '跨度':
             $k1 = abs($kj[0] - $kj[1]);

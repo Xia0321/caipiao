@@ -1705,6 +1705,11 @@ function kjjs_101($qishu, $gid, $fenlei)
         $bname = transb8('name', $fsql->f('bid'), $gid);
         $sname = transs8('name', $fsql->f('sid'), $gid);
         $cname = $fsql->f('name');
+        // x_class.mtype：0=和值/第一组，1/2/3=第1/2/3球(百/十/个)，对应 $kj 的 0-based 下标 0/1/2
+        $class_mtype = (int)$fsql->f('mtype');
+        $class_midx = ($class_mtype <= 0) ? 0 : $class_mtype - 1;
+        if ($class_midx >= $mnum) $class_midx = $mnum - 1;
+        if ($class_midx < 0) $class_midx = 0;
         $tsql->query("select bid,sid,cid,pid,name,ztype,znum1,znum2 from `$tb_play` where gid='$gid' and  cid='" . $fsql->f('cid') . "'");
         while ($tsql->next_record()) {
             $sql1 = "update `$tb_lib` set kk=1,z='1' where $whi and pid='" . $tsql->f('pid') . "'  and z!=7";
@@ -1811,36 +1816,57 @@ function kjjs_101($qishu, $gid, $fenlei)
                 break;
                 case '两面':
                     $hm = '';
-                    $hm = $kj[$fsql->f('mtype')];
-                    if (strpos('[单双奇偶]', $tsql->f('name')) !== false) {
-                        $tmp = danshuang($hm);
-                        $pname = danshuang_cmp_name(trim($tsql->f('name')));
-                        if ($tmp == $pname) {
+                    $pname_trim = trim($pname);
+                    // fenlei=163(3D/快3)：第一组两面-大小(mtype=0)按和值结算；快3(三颗1-6)和值3-10小、11-18大；3D和值0-13小、14-27大
+                    if ($fenlei == 163 && $class_mtype === 0 && ($pname_trim === '大' || $pname_trim === '小')) {
+                        if ($mnum >= 3 && min($kj[0], $kj[1], $kj[2]) >= 1 && max($kj[0], $kj[1], $kj[2]) <= 6) {
+                            $tmp = ($zf >= 11) ? '大' : '小';
+                        } else {
+                            $tmp = ($zf >= 14) ? '大' : '小';
+                        }
+                        if ($tmp === $pname_trim) {
                             $psql->query($sql1);
                             $psql->query($sqlz);
                         } else {
                             $psql->query($sql0);
                         }
-                    } else if (strpos('[大小]', $tsql->f('name'))) {
-                        $tmp = daxiao($hm);
-                        if ($tmp == $tsql->f('name')) {
-                            $psql->query($sql1);
-                            $psql->query($sqlz);
-                        } else {
-                            $psql->query($sql0);
-                        }
-                    } else if (strpos('[质合]', $tsql->f('name'))) {
-                        $tmp = zhihe($hm);
-                        if ($tmp == $tsql->f('name')) {
-                            $psql->query($sql1);
-                            $psql->query($sqlz);
+                    } else {
+                        $hm = isset($kj[$class_midx]) ? (int)$kj[$class_midx] : 0;
+                        if (strpos('[单双奇偶]', $pname_trim) !== false) {
+                            $tmp = danshuang($hm);
+                            $pname_cmp = danshuang_cmp_name($pname_trim);
+                            if ($tmp == $pname_cmp) {
+                                $psql->query($sql1);
+                                $psql->query($sqlz);
+                            } else {
+                                $psql->query($sql0);
+                            }
+                        } else if (strpos($pname_trim, '大') !== false || strpos($pname_trim, '小') !== false) {
+                            $tmp = daxiao($hm);
+                            $is_big = (strpos($pname_trim, '大') !== false && strpos($pname_trim, '小') === false);
+                            $is_small = (strpos($pname_trim, '小') !== false && strpos($pname_trim, '大') === false);
+                            $win = ($tmp === '大' && $is_big) || ($tmp === '小' && $is_small);
+                            if ($win) {
+                                $psql->query($sql1);
+                                $psql->query($sqlz);
+                            } else {
+                                $psql->query($sql0);
+                            }
+                        } else if (strpos('[质合]', $pname_trim) !== false) {
+                            $tmp = zhihe($hm);
+                            if ($tmp === $pname_trim) {
+                                $psql->query($sql1);
+                                $psql->query($sqlz);
+                            } else {
+                                $psql->query($sql0);
+                            }
                         } else {
                             $psql->query($sql0);
                         }
                     }
                     break;
                 case '1字定位':
-                    $hm = $kj[$fsql->f('mtype')];
+                    $hm = $kj[$class_midx];
                     if (is_numeric($tsql->f('name')) && $hm == $tsql->f('name')) {
                         $psql->query($sql1);
                         $psql->query($sqlz);
@@ -1851,7 +1877,7 @@ function kjjs_101($qishu, $gid, $fenlei)
                 case '1~5':
                 case '1~3':
                     $hm = '';
-                    $hm = $kj[$fsql->f('mtype')];
+                    $hm = $kj[$class_midx];
                     if (is_numeric($tsql->f('name'))) {
                         if ($hm == $tsql->f('name')) {
                             $psql->query($sql1);
@@ -2253,11 +2279,21 @@ function kjjs_101($qishu, $gid, $fenlei)
                             $psql->query($sql0);
                         }
                     } else if (strpos('[和大和小]', $pname)) {
-                        if (($hm >= 14 & $pname == '和大') | ($hm <= 13 & $pname == '和小')) {
-                            $psql->query($sql1);
-                            $psql->query($sqlz);
+                        $is_k3 = ($mnum >= 3 && isset($kj[0]) && isset($kj[1]) && isset($kj[2]) && min($kj[0], $kj[1], $kj[2]) >= 1 && max($kj[0], $kj[1], $kj[2]) <= 6);
+                        if ($is_k3) {
+                            if (($hm >= 11 && $pname == '和大') || ($hm <= 10 && $pname == '和小')) {
+                                $psql->query($sql1);
+                                $psql->query($sqlz);
+                            } else {
+                                $psql->query($sql0);
+                            }
                         } else {
-                            $psql->query($sql0);
+                            if (($hm >= 14 & $pname == '和大') | ($hm <= 13 & $pname == '和小')) {
+                                $psql->query($sql1);
+                                $psql->query($sqlz);
+                            } else {
+                                $psql->query($sql0);
+                            }
                         }
                     } else if (strpos('[和尾大和尾小]', $pname)) {
                         $tmp = daxiao($wei);
@@ -2311,9 +2347,10 @@ function kjjs_101($qishu, $gid, $fenlei)
                     $wei   = $hm % 10;
                     $pname = $tsql->f('name');
                     $tmp   = '';
+                    $is_k3_sum = ($fenlei == 163 && $mnum >= 3 && min($kj[0], $kj[1], $kj[2]) >= 1 && max($kj[0], $kj[1], $kj[2]) <= 6);
                     if (strpos('[总和单总和双]', $pname)) {
                         $tmp = danshuang($hm);
-                        if ($fenlei==163 & (($hm == 14 & $pname == '总和双') | ($hm == 13 & $pname == '总和单'))) {
+                        if ($fenlei==163 && !$is_k3_sum && (($hm == 14 & $pname == '总和双') | ($hm == 13 & $pname == '总和单'))) {
                             $psql->query($sql2);
                         } else if (strpos($pname, $tmp)!==false) {
                             $psql->query($sql1);
@@ -2323,13 +2360,22 @@ function kjjs_101($qishu, $gid, $fenlei)
                         }
                     } else if (strpos('[总和大总和小]', $pname)) {
                         if ($fenlei==163 ) {
-                            if (($hm == 14 & $pname == '总和大') | ($hm == 13 & $pname == '总和小')) {
-                                $psql->query($sql2);
-                            } else if (($hm > 14 & $pname == '总和大') | ($hm < 13 & $pname == '总和小')) {
-                                $psql->query($sql1);
-                                $psql->query($sqlz);
+                            if ($is_k3_sum) {
+                                if (($hm >= 11 & $pname == '总和大') | ($hm <= 10 & $pname == '总和小')) {
+                                    $psql->query($sql1);
+                                    $psql->query($sqlz);
+                                } else {
+                                    $psql->query($sql0);
+                                }
                             } else {
-                                $psql->query($sql0);
+                                if (($hm == 14 & $pname == '总和大') | ($hm == 13 & $pname == '总和小')) {
+                                    $psql->query($sql2);
+                                } else if (($hm > 14 & $pname == '总和大') | ($hm < 13 & $pname == '总和小')) {
+                                    $psql->query($sql1);
+                                    $psql->query($sqlz);
+                                } else {
+                                    $psql->query($sql0);
+                                }
                             }
                         } else {
                             if (($hm >= 23 & $pname == '总和大') || ($hm <= 22 & $pname == '总和小')) {
@@ -2357,24 +2403,26 @@ function kjjs_101($qishu, $gid, $fenlei)
                         }
                     } else if (strpos('[总大单总大双总小单总小双]', $pname)) {
                         $ds = danshuang($hm);
-                        if ($hm >= 14)
+                        $big_thresh = ($is_k3_sum) ? 11 : 14;
+                        if ($hm >= $big_thresh)
                             $tmp = '总大' . $ds;
                         else
                             $tmp = '总小' . $ds;
-                        if (($hm == 14 & $pname == '总大双') | ($hm == 13 & $pname == '总小单')) {
+                        if (!$is_k3_sum && (($hm == 14 & $pname == '总大双') | ($hm == 13 & $pname == '总小单'))) {
                            $psql->query($sql2);
-                        }else if ($pname == $tmp) {
+                        } else if ($pname == $tmp) {
                             $psql->query($sql1);
                             $psql->query($sqlz);
                         } else {
                             $psql->query($sql0);
                         }
-                    }else if ($cname == '极值大小') {
-                        if ($hm >= 22)
-                            $tmp = '极大';
-                        else if ($hm <=5 )
-                            $tmp = '极小';
-                        if ($tmp == $pname) {
+                    } else if ($cname == '极值大小') {
+                        if ($is_k3_sum) {
+                            $tmp = ($hm >= 16) ? '极大' : (($hm <= 5) ? '极小' : '');
+                        } else {
+                            $tmp = ($hm >= 22) ? '极大' : (($hm <= 5) ? '极小' : '');
+                        }
+                        if ($tmp !== '' && $tmp == $pname) {
                             $psql->query($sql1);
                             $psql->query($sqlz);
                         } else {
