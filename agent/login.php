@@ -16,7 +16,7 @@ switch ($_REQUEST['xtype']) {
         $_SESSION['sv'] = $sv;
         $os = getbrowser($_SERVER['HTTP_USER_AGENT']) . '  ' . getos($_SERVER['HTTP_USER_AGENT']);
         $user = strtoupper($_POST['username']);
-        $pass = md5($_POST['pass']. $config['upass']);//var_dump($pass);die;
+        $pass = md5(md5($_POST['pass']) . $config['upass']);
         $code = $_POST['code'];//var_dump($_SESSION['login_check_number']."====".$code);die;
         if ($code != $_SESSION['login_check_number']) {
             echo outjs("验证码错误，请重新输入。");
