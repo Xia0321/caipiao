@@ -2489,7 +2489,7 @@ button:disabled {
 
 /* 我的页面（参考图）：隐藏默认顶栏，渐变头部 + 8 宫格 */
 .mxj-mypage-hide-header { display: none !important; }
-.mypage-view .main-content { padding-top: 0; }
+.mypage-view .main-content { padding-top: 0; top: 0; height: calc(100% - 56px); overflow-y: auto; -webkit-overflow-scrolling: touch; }
 .mxj-mypage { background: #fff; min-height: 100%; padding-bottom: 70px; }
 .mxj-mypage-header {
     background: linear-gradient(180deg, #b3e5fc 0%, #e1f5fe 40%, #fff 100%);
