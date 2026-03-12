@@ -158,7 +158,7 @@ switch ($_REQUEST['xtype']) {
         $thispage=r1($_REQUEST['PB_page']);
         $user= trim($_REQUEST['user']);
         $whi = "";
-        if(preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,10}$/", $user)){
+        if(preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,24}$/", $user)){
             $whi = " where jkuser=(select userid from `$tb_user` where username='$user') ";
         }
 	    $msql->query("select count(id) from `x_down` $whi");

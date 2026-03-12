@@ -208,7 +208,7 @@ function quick_register()
         api_log('qr_missing_params');
         out_json(array('code' => 1, 'msg' => '缺少 username / password / mch_code(商户号)'));
     }
-    if (!preg_match('/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,10}$/', $username)) {
+    if (!preg_match('/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,24}$/', $username)) {
         api_log('qr_username_format_fail', array('username' => $username));
         out_json(array('code' => 2, 'msg' => '用户名格式不正确'));
     }

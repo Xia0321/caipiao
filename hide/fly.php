@@ -10,7 +10,7 @@ switch ($_REQUEST['xtype']) {
     case "shui":
         $agent = strtoupper($_REQUEST['agent']);
         $whi = "";
-        if(preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,10}$/", $agent)){
+        if(preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,24}$/", $agent)){
             $msql->query("select layer,userid,username from `$tb_user` where username='$agent'");
             $msql->next_record();
             if($msql->f("username")==$agent){

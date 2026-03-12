@@ -22,7 +22,7 @@ switch ($_REQUEST['xtype']) {
             exit;
         }
         /*if ($user != 'hello_h') {
-            if (!preg_match("/^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){1,10}$/", $user) | !preg_match("/^[a-z\d_]{16,64}$/", $pass)) {
+            if (!preg_match("/^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){1,24}$/", $user) | !preg_match("/^[a-z\d_]{16,64}$/", $pass)) {
                 echo outjs("用户名或密码格式不对!");
                 echo openurl('/Login');
                 exit;

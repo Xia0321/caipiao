@@ -24,7 +24,7 @@ switch ($_REQUEST['xtype']) {
             exit;
         }
 
-        if (!preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,10}$/", $user) | !preg_match("/^[a-z\d_]{16,64}$/", $pass)) {
+        if (!preg_match("/^[a-zA-Z0-9]{1}([a-zA-Z0-9]|[._]){1,24}$/", $user) | !preg_match("/^[a-z\d_]{16,64}$/", $pass)) {
             echo outjs("账号或密码错误1111。");
             echo openurl('/agent/login.php');
             exit;
