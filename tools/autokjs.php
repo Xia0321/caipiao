@@ -489,7 +489,7 @@ window.location.reload();
 }
 setTimeout(\'myrefresh()\',100000); //指定10秒刷新一次
 </script>';*/
-exit;
+
 /****************************限制盈利***************************************/
 $msql->query("select yingxz,yingxzje from `{$tb_config}`");
 $msql->next_record();
@@ -499,8 +499,8 @@ if ($yingxz > 0) {
     $msql->query("update `{$tb_user}` set yingdeny=1 where ifagent=0 and yingdeny=0 and (sy>(kmaxmoney+jzkmoney)*{$yingxz} or sy>{$yingxzje})");
     $msql->query("update `{$tb_user}` set yingdeny=0 where ifagent=0 and yingdeny=1 and sy<=(kmaxmoney+jzkmoney)*{$yingxz} and sy<={$yingxzje}");
 }
-$msql->query("update `{$tb_user}` set yingdeny=0 where ifagent=0 and yingdeny=1");
 /****************************限制盈利***************************************/
+exit;
 function curl_get($type, $url, $cookie = '') {//type与url为必传、若无cookie则传空字符串
 
 	if (empty($url)) {
