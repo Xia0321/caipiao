@@ -138,10 +138,10 @@ function is_mobile_device()
  * @param string $device 'm'=移动端 uxj, 'p'=PC mxj
  * @return string 完整 URL
  */
-function build_entry_url_with_token($userid, $expiry, $device)
+function build_entry_url_with_token($userid, $expiry, $device, $gid = '')
 {
-    $sign = md5(OPEN_API_SECRET . $userid . $expiry . $device);
-    $payload = $userid . '|' . $expiry . '|' . $device . '|' . $sign;
+    $sign = md5(OPEN_API_SECRET . $userid . $expiry . $device . $gid);
+    $payload = $userid . '|' . $expiry . '|' . $device . '|' . $gid . '|' . $sign;
     $token = strtr(base64_encode($payload), '+/', '-_');
     $token = rtrim($token, '=');
     $host = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : 'localhost';
@@ -170,21 +170,39 @@ function parse_entry_token($token)
         return null;
     }
     $parts = explode('|', $raw);
-    if (count($parts) !== 4) {
+    // 兼容旧版4段token和新版5段token（含gid）
+    if (count($parts) === 4) {
+        // 旧版token：userid|expiry|device|sign
+        $userid = $parts[0];
+        $expiry = $parts[1];
+        $device = $parts[2];
+        $sign = $parts[3];
+        $gid = '';
+        if (!is_numeric($expiry) || (int)$expiry < time()) {
+            return null;
+        }
+        $expect = md5(OPEN_API_SECRET . $userid . $expiry . $device);
+        if (!hash_equals($expect, $sign)) {
+            return null;
+        }
+    } elseif (count($parts) === 5) {
+        // 新版token：userid|expiry|device|gid|sign
+        $userid = $parts[0];
+        $expiry = $parts[1];
+        $device = $parts[2];
+        $gid = $parts[3];
+        $sign = $parts[4];
+        if (!is_numeric($expiry) || (int)$expiry < time()) {
+            return null;
+        }
+        $expect = md5(OPEN_API_SECRET . $userid . $expiry . $device . $gid);
+        if (!hash_equals($expect, $sign)) {
+            return null;
+        }
+    } else {
         return null;
     }
-    $userid = $parts[0];
-    $expiry = $parts[1];
-    $device = $parts[2];
-    $sign = $parts[3];
-    if (!is_numeric($expiry) || (int)$expiry < time()) {
-        return null;
-    }
-    $expect = md5(OPEN_API_SECRET . $userid . $expiry . $device);
-    if (!hash_equals($expect, $sign)) {
-        return null;
-    }
-    return array('userid' => $userid, 'device' => $device);
+    return array('userid' => $userid, 'device' => $device, 'gid' => $gid);
 }
 
 function quick_register()
@@ -337,11 +355,12 @@ function quick_login()
     // BugN2 fix: 登录成功清零错误次数
     $msql->query("UPDATE `$tb_user` SET errortimes=0 WHERE username='" . addslashes($username) . "'");
     $userid = $msql->f('userid');
+    $gid = isset($_POST['gid']) ? trim($_POST['gid']) : '';
     $ttl = defined('OPEN_API_TOKEN_TTL') ? OPEN_API_TOKEN_TTL : 300;
     $expiry = time() + $ttl;
     $mobile = is_mobile_device();
     $device = $mobile ? 'm' : 'p';
-    $game_url = build_entry_url_with_token($userid, $expiry, $device);
+    $game_url = build_entry_url_with_token($userid, $expiry, $device, $gid);
     out_json(array(
         'code' => 0,
         'msg' => 'ok',
@@ -375,6 +394,7 @@ function entry()
             exit;
         }
         $userid = $parsed['userid'];
+        $entry_gid = isset($parsed['gid']) ? $parsed['gid'] : '';
         // Bug7 fix: token 中记录了生成链接时的设备类型，应优先使用，而不是重新检测 UA
         // 原代码设置了 $use_mobile 但最终跳转时完全不用，重新调用 is_mobile_device()，导致设备信息失效
         $use_mobile = ($parsed['device'] === 'm');
@@ -396,6 +416,7 @@ function entry()
             exit;
         }
         $userid = $uid;
+        $entry_gid = '';
         // 旧版参数方式没有 device 信息，回退到实时检测 UA
         $use_mobile = is_mobile_device();
     }
@@ -419,7 +440,12 @@ function entry()
     $_SESSION['uuid'] = $userid;
     $_SESSION['ucheck'] = md5($config['allpass'] . $userid);
     $_SESSION['ip'] = $ip;
-    $_SESSION['gid'] = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
+    // 如果外部传入了gid，优先使用；否则用用户自身的gid
+    if (!empty($entry_gid) && is_numeric($entry_gid)) {
+        $_SESSION['gid'] = $entry_gid;
+    } else {
+        $_SESSION['gid'] = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
+    }
     $_SESSION['wid'] = $wid;
     $_SESSION['sv'] = '2';
     session_write_close();
