@@ -355,7 +355,7 @@ function quick_login()
     // BugN2 fix: 登录成功清零错误次数
     $msql->query("UPDATE `$tb_user` SET errortimes=0 WHERE username='" . addslashes($username) . "'");
     $userid = $msql->f('userid');
-    $gid = isset($_POST['gid']) ? trim($_POST['gid']) : '';
+    $gid = isset($_POST['gid']) ? trim($_POST['gid']) : (isset($_POST['game_code']) ? trim($_POST['game_code']) : '');
     $ttl = defined('OPEN_API_TOKEN_TTL') ? OPEN_API_TOKEN_TTL : 300;
     $expiry = time() + $ttl;
     $mobile = is_mobile_device();
