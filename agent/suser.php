@@ -670,7 +670,7 @@ switch ($_REQUEST['xtype']) {
         } else {
             $ftime = date("Y-m-d ".$config['editend']);
         }
-        $sql = "insert into `$tb_user` set username='$username',userid='$uid',userpass='$userpass',name='$name',status='$status',ifagent='$ifagent',layer='$layer',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',maxmoney='$maxmoney',kmaxmoney='$kmaxmoney',money='$money',kmoney='$kmoney',fudong='$fudong',fid='$fid',wid='$wid',fastje=0,cssz='$cssz',regtime=now(),ftime='$ftime'";
+        $sql = "insert into `$tb_user` set username='$username',userid='$uid',userpass='$userpass',name='$name',status='$status',ifagent='$ifagent',layer='$layer',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',maxmoney='$maxmoney',kmaxmoney='$kmaxmoney',money='$money',kmoney='$kmoney',fudong='$fudong',fid='$fid',wid='$wid',fastje=0,cssz='$cssz',regtime=now(),ftime='$ftime',yingdeny='$yingdeny'";
         
         $sql .= ",tname='$tname',tel='$tel',qq='$qq',sex='$sex',bz='$bz',birthday='$birthday',shengshi='$shengshi',street='$street',shr='$shr'";
         
@@ -926,10 +926,10 @@ switch ($_REQUEST['xtype']) {
     }
         $oldplc = transuser($uid, 'plc');
         if ($userpass == '') {
-            $sql = "update `$tb_user` set name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz'";
+            $sql = "update `$tb_user` set name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz',yingdeny='$yingdeny'";
         } else {
             $userpass = md5(md5($_POST['userpass']) . $config['upass']);
-            $sql      = "update `$tb_user` set passtime=0,userpass='$userpass',errortimes=0,name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz'";
+            $sql      = "update `$tb_user` set passtime=0,userpass='$userpass',errortimes=0,name='$name',ifagent='$ifagent',maxren='$maxren',ifexe='$ifexe',pself='$pself',plc='$plc',pan='$pan',defaultpan='$defaultpan',wid='$wid',cssz='$cssz',yingdeny='$yingdeny'";
         }
         $sql .= ",tname='$tname',tel='$tel',qq='$qq',sex='$sex',bz='$bz',birthday='$birthday',shengshi='$shengshi',street='$street',shr='$shr'";
         $sql .= " where userid='$uid' ";

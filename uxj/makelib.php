@@ -127,7 +127,7 @@ switch ($_REQUEST['xtype']) {
             unset($_SESSION['exe']);
             exit;
         }
-        if ($msql->f("yingdeny") ==1) {
+        if ($msql->f("yingdeny") > 0) {
             foreach ($play as $key => $val) {
                 $play[$key]['err'] = "赢利超限,请明日再投注!";
             }
