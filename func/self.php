@@ -288,7 +288,7 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                 $tmp['p' . $lib[$j]['pid']]['znum1'] = $tsql->f('znum1');
                 $tmp['p' . $lib[$j]['pid']]['znum2'] = $tsql->f('znum2');
             }
-            $flag = calcjs($fenlei, $gid, $kj[$i]['m'], $tmp['b' . $lib[$j]['bid']], $tmp['s' . $lib[$j]['sid']], $tmp['c' . $lib[$j]['cid']], $tmp['p' . $lib[$j]['pid']], $tmp['p' . $lib[$j]['content']], $ft, $marr, $sx, $ws);
+            $flag = calcjs($fenlei, $gid, $kj[$i]['m'], $tmp['b' . $lib[$j]['bid']], $tmp['s' . $lib[$j]['sid']], $tmp['c' . $lib[$j]['cid']], $tmp['p' . $lib[$j]['pid']], $lib[$j]['content'], $ft, $marr, $sx, $ws);
             //echo $flag[0],",";
             switch ($flag[0]) {
                 case '1':
