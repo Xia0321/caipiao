@@ -99,6 +99,7 @@ sign = md5(mch_secret + json)
 | action | string | 是 | 固定值：`quick_login` |
 | username | string | 是 | 登录名（与注册时一致，大小写不敏感） |
 | password | string | 是 | 登录密码（明文） |
+| gid | string | 否 | 游戏ID。传入后用户点击免登链接将**直接进入该游戏的投注页面**，不传则进入用户上次使用的游戏或系统默认游戏 |
 
 ### 响应（JSON）
 
@@ -108,13 +109,15 @@ sign = md5(mch_secret + json)
 {
   "code": 0,
   "msg": "ok",
-  "game_url": "https://域名/138/open_api.php?action=entry&userid=xxx&ts=xxx&sign=xxx",
-  "device": "mobile 或 pc"
+  "game_url": "https://域名/open_api.php?action=entry&token=xxxx",
+  "device": "mobile 或 pc",
+  "expire_at": 1773367286
 }
 ```
 
-- **game_url**：带 `userid`、`ts`、`sign` 的 `entry` 地址，直接重定向即可免登。
+- **game_url**：带 token 的免登链接，有效期 5 分钟。将此链接给用户在浏览器中打开即可自动登录。
 - **device**：根据当前请求的 User-Agent 判断，`mobile` 表示移动端，`pc` 表示 PC。
+- **expire_at**：链接过期时间戳（秒），超过此时间需重新调用获取。
 
 **失败：**
 
@@ -123,6 +126,7 @@ sign = md5(mch_secret + json)
 | 1 | 缺少 username / password | 必填参数缺失 |
 | 2 | 账号或密码错误 | 用户名或密码不正确（仅针对普通会员账号） |
 | 3 | 账号已禁用 | 该账号 status=0 |
+| 4 | 密码错误次数过多 | 连续错误 5 次被锁定，需联系代理重置 |
 
 ---
 
@@ -185,11 +189,12 @@ sign = md5(拼接)
 
 ### 5.2 登录并进入游戏
 
-1. 调用 `quick_login`，传入 `username`、`password`。
+1. 调用 `quick_login`，传入 `username`、`password`，可选传入 `gid`（游戏ID）。
 2. 若 `code=0`，使用返回的 `game_url`：
    - **H5**：直接 `window.location.href = game_url` 或 `<a href="game_url">进入游戏</a>`。
    - **App**：用 WebView 打开 `game_url`。
-3. 用户被带到 `entry`，验签通过后自动跳转到 uxj（手机）或 mxj（PC）游戏列表，无需再输账号密码。
+3. 用户被带到 `entry`，验签通过后自动跳转到 mxj（手机）或 uxj（PC）游戏页面，无需再输账号密码。
+4. 如果传了 `gid`，用户进入后将**直接显示对应游戏的投注界面**；不传则进入默认游戏。
 
 ### 5.3 自行拼接 entry 链接（可选）
 
@@ -248,13 +253,23 @@ curl -X POST "https://您的域名/138/open_api.php" \
   -d "name=测试用户"
 ```
 
-**快速登录：**
+**快速登录（进入默认游戏）：**
 
 ```bash
-curl -X POST "https://您的域名/138/open_api.php" \
+curl -X POST "https://您的域名/open_api.php" \
   -d "action=quick_login" \
   -d "username=testuser01" \
   -d "password=123456"
+```
+
+**快速登录（直接进入指定游戏）：**
+
+```bash
+curl -X POST "https://您的域名/open_api.php" \
+  -d "action=quick_login" \
+  -d "username=testuser01" \
+  -d "password=123456" \
+  -d "gid=172"
 ```
 
 ### 8.2 PHP
@@ -274,9 +289,9 @@ curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 $res = json_decode(curl_exec($ch), true);
 
-// 快速登录
-$post = ['action' => 'quick_login', 'username' => 'testuser01', 'password' => '123456'];
-// ... 同上 POST，若 code=0 则 $res['game_url'] 即为免登链接
+// 快速登录（可选传 gid 直接进入指定游戏）
+$post = ['action' => 'quick_login', 'username' => 'testuser01', 'password' => '123456', 'gid' => '172'];
+// ... 同上 POST，若 code=0 则 $res['game_url'] 即为免登链接，用户点击直接进入 gid=172 的游戏
 ```
 
 ### 8.3 JavaScript（前端跳转）
@@ -286,7 +301,7 @@ $post = ['action' => 'quick_login', 'username' => 'testuser01', 'password' => '1
 fetch('https://您的域名/138/open_api.php', {
   method: 'POST',
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  body: 'action=quick_login&username=testuser01&password=123456'
+  body: 'action=quick_login&username=testuser01&password=123456&gid=172'
 })
   .then(r => r.json())
   .then(data => {
