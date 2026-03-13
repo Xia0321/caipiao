@@ -441,8 +441,22 @@ function entry()
     $_SESSION['ucheck'] = md5($config['allpass'] . $userid);
     $_SESSION['ip'] = $ip;
     // 如果外部传入了gid，优先使用；否则用用户自身的gid
-    if (!empty($entry_gid) && is_numeric($entry_gid)) {
-        $_SESSION['gid'] = $entry_gid;
+    // 支持数字gid（直接使用）和游戏名称/代码（从x_game表查找）
+    if (!empty($entry_gid)) {
+        if (is_numeric($entry_gid)) {
+            $_SESSION['gid'] = $entry_gid;
+        } else {
+            // 非数字：按gname精确匹配，或按class匹配（如 c151）
+            $safe_gid = addslashes($entry_gid);
+            $msql->query("SELECT gid FROM `x_game` WHERE gname='{$safe_gid}' OR class='{$safe_gid}' OR class='c{$safe_gid}' LIMIT 1");
+            $msql->next_record();
+            $found_gid = $msql->f('gid');
+            if ($found_gid) {
+                $_SESSION['gid'] = $found_gid;
+            } else {
+                $_SESSION['gid'] = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
+            }
+        }
     } else {
         $_SESSION['gid'] = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
     }
