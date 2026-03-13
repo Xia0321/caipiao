@@ -441,24 +441,17 @@ function entry()
     $_SESSION['ucheck'] = md5($config['allpass'] . $userid);
     $_SESSION['ip'] = $ip;
     // 如果外部传入了gid，优先使用；否则用用户自身的gid
-    // 支持数字gid（直接使用）和游戏名称/代码（从x_game表查找）
+    // 支持：数字gid（先精确匹配，再按class匹配）、游戏名称、class代码
+    $default_gid = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
     if (!empty($entry_gid)) {
-        if (is_numeric($entry_gid)) {
-            $_SESSION['gid'] = $entry_gid;
-        } else {
-            // 非数字：按gname精确匹配，或按class匹配（如 c151）
-            $safe_gid = addslashes($entry_gid);
-            $msql->query("SELECT gid FROM `x_game` WHERE gname='{$safe_gid}' OR class='{$safe_gid}' OR class='c{$safe_gid}' LIMIT 1");
-            $msql->next_record();
-            $found_gid = $msql->f('gid');
-            if ($found_gid) {
-                $_SESSION['gid'] = $found_gid;
-            } else {
-                $_SESSION['gid'] = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
-            }
-        }
+        $safe_gid = addslashes($entry_gid);
+        // 统一查询：按gid精确匹配、按gname匹配、按class匹配
+        $msql->query("SELECT gid FROM `x_game` WHERE gid='{$safe_gid}' OR gname='{$safe_gid}' OR class='{$safe_gid}' OR class='c{$safe_gid}' LIMIT 1");
+        $msql->next_record();
+        $found_gid = $msql->f('gid');
+        $_SESSION['gid'] = $found_gid ? $found_gid : $default_gid;
     } else {
-        $_SESSION['gid'] = $ugid ? $ugid : (isset($config['gid']) && $config['gid'] > 0 ? $config['gid'] : '172');
+        $_SESSION['gid'] = $default_gid;
     }
     $_SESSION['wid'] = $wid;
     $_SESSION['sv'] = '2';
