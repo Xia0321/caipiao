@@ -25,12 +25,17 @@
 
 /* =========== BODY / GLOBAL =========== */
 
-html { height: 100%; }
+html {
+    height: 100% !important;
+    overflow: hidden;
+}
 body {
     background: var(--t-bg) !important;
     color: var(--t-txt) !important;
     font-family: "Microsoft YaHei","PingFang SC",-apple-system,system-ui,sans-serif !important;
     height: 100% !important;
+    margin: 0 !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
 }
@@ -223,6 +228,8 @@ a.page:hover { background: var(--t-cyan) !important; color: #000 !important; }
 .main {
     background: var(--t-bg) !important;
     color: var(--t-txt) !important;
+    min-height: 100% !important;
+    box-sizing: border-box;
 }
 
 .utb { background: var(--t-bg) !important; }
@@ -356,6 +363,8 @@ a.page:hover { background: var(--t-cyan) !important; color: #000 !important; }
 
 .xbody1, .xbody2, .xbody3 {
     color: var(--t-txt);
+    min-height: 100% !important;
+    box-sizing: border-box;
 }
 
 /* =========== BUTTONS =========== */
