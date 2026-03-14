@@ -533,7 +533,7 @@ function moni_100($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft, $marr, $sx, $ws
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -576,7 +576,7 @@ function moni_100($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft, $marr, $sx, $ws
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -903,7 +903,7 @@ function moni_121($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -946,7 +946,7 @@ function moni_121($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1088,7 +1088,7 @@ function moni_161($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1131,7 +1131,7 @@ function moni_161($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1277,7 +1277,7 @@ function moni_103($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1320,7 +1320,7 @@ function moni_103($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1491,7 +1491,7 @@ function moni_107($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1534,7 +1534,7 @@ function moni_107($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1622,7 +1622,7 @@ function moni_101($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -1665,7 +1665,7 @@ function moni_101($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -2085,7 +2085,7 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if ($ps[1] == $ft) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
@@ -2128,7 +2128,7 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                         $v = 1;
                     } else {
                         if (strpos($ps[1], $ft . "") !== false) {
-                            $v = 2;
+                            $v = 3;
                         } else {
                             $v = 0;
                         }
