@@ -124,6 +124,6 @@ include('./checklogin.php');
         $tpl->assign('news', $news);
         $tpl->assign('cnews', count($news));
         $tpl->assign("yy",date("Y"));
-        $tpl->assign('bottom_menu_active', '');
+        $tpl->assign('bottom_menu_active', 'game');
         $tpl->display('home.html');
        

@@ -44,8 +44,8 @@
     line-height: 1.3;
     color: inherit;
 }
-/* 游戏 - 圆形/几何图标 */
-.mxj-bottom-nav a.betting_shortcut .mxj-nav-icon { background-position: 39px -38px; }
+/* 游戏 - 游戏手柄图标 */
+.mxj-bottom-nav a.betting_shortcut .mxj-nav-icon { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2'%3E%3Crect x='2' y='6' width='20' height='12' rx='3'/%3E%3Ccircle cx='8' cy='12' r='1.5' fill='%239e9e9e'/%3E%3Ccircle cx='16' cy='12' r='1.5' fill='%239e9e9e'/%3E%3C/svg%3E") no-repeat center; background-size: 22px 22px; }
 /* 结果 - 柱状图 */
 .mxj-bottom-nav a.result_shortcut .mxj-nav-icon { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239e9e9e' stroke-width='2'%3E%3Crect x='4' y='14' width='4' height='6'/%3E%3Crect x='10' y='10' width='4' height='10'/%3E%3Crect x='16' y='6' width='4' height='14'/%3E%3C/svg%3E") no-repeat center; background-size: 22px 22px; }
 /* 记录 - 文档/列表 */
@@ -65,9 +65,7 @@
 }
 /* 选中时 SVG 图标改为蓝色（通过 mask 或内联） */
 .mxj-bottom-nav a.betting_shortcut.bottom-nav-active .mxj-nav-icon {
-    background-position: 39px -38px;
-    filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(166deg);
-    -webkit-filter: brightness(0) saturate(100%) invert(48%) sepia(79%) saturate(2476%) hue-rotate(166deg);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2303a9f4' stroke-width='2'%3E%3Crect x='2' y='6' width='20' height='12' rx='3'/%3E%3Ccircle cx='8' cy='12' r='1.5' fill='%2303a9f4'/%3E%3Ccircle cx='16' cy='12' r='1.5' fill='%2303a9f4'/%3E%3C/svg%3E");
 }
 .mxj-bottom-nav a.result_shortcut.bottom-nav-active .mxj-nav-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2303a9f4' stroke-width='2'%3E%3Crect x='4' y='14' width='4' height='6'/%3E%3Crect x='10' y='10' width='4' height='10'/%3E%3Crect x='16' y='6' width='4' height='14'/%3E%3C/svg%3E"); }
 .mxj-bottom-nav a.not_settlement_shortcut.bottom-nav-active .mxj-nav-icon { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2303a9f4' stroke-width='2'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3Cline x1='10' y1='9' x2='8' y2='9'/%3E%3C/svg%3E"); }
