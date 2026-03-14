@@ -186,6 +186,13 @@ function calc($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype,$qz=false)
     }
     return 1;
 }
+function _randSearch($v, $jiang) {
+    $matched = [];
+    for ($i = 0, $n = count($jiang); $i < $n; $i++) {
+        if ($jiang[$i] == $v) $matched[] = $i;
+    }
+    return count($matched) > 0 ? $matched[rand(0, count($matched) - 1)] : false;
+}
 function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
 {
     global $fsql, $tsql, $psql, $tb_bclass, $tb_sclass, $tb_class, $tb_play, $tb_lib, $tb_user, $tb_config,$tb_game;
@@ -390,9 +397,9 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
             return $kj[$key]['m'];
         }
         $v = $cy1 > 0 ? $y1[$cy1 - 1] : ($cy2 > 0 ? $y2[0] : 0);
-        $key = array_search($v, $jiang);
+        $key = _randSearch($v, $jiang);
         if ($key !== false) return $kj[$key]['m'];
-        return $kj[0]['m'];
+        return $kj[rand(0, count($kj) - 1)]['m'];
     }
     $v = 0;
     switch ($cs['xtmode']) {
@@ -462,9 +469,9 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
             $psql->query("update `$tb_game` set cs='$cs' where gid='$gid'");
             break;
     }
-    $key = array_search($v, $jiang);
+    $key = _randSearch($v, $jiang);
     if ($key !== false) return $kj[$key]['m'];
-    return $kj[0]['m'];
+    return $kj[rand(0, count($kj) - 1)]['m'];
 }
 function calcjs($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft, $marr, $sx, $ws)
 {
