@@ -255,14 +255,29 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
     }
     $jiang = [];
     $usy = [];
-    for ($i = 0; $i < $cs['suiji']; $i++) {
-        $kj[$i]['m'] = suiji($fenlei, $gid, $qishu);
-        //echo json_encode($kj[$i]['m']),"<bR>";
+    $tmpcid = '';
+    if ($fenlei == 163) {
+        $totalCandidates = 0;
+        for ($d1 = 0; $d1 <= 9; $d1++) {
+            for ($d2 = 0; $d2 <= 9; $d2++) {
+                for ($d3 = 0; $d3 <= 9; $d3++) {
+                    $kj[$totalCandidates]['m'] = [$d1, $d2, $d3];
+                    $totalCandidates++;
+                }
+            }
+        }
+    } else {
+        $totalCandidates = $cs['suiji'];
+        for ($i = 0; $i < $totalCandidates; $i++) {
+            $kj[$i]['m'] = suiji($fenlei, $gid, $qishu);
+        }
+    }
+    for ($i = 0; $i < $totalCandidates; $i++) {
         $jiang[$i] = 0;
         $usy[$i] = 0;
         $ft = 0;
         if ($cs['ft'] == 1) {
-            $ft = getft($kj[$i]['m'],$cs);
+            $ft = getft($kj[$i]['m'], $cs);
         }
         $sx = [];
         $ws = [];
@@ -300,7 +315,6 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                 $tmp['p' . $lib[$j]['pid']]['znum2'] = $tsql->f('znum2');
             }
             $flag = calcjs($fenlei, $gid, $kj[$i]['m'], $tmp['b' . $lib[$j]['bid']], $tmp['s' . $lib[$j]['sid']], $tmp['c' . $lib[$j]['cid']], $tmp['p' . $lib[$j]['pid']], $lib[$j]['content'], $ft, $marr, $sx, $ws);
-            //echo $flag[0],",";
             switch ($flag[0]) {
                 case '1':
                     $jiang[$i] += $lib[$j]['jes'] - $lib[$j]['z1'] - $lib[$j]['shui'];
@@ -340,20 +354,14 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
         $jiang[$i] > 0 ? $y1[] = $jiang[$i] : ($y2[] = $jiang[$i]);
         $usy[$i] > 0 ? $sy1[] = $usy[$i] : ($sy2[] = $usy[$i]);
     }
-    /*
-    for ($i = 0; $i < $cs['suiji']; $i++) {
-        $kj[$i]['jj'] = $jiang[$i];
-        $kj[$i]['mm'] = implode(',', $kj[$i]['m']);
-    }
-    */
     sort($y1);
     sort($y2);
-    // 当指定会员输赢时，用usy数组选号，同时兼顾庄家整体盈亏
+    $cy1 = count($y1);
+    $cy2 = count($y2);
+
     if ($cs['zhiding'] != 0 && $uid > 0 && (count($sy1) > 0 || count($sy2) > 0)) {
         $key = -1;
         if ($cs['zhiding'] == 1 && count($sy1) > 0) {
-            // 指定用户赢：在用户赚钱的方案中，优先选庄家也赚钱的
-            // 按用户盈利从大到小排序候选
             $candidates = [];
             for ($i = 0; $i < count($usy); $i++) {
                 if ($usy[$i] > 0) {
@@ -361,15 +369,11 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                 }
             }
             usort($candidates, function($a, $b) { return $b['user'] > $a['user'] ? 1 : ($b['user'] < $a['user'] ? -1 : 0); });
-            // 先找庄家也赚的（jiang>0），取其中用户赢最多的
-            foreach ($candidates as $c) {
-                if ($c['house'] > 0) { $key = $c['idx']; break; }
+            foreach ($candidates as $cc) {
+                if ($cc['house'] > 0) { $key = $cc['idx']; break; }
             }
-            // 找不到庄家赚的，就取用户赢最多的
             if ($key < 0 && count($candidates) > 0) $key = $candidates[0]['idx'];
         } elseif ($cs['zhiding'] == -1 && count($sy2) > 0) {
-            // 指定用户输：在用户亏钱的方案中，优先选庄家也赚钱的
-            // 按用户亏损从大到小排序候选（usy越小=亏越多）
             $candidates = [];
             for ($i = 0; $i < count($usy); $i++) {
                 if ($usy[$i] < 0) {
@@ -377,70 +381,90 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                 }
             }
             usort($candidates, function($a, $b) { return $a['user'] > $b['user'] ? 1 : ($a['user'] < $b['user'] ? -1 : 0); });
-            // 先找庄家也赚的（jiang>0），取其中用户亏最多的
-            foreach ($candidates as $c) {
-                if ($c['house'] > 0) { $key = $c['idx']; break; }
+            foreach ($candidates as $cc) {
+                if ($cc['house'] > 0) { $key = $cc['idx']; break; }
             }
-            // 找不到庄家赚的，就取用户亏最多的
             if ($key < 0 && count($candidates) > 0) $key = $candidates[0]['idx'];
         }
         if ($key >= 0) {
             return $kj[$key]['m'];
         }
-        // 回退到普通xtmode逻辑
-        $v = count($y1) > 0 ? $y1[count($y1) - 1] : $y2[0];
+        $v = $cy1 > 0 ? $y1[$cy1 - 1] : ($cy2 > 0 ? $y2[0] : 0);
         $key = array_search($v, $jiang);
-        return $kj[$key]['m'];
+        if ($key !== false) return $kj[$key]['m'];
+        return $kj[0]['m'];
     }
     $v = 0;
     switch ($cs['xtmode']) {
-        case '3':
-            $v = $y1[rand(0, count($y1) - 1)];
-            break;
         case '2':
-            $v = $y1[count($y1) - 1];
+            if ($cy1 > 0) {
+                $v = $y1[$cy1 - 1];
+            } elseif ($cy2 > 0) {
+                $v = $y2[$cy2 - 1];
+            }
             break;
         case '1':
-            $v = $y1[0];
+            if ($cy1 > 0) {
+                $v = $y1[0];
+            } elseif ($cy2 > 0) {
+                $v = $y2[$cy2 - 1];
+            }
+            break;
+        case '3':
+            if ($cy1 > 0) {
+                $v = $y1[rand(0, $cy1 - 1)];
+            } elseif ($cy2 > 0) {
+                $v = $y2[rand(0, $cy2 - 1)];
+            }
             break;
         case '-1':
-            $v = $y2[count($y2) - 1];
+            if ($cy2 > 0) {
+                $v = $y2[$cy2 - 1];
+            } elseif ($cy1 > 0) {
+                $v = $y1[0];
+            }
             break;
         case '-2':
-            $v = $y2[0];
+            if ($cy2 > 0) {
+                $v = $y2[0];
+            } elseif ($cy1 > 0) {
+                $v = $y1[0];
+            }
             break;
         case '-3':
-            $v = $y2[rand(0, count($y2) - 1)];
+            if ($cy2 > 0) {
+                $v = $y2[rand(0, $cy2 - 1)];
+            } elseif ($cy1 > 0) {
+                $v = $y1[rand(0, $cy1 - 1)];
+            }
             break;
         case '5':
-            $totalqs = floor($cs["shenglv"]/10);
-            $zhongqs = $cs["shenglv"]%10;
+            $totalqs = floor($cs["shenglv"] / 10);
+            $zhongqs = $cs["shenglv"] % 10;
             $buzhongqs = $totalqs - $zhongqs;
-            if($cs["yingqs"]+$cs["shuqs"]==$totalqs){
+            if ($cs["yingqs"] + $cs["shuqs"] == $totalqs) {
                 $cs["yingqs"] = 0;
                 $cs["shuqs"] = 0;
             }
-
-            $v = $jiang[rand(0,$cs['suiji']-1)];
-            $v<0 ? $cs["shuqs"]++ : $cs["yingqs"]++;
-            if($cs["yingqs"]>$buzhongqs){
+            $v = $jiang[rand(0, count($jiang) - 1)];
+            $v < 0 ? $cs["shuqs"]++ : $cs["yingqs"]++;
+            if ($cs["yingqs"] > $buzhongqs && $cy2 > 0) {
                 $cs["yingqs"]--;
-                $v = $y2[rand(0, count($y2) - 1)];
+                $v = $y2[rand(0, $cy2 - 1)];
                 $cs["shuqs"]++;
             }
-
-            if($cs["shuqs"]>$zhongqs){
+            if ($cs["shuqs"] > $zhongqs && $cy1 > 0) {
                 $cs["shuqs"]--;
-                $v = $y1[rand(0, count($y1) - 1)];
+                $v = $y1[rand(0, $cy1 - 1)];
                 $cs["yingqs"]++;
             }
-            //$cs["v"] = $cs["v"].",".$v;
             $cs = json_encode($cs);
             $psql->query("update `$tb_game` set cs='$cs' where gid='$gid'");
-        break;
+            break;
     }
     $key = array_search($v, $jiang);
-    return $kj[$key]['m'];
+    if ($key !== false) return $kj[$key]['m'];
+    return $kj[0]['m'];
 }
 function calcjs($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft, $marr, $sx, $ws)
 {
