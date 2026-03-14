@@ -73,7 +73,7 @@ a.red{color:red}
  <table class="data_table">
 <thead>
       <th >自动开奖设置</th><th>控制方式</th><th>开奖模式(庄)</th><th>开始控制金额</th><th>随机数[100-500]</th>
-      <th style="display: none;">指定会员输赢</th><th>占成模式</th><th>盈利上限</th>
+      <th>指定会员输赢</th><th>占成模式</th><th>盈利上限</th>
       <th>
   操作
      </th>
@@ -129,10 +129,10 @@ a.red{color:red}
           <td>
             <input type="number" class="txt2 suiji" value="{+$cs.suiji+}" />
           </td>
-          <td style="display: none;">
+          <td>
             <input type="radio"  name='zhiding' value="0" {+if $cs.zhiding==0+}checked{+/if+} />不指定&nbsp;
             <input type="radio"  name='zhiding' value="1" {+if $cs.zhiding==1+}checked{+/if+} />赢&nbsp;
-            <input type="radio"  name='zhiding' value="-1" {+if $cs.zhiding==-11+}checked{+/if+} />输&nbsp;
+            <input type="radio"  name='zhiding' value="-1" {+if $cs.zhiding==-1+}checked{+/if+} />输&nbsp;
             <input type="text" class="txt2 zduser" value="{+$cs.zduser+}" />
           </td>
           <td>

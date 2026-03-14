@@ -190,10 +190,10 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
 {
     global $fsql, $tsql, $psql, $tb_bclass, $tb_sclass, $tb_class, $tb_play, $tb_lib, $tb_user, $tb_config,$tb_game;
     $uid = 0;
-    if ($cs['zhiding'] != 0) {
-        //$arr = $tsql->arr("select userid from `{$tb_user}` where username='" . $cs['zduser'] . "'", 1);
-        //$uid = $arr[0]['userid'];
-    }    
+    if ($cs['zhiding'] != 0 && $cs['zduser'] != '') {
+        $arr = $tsql->arr("select userid from `{$tb_user}` where username='" . $cs['zduser'] . "'", 1);
+        $uid = isset($arr[0]['userid']) ? $arr[0]['userid'] : 0;
+    }
 
     if ($cs['zcmode'] == 1) {
         $sql = "select bid,sid,cid,pid,content,bz,ab,userid,sum(je*zc0/100) as jes,sum(je*(zc0/100)*peilv1) as z1,sum(je*(zc0/100)*peilv2) as z2,sum(je*(zc0/100)*points/100) as shui,bz,dates from `{$tb_lib}` where gid='{$gid}' and qishu='{$qishu}' group by cid,pid,content";
@@ -304,7 +304,7 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                     $jiang[$i] += $lib[$j]['jes'] - $lib[$j]['shui'];
                     break;
             }
-            if ($cs['zhiding'] != 0 && is_numeric($uid) && $uid > 10000000 && 1==2) {
+            if ($cs['zhiding'] != 0 && is_numeric($uid) && $uid > 0) {
                 if ($lib[$j]['content'] != "") {
                     $psql->query("select sum(je) as jes,sum(je*peilv1) as z1,sum(je*peilv2) as z2,sum(je*points/100) as shui,bz from `{$tb_lib}` where {$whi} and userid='{$uid}' and pid='{$lib[$j]['pid']}' and content='{$lib[$j]['content']}'");
                 } else {
@@ -339,6 +339,25 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
     */
     sort($y1);
     sort($y2);
+    // 当指定会员输赢时，用usy数组选号
+    if ($cs['zhiding'] != 0 && $uid > 0 && (count($sy1) > 0 || count($sy2) > 0)) {
+        sort($sy1);
+        sort($sy2);
+        if ($cs['zhiding'] == 1 && count($sy1) > 0) {
+            // 指定用户赢：选用户盈利最大的方案
+            $v = $sy1[count($sy1) - 1];
+            $key = array_search($v, $usy);
+        } elseif ($cs['zhiding'] == -1 && count($sy2) > 0) {
+            // 指定用户输：选用户亏损最大的方案
+            $v = $sy2[0];
+            $key = array_search($v, $usy);
+        } else {
+            // 回退到普通xtmode逻辑
+            $v = count($y1) > 0 ? $y1[count($y1) - 1] : $y2[0];
+            $key = array_search($v, $jiang);
+        }
+        return $kj[$key]['m'];
+    }
     $v = 0;
     switch ($cs['xtmode']) {
         case '3':
@@ -367,7 +386,7 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                 $cs["yingqs"] = 0;
                 $cs["shuqs"] = 0;
             }
-            
+
             $v = $jiang[rand(0,$cs['suiji']-1)];
             $v<0 ? $cs["shuqs"]++ : $cs["yingqs"]++;
             if($cs["yingqs"]>$buzhongqs){
@@ -384,7 +403,7 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
             //$cs["v"] = $cs["v"].",".$v;
             $cs = json_encode($cs);
             $psql->query("update `$tb_game` set cs='$cs' where gid='$gid'");
-        break;    
+        break;
     }
     $key = array_search($v, $jiang);
     return $kj[$key]['m'];
