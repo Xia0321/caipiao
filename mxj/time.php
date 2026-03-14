@@ -19,17 +19,13 @@ if ($config['panstatus'] == 1 & (($time - strtotime($msql->f('opentime'))-$confi
     $pantime = strtotime($msql->f('closetime')) - $time - $config['userclosetime']-$config['times']['c'];
 } else {
 	$config['panstatus'] = 0;
-    $pantime = $time - strtotime($msql->f('opentime'))-$config['times']['o'];
-    if ($pantime > 0)
-        $pantime = 0;
+    $pantime = 0;
 }
 if ($config['otherstatus'] == 1 & ($config['autoopenpan']==0 | ($time - strtotime($msql->f('opentime'))-$config['times']['o'])>0)) {
     $othertime = strtotime($msql->f('closetime')) - $time - $config['userclosetime'] - $config['otherclosetime']-$config['times']['c'];
 } else {
 	$config['otherstatus'] = 0;
-    $othertime = $time - strtotime($msql->f('opentime'))-$config['times']['o'];
-    if ($othertime > 0)
-        $othertime = 0;
+    $othertime = 0;
 }
 if ($config['autoopenpan'] == 0 | $config['times']['io']==0) {
     $pantime = 9999;
@@ -51,8 +47,5 @@ if($check==0 | $config['ifopen']==0){
 	 sessiondelu();
 }
 $config['thisqishu'] = substr($config['thisqishu'], -8);
-$_logfile = dirname(__FILE__) . '/time_debug.log';
-$_logline = date('Y-m-d H:i:s') . ' qishu=' . $config['thisqishu'] . ' pan=' . $config['panstatus'] . ' kjsecs=' . $kjtime . "\n";
-@file_put_contents($_logfile, $_logline, FILE_APPEND);
 echo abs($pantime) . '|' . abs($othertime).'|'.$config['thisqishu'].'|'.$config['panstatus'].'|'.$config['otherstatus'].'|'.date("Hi").'|'.$check.'|'.$kjtime;
 ?>
