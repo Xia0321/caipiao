@@ -138,30 +138,17 @@ body{background:#0b0f19;margin:0;padding:0;}
 .tools_user .online{color:#22c55e;font-weight:700;}
 .tools_user .ico{display:none !important;}
 
-/* ===== SYSTEM CLOCK ===== */
-.sys-clock{
-    display:flex;align-items:center;gap:8px;
-    margin-left:16px;padding-left:16px;
-    border-left:1px solid rgba(0,212,255,.15);height:40px;
+/* ===== SYSTEM CLOCK (below admin card) ===== */
+.sys-clock-bar{
+    text-align:center;margin-top:4px;
+    padding:3px 0;
+    border-top:1px solid rgba(0,212,255,.1);
 }
-.sys-clock .clock-icon{
-    width:32px;height:32px;border-radius:50%;
-    background:linear-gradient(135deg,rgba(0,212,255,.12),rgba(59,130,246,.08));
-    border:1px solid rgba(0,212,255,.2);
-    display:flex;align-items:center;justify-content:center;
-    font-size:14px;color:#00d4ff;
-}
-.sys-clock .clock-text{
+.sys-clock-bar .clock-text{
     font-family:'Courier New','SF Mono','Consolas',monospace;
-    font-size:15px;font-weight:600;letter-spacing:1.5px;
+    font-size:12px;font-weight:600;letter-spacing:1.5px;
     color:#00d4ff;
-    text-shadow:0 0 10px rgba(0,212,255,.3);
-    min-width:170px;
-}
-.sys-clock .clock-label{
-    display:block;font-size:10px;color:#4a6480;font-weight:400;
-    letter-spacing:2px;text-transform:uppercase;margin-bottom:1px;
-    font-family:"Microsoft YaHei",sans-serif;
+    text-shadow:0 0 8px rgba(0,212,255,.25);
 }
 
 /* ===== ADMIN INFO ===== */
@@ -252,13 +239,9 @@ body{background:#0b0f19;margin:0;padding:0;}
                     <div><span class="admin-name">{+$name+}</span></div>
                     <div>在线: <span class="admin-online online">{+$onlinenum+}</span></div>
                 </div>
-            </div></li>
-            <li><div class="sys-clock">
-                <div class="clock-icon">&#9202;</div>
-                <div>
-                    <span class="clock-label">System Time</span>
-                    <div class="clock-text" id="sysClock">----/--/-- --:--:--</div>
-                </div>
+            </div>
+            <div class="sys-clock-bar">
+                <div class="clock-text" id="sysClock">----/--/-- --:--:--</div>
             </div></li>
         </ul>
 
