@@ -2030,15 +2030,14 @@ ul {
 }
 .mxj-record-pagination .pagination {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
     gap: 10px;
     font-size: 13px;
     color: #666;
 }
 .mxj-record-pagination .page-info { font-weight: 500; color: #424242; }
-.mxj-record-pagination .page-navi { display: flex; align-items: center; gap: 8px; }
+.mxj-record-pagination .page-navi { display: flex; align-items: center; justify-content: center; gap: 8px; }
 .mxj-record-pagination .page-navi input {
     width: 36px;
     height: 32px;
