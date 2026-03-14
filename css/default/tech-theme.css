@@ -25,10 +25,14 @@
 
 /* =========== BODY / GLOBAL =========== */
 
+html { height: 100%; }
 body {
     background: var(--t-bg) !important;
     color: var(--t-txt) !important;
     font-family: "Microsoft YaHei","PingFang SC",-apple-system,system-ui,sans-serif !important;
+    height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
 }
 
 ::selection { background: rgba(0,212,255,.25); color: #fff; }
