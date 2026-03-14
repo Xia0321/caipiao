@@ -298,14 +298,14 @@ function getp107($bid, $ab, $abcd, $cid)
     $time = time();
     $sql2="";
     if($bid==0){
-       $sql = "select * from `$tb_play` where gid='$gid' and bid=23378805 order by bid,xsort";
-       $sql2 = "select * from `$tb_play` where gid='$gid' and name!='质' and name!='合' and bid<23378805 order by bid,xsort";
+       $sql = "select * from `$tb_play` where gid='$gid' and bid=23378805 and ifok=1 order by bid,xsort";
+       $sql2 = "select * from `$tb_play` where gid='$gid' and name!='质' and name!='合' and bid<23378805 and ifok=1 order by bid,xsort";
     }else if($bid==1){
-       $sql = "select * from `$tb_play` where gid='$gid' and bid>=23378807 and bid<=23378813 order by bid,sid,xsort";
+       $sql = "select * from `$tb_play` where gid='$gid' and bid>=23378807 and bid<=23378813 and ifok=1 order by bid,sid,xsort";
     }else if($bid==2){
-       $sql = "select * from `$tb_play` where gid='$gid' and bid>=23378816 and bid<=23378823 order by bid,sid,xsort";
+       $sql = "select * from `$tb_play` where gid='$gid' and bid>=23378816 and bid<=23378823 and ifok=1 order by bid,sid,xsort";
     }else if($bid==3){
-       $sql = "select * from `$tb_play` where gid='$gid' and bid=26000000 order by bid,sid,cid,xsort";
+       $sql = "select * from `$tb_play` where gid='$gid' and bid=26000000 and ifok=1 order by bid,sid,cid,xsort";
     }
     $tsql->query($sql);
     $i    = 0;
@@ -417,14 +417,14 @@ function getpsm($bid, $ab, $abcd, $cid)
     // 特殊：3D(gid=251/252, fenlei=163) 的“两面”页面，需要同时带出对应位置的具体号码（1字定位），用于在同一界面下注。
     if (isset($config['fenlei']) && $config['fenlei'] == 163) {
         if ($gid == 251 && $bid == 251001) {
-            $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('251001','251005') order by bid,sid,xsort");
+            $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('251001','251005') and ifok=1 order by bid,sid,xsort");
         } elseif ($gid == 252 && $bid == 252001) {
-            $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('252001','252005') order by bid,sid,xsort");
+            $tsql->query("select * from `$tb_play` where gid='$gid' and bid in('252001','252005') and ifok=1 order by bid,sid,xsort");
         } else {
-            $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' order by bid,sid,xsort");
+            $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and ifok=1 order by bid,sid,xsort");
         }
     } else {
-        $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' order by bid,sid,xsort");
+        $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and ifok=1 order by bid,sid,xsort");
     }
     $i    = 0;
     $p    = array();
@@ -485,7 +485,7 @@ function getp_1dw($bid, $ab, $abcd, $cid)
     global $tsql, $psql, $tb_play, $tb_bclass, $tb_sclass, $tb_class, $config, $userid, $tb_play_user, $gid;
     //$abcd = low($abcd);
     $time = time();
-    $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and name+1>0 order by bid,sid,xsort");
+    $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and name+1>0 and ifok=1 order by bid,sid,xsort");
     $i    = 0;
     $p    = array();
     $cid  = 0;
@@ -550,9 +550,9 @@ function getpsmc($bid, $ab, $abcd, $cid, $p)
     $tsql->next_record();
     $rcount = $tsql->f(0);
     if ($rcount < 200) {
-        $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and cid='$cid'  order by bid,sid,cid,xsort");
+        $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and cid='$cid' and ifok=1 order by bid,sid,cid,xsort");
     } else {
-        $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and cid='$cid'  order by bid,sid,cid,xsort limit " . ($p * 100) . ",100");
+        $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and cid='$cid' and ifok=1 order by bid,sid,cid,xsort limit " . ($p * 100) . ",100");
     }
     $i    = 0;
     $p    = array();
@@ -684,7 +684,7 @@ function getpsmq($bid, $ab, $abcd, $cid)
     global $tsql, $psql, $tb_play, $tb_bclass, $tb_sclass, $tb_class, $config, $userid, $tb_play_user, $gid;
     //$abcd = low($abcd);
     $time = time();
-    $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid'  order by bid,sid,cid,xsort");
+    $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and ifok=1 order by bid,sid,cid,xsort");
     $i    = 0;
     $p    = array();
     $cid  = 0;
@@ -744,12 +744,12 @@ function getpsme($bid, $ab, $abcd, $sid)
     $abcd = low($abcd);
     $time = time();
     if($bid==''){
-       $tsql->query("select * from `$tb_play` where gid='$gid' and sid='$sid' order by bid,sid,xsort");
+       $tsql->query("select * from `$tb_play` where gid='$gid' and sid='$sid' and ifok=1 order by bid,sid,xsort");
     }else if($sid=='' | $sid=='undefined'){
-       $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid'  order by bid,sid,xsort");
+       $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and ifok=1 order by bid,sid,xsort");
        
     }else{
-       $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and sid='$sid' order by bid,sid,xsort");
+       $tsql->query("select * from `$tb_play` where gid='$gid' and bid='$bid' and sid='$sid' and ifok=1 order by bid,sid,xsort");
     }
     $i    = 0;
     $p    = array();
@@ -811,7 +811,7 @@ function getpsm60($bid, $ab, $abcd, $sid)
     global $tsql, $psql, $tb_play, $tb_bclass, $tb_sclass, $tb_class, $config, $userid, $tb_play_user, $gid;
     $abcd = low($abcd);
     $time = time();
-    $tsql->query("select * from `$tb_play` where gid='$gid'  and sid='$sid' order by xsort");
+    $tsql->query("select * from `$tb_play` where gid='$gid' and sid='$sid' and ifok=1 order by xsort");
     $i    = 0;
     $p    = array();
     $cid  = 0;
@@ -1218,7 +1218,7 @@ function sscmyself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
         $fanjiang = $benqije * $cs['fanjianglv'] / 100;
     }
     //echo $fanjiang;
-    $rs = $psql->arr("select * from `$tb_play` where gid='$gid' and ztype=0 and bid=23378755", 1);
+    $rs = $psql->arr("select * from `$tb_play` where gid='$gid' and ztype=0 and bid=23378755 and ifok=1", 1);
     $play = [];
     $mtype = [];
     $parr = [];
@@ -1279,7 +1279,7 @@ function sscmyself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
                     $arr = [0, 2, 4, 6, 8];
                 break;
             }
-            $pr = $psql->arr("select * from `$tb_play` where gid='$gid' and sid='{$v['sid']}' and ztype=0 and name in (" . implode(',', $arr) . ")", 1);
+            $pr = $psql->arr("select * from `$tb_play` where gid='$gid' and sid='{$v['sid']}' and ztype=0 and ifok=1 and name in (" . implode(',', $arr) . ")", 1);
             foreach ($pr as $k1 => $v1) {
                 $play['p' . $v1['pid']]['je']+= $v['je'] / 5;
                 $play['p' . $v1['pid']]['zhong']+= $v['zhong'];
@@ -1395,43 +1395,43 @@ function sscmyself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
         $ms[$i] = $m[$i];
     }
     $hes = $m[0] + $m[1] + $m[2] + $m[3] + $m[4];
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='龙'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='龙' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
     $psql->next_record();
     $long = $psql->f('zhong');
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='虎'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='虎' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
     $psql->next_record();
     $hu = $psql->f('zhong');
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='和'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='和' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
     $psql->next_record();
     $he = $psql->f('zhong');
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总大'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总大' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
     $psql->next_record();
     $zd = $psql->f('zhong');
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总小'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总小' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
     $psql->next_record();
     $zx = $psql->f('zhong');
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总单'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总单' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
     $psql->next_record();
     $zdd = $psql->f('zhong');
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总双'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378763' and name='总双' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
@@ -1543,7 +1543,7 @@ function pk10myself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
     } else {
         $fanjiang = $benqije * $cs['fanjianglv'] / 100;
     }
-    $rs = $psql->arr("select * from `$tb_play` where gid='$gid' and ztype=0 and bid!=23378805", 1);
+    $rs = $psql->arr("select * from `$tb_play` where gid='$gid' and ztype=0 and bid!=23378805 and ifok=1", 1);
     $play = [];
     $mtype = [];
     $parr = [];
@@ -1608,7 +1608,7 @@ function pk10myself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
                     continue;
                 break;
             }
-            $pr = $psql->arr("select * from `$tb_play` where gid='$gid' and sid='{$v['sid']}' and ztype=0 and name in (" . implode(',', $arr) . ")", 1);
+            $pr = $psql->arr("select * from `$tb_play` where gid='$gid' and sid='{$v['sid']}' and ztype=0 and ifok=1 and name in (" . implode(',', $arr) . ")", 1);
             foreach ($pr as $k1 => $v1) {
                 $play['p' . $v1['pid']]['je']+= $v['je'] / 5;
                 $play['p' . $v1['pid']]['zhong']+= $v['zhong'];
@@ -1743,13 +1743,13 @@ function pk10myself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
     }
     $zharr=[];
     for ($i = 0;$i < 5;$i++) {
-        $psql->query("select * from `$tb_play` where gid='$gid' and sid='" . $sidarr[$i] . "' and name='龙'");
+        $psql->query("select * from `$tb_play` where gid='$gid' and sid='" . $sidarr[$i] . "' and name='龙' and ifok=1");
         $psql->next_record();
         $pid = $psql->f('pid');
         $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
         $psql->next_record();
         $long = $psql->f('zhong');
-        $psql->query("select * from `$tb_play` where gid='$gid' and sid='" . $sidarr[$i] . "' and name='虎'");
+        $psql->query("select * from `$tb_play` where gid='$gid' and sid='" . $sidarr[$i] . "' and name='虎' and ifok=1");
         $psql->next_record();
         $pid = $psql->f('pid');
         $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
@@ -1778,7 +1778,7 @@ function pk10myself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
     }
 
     $he = $ms[0]+$ms[1];
-    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='$he'");
+    $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='$he' and ifok=1");
     $psql->next_record();
     $pid = $psql->f('pid');
     $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
@@ -1786,14 +1786,14 @@ function pk10myself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
     $zharr[5]['num'] = $psql->f('zhong');
     $zharr[5]['sm'] = 0;
     if($he<=11){
-        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和小'");
+        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和小' and ifok=1");
         $psql->next_record();
         $pid = $psql->f('pid');
         $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
         $psql->next_record();
         $zharr[5]['sm'] += $psql->f("zhong");
     }else{
-        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和大'");
+        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和大' and ifok=1");
         $psql->next_record();
         $pid = $psql->f('pid');
         $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
@@ -1801,14 +1801,14 @@ function pk10myself($gid, $cs, $qishu, $mnum, $dates,&$trys) {
         $zharr[5]['sm'] += $psql->f("zhong");
     }
     if($he%2==0){
-        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和双'");
+        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和双' and ifok=1");
         $psql->next_record();
         $pid = $psql->f('pid');
         $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
         $psql->next_record();
         $zharr[5]['sm'] += $psql->f("zhong");
     }else{
-        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和单'");
+        $psql->query("select * from `$tb_play` where gid='$gid' and bid='23378805' and name='和单' and ifok=1");
         $psql->next_record();
         $pid = $psql->f('pid');
         $psql->query("select sum(peilv1*je*zc0/100) as zhong from `$tb_lib` where gid='$gid' and qishu='$qishu' and pid='$pid'");
