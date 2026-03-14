@@ -351,7 +351,7 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                     $candidates[] = ['idx' => $i, 'user' => $usy[$i], 'house' => $jiang[$i]];
                 }
             }
-            usort($candidates, function($a, $b) { return $b['user'] <=> $a['user']; });
+            usort($candidates, function($a, $b) { return $b['user'] > $a['user'] ? 1 : ($b['user'] < $a['user'] ? -1 : 0); });
             // 先找庄家也赚的（jiang>0），取其中用户赢最多的
             foreach ($candidates as $c) {
                 if ($c['house'] > 0) { $key = $c['idx']; break; }
@@ -367,7 +367,7 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                     $candidates[] = ['idx' => $i, 'user' => $usy[$i], 'house' => $jiang[$i]];
                 }
             }
-            usort($candidates, function($a, $b) { return $a['user'] <=> $b['user']; });
+            usort($candidates, function($a, $b) { return $a['user'] > $b['user'] ? 1 : ($a['user'] < $b['user'] ? -1 : 0); });
             // 先找庄家也赚的（jiang>0），取其中用户亏最多的
             foreach ($candidates as $c) {
                 if ($c['house'] > 0) { $key = $c['idx']; break; }
