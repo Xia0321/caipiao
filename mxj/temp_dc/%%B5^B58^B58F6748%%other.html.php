@@ -1878,11 +1878,21 @@ ul {
 
 /* ========== 记录页现代化样式（未结明细 / 今日已结） ========== */
 .mxj-record-page {
-    min-height: 100%;
     background: #f5f7fa;
     padding: 12px 14px 24px;
     box-sizing: border-box;
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+.home.settlement_page .mxj-record-page {
+    height: calc(100vh - 50px);
+}
+.home:not(.settlement_page):not(.mypage-view) .mxj-record-page {
+    height: calc(100vh - 48px - 70px);
+}
+.home.mypage-view .mxj-record-page {
+    height: calc(100vh - 70px);
 }
 .mxj-record-page .ettwvL {
     background: transparent;
