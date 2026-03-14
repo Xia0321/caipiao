@@ -339,23 +339,48 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
     */
     sort($y1);
     sort($y2);
-    // 当指定会员输赢时，用usy数组选号
+    // 当指定会员输赢时，用usy数组选号，同时兼顾庄家整体盈亏
     if ($cs['zhiding'] != 0 && $uid > 0 && (count($sy1) > 0 || count($sy2) > 0)) {
-        sort($sy1);
-        sort($sy2);
+        $key = -1;
         if ($cs['zhiding'] == 1 && count($sy1) > 0) {
-            // 指定用户赢：选用户盈利最大的方案
-            $v = $sy1[count($sy1) - 1];
-            $key = array_search($v, $usy);
+            // 指定用户赢：在用户赚钱的方案中，优先选庄家也赚钱的
+            // 按用户盈利从大到小排序候选
+            $candidates = [];
+            for ($i = 0; $i < count($usy); $i++) {
+                if ($usy[$i] > 0) {
+                    $candidates[] = ['idx' => $i, 'user' => $usy[$i], 'house' => $jiang[$i]];
+                }
+            }
+            usort($candidates, function($a, $b) { return $b['user'] <=> $a['user']; });
+            // 先找庄家也赚的（jiang>0），取其中用户赢最多的
+            foreach ($candidates as $c) {
+                if ($c['house'] > 0) { $key = $c['idx']; break; }
+            }
+            // 找不到庄家赚的，就取用户赢最多的
+            if ($key < 0 && count($candidates) > 0) $key = $candidates[0]['idx'];
         } elseif ($cs['zhiding'] == -1 && count($sy2) > 0) {
-            // 指定用户输：选用户亏损最大的方案
-            $v = $sy2[0];
-            $key = array_search($v, $usy);
-        } else {
-            // 回退到普通xtmode逻辑
-            $v = count($y1) > 0 ? $y1[count($y1) - 1] : $y2[0];
-            $key = array_search($v, $jiang);
+            // 指定用户输：在用户亏钱的方案中，优先选庄家也赚钱的
+            // 按用户亏损从大到小排序候选（usy越小=亏越多）
+            $candidates = [];
+            for ($i = 0; $i < count($usy); $i++) {
+                if ($usy[$i] < 0) {
+                    $candidates[] = ['idx' => $i, 'user' => $usy[$i], 'house' => $jiang[$i]];
+                }
+            }
+            usort($candidates, function($a, $b) { return $a['user'] <=> $b['user']; });
+            // 先找庄家也赚的（jiang>0），取其中用户亏最多的
+            foreach ($candidates as $c) {
+                if ($c['house'] > 0) { $key = $c['idx']; break; }
+            }
+            // 找不到庄家赚的，就取用户亏最多的
+            if ($key < 0 && count($candidates) > 0) $key = $candidates[0]['idx'];
         }
+        if ($key >= 0) {
+            return $kj[$key]['m'];
+        }
+        // 回退到普通xtmode逻辑
+        $v = count($y1) > 0 ? $y1[count($y1) - 1] : $y2[0];
+        $key = array_search($v, $jiang);
         return $kj[$key]['m'];
     }
     $v = 0;
