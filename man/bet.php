@@ -99,10 +99,10 @@ if ($us["fudong"] == 1 & time() - strtotime($us['ftime']) > 86400) {
     echo json_encode($arr,JSON_UNESCAPED_UNICODE);
     die;
 }
-if ($us["yingdeny"] == 1) {
-    $arr = ["status" => 80, "message" => "赢利超限,请明日再投注!"];
-    echo json_encode($arr,JSON_UNESCAPED_UNICODE);
-}
+// if ($us["yingdeny"] == 1) {
+//     $arr = ["status" => 80, "message" => "赢利超限,请明日再投注!"];
+//     echo json_encode($arr,JSON_UNESCAPED_UNICODE);
+// }
 
 $u = getfid($userid);
 $zc = getzcnew($userid, $u, $us["layer"], $gid, $zcmode);

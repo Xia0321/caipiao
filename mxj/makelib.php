@@ -173,14 +173,14 @@ switch ($_REQUEST['xtype']) {
             exit;
 		}
 
-        if ($msql->f("yingdeny") > 0) {
-            foreach ($play as $key => $val) {
-                $play[$key]['err'] = "赢利超限,请明日再投注!";
-            }
-            echo json_encode($play);
-            unset($_SESSION['exe']);
-            exit;
-        }
+        // if ($msql->f("yingdeny") > 0) {
+        //     foreach ($play as $key => $val) {
+        //         $play[$key]['err'] = "赢利超限,请明日再投注!";
+        //     }
+        //     echo json_encode($play);
+        //     unset($_SESSION['exe']);
+        //     exit;
+        // }
 		
         if ($ab !== 'A' & $ab !== 'B')
             $ab = 'A';
