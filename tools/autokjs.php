@@ -67,7 +67,7 @@ for ($k = 0; $k < $cg; $k++) {
                 continue;
             }
             $url = 'http://' . $kjip . '&gid=100&qishu=' . $qishu;
-            $ma = file_get_contents($url);
+            $ma = curl_get(0, $url);
             $ma = json_decode($ma, true);
             if (!is_array($ma[0]['m'])) {
                 $ma[0]['m'] = explode(',', $ma[0]['m']);
@@ -323,8 +323,7 @@ for ($k = 0; $k < $cg; $k++) {
            
             $his = date("His");
             $url = 'http://' . $kjip . '&gid=161&qishu=' . $qs;
-            // var_dump($url);die;
-            $ma = file_get_contents($url);
+            $ma = curl_get(0, $url);
             $ma = json_decode($ma, true);
             if (!is_array($ma[0]['m'])) {
                 $ma[0]['m'] = explode(',', $ma[0]['m']);
@@ -372,7 +371,7 @@ for ($k = 0; $k < $cg; $k++) {
 
             } else {
                 $url = 'http://api.fiash.top/sgwinapi.php?gid=' . $gid . '&qishu=' . $qs;
-                $ma = file_get_contents($url);
+                $ma = curl_get(0, $url);
                 $ma = json_decode($ma, true);
 				
 				foreach($ma as $key=>$value)
