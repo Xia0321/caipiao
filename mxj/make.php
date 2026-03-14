@@ -318,7 +318,7 @@ switch ($_REQUEST['xtype']) {
                 $p2[$j] = $v1;
                 $m = $v1['fenlei']==107 ? randp([$v1['name']],1) : randp([$v1['name']],0);
                 $m = implode(',', $m);
-                $pp = $msql->arr("select * from `{$tb_play}` where gid='{$v1['gid']}' and sid='{$v1['sid']}' and cid='{$v1['cid']}' and name+0 in($m) ", 1);
+                $pp = $msql->arr("select * from `{$tb_play}` where gid='{$v1['gid']}' and sid='{$v1['sid']}' and cid='{$v1['cid']}' and name+0 in($m) and ifok=1 ", 1);
                
                 $j++;
                 $p2[$j] = $pp[0];
@@ -335,7 +335,7 @@ switch ($_REQUEST['xtype']) {
             $j = 0;
             foreach ($ps as $k1 => $v1) {
                 $p2[$j] = $v1;
-                $pp = $msql->arr("select * from `{$tb_play}` where gid='{$v1['gid']}' and sid='{$v1['sid']}' and cid='{$v1['cid']}' and pid!='{$v1['pid']}' and name!='和'", 1);               
+                $pp = $msql->arr("select * from `{$tb_play}` where gid='{$v1['gid']}' and sid='{$v1['sid']}' and cid='{$v1['cid']}' and pid!='{$v1['pid']}' and name!='和' and ifok=1", 1);               
                 $j++;
                 $p2[$j] = $pp[0];
                 $j++;
@@ -818,7 +818,7 @@ function getsmgg($bid, $ab, $abcd, $sid)
     global $tsql, $psql, $tb_play, $tb_bclass, $tb_sclass, $tb_class, $config, $userid, $tb_play_user, $gid;
     $abcd = low($abcd);
     $time = time();
-    $tsql->query("select * from `{$tb_play}` where gid='{$gid}' and bid=(select bid from `{$tb_bclass}` where gid='{$gid}' and instr(name,'正') and instr(name,'特') ) and name<1 order by bid,sid,xsort");
+    $tsql->query("select * from `{$tb_play}` where gid='{$gid}' and bid=(select bid from `{$tb_bclass}` where gid='{$gid}' and instr(name,'正') and instr(name,'特') ) and name<1 and ifok=1 order by bid,sid,xsort");
     $i = 0;
     $p = array();
     $cid = 0;
@@ -879,19 +879,19 @@ function getpaiming($bid, $ab, $abcd, $stype)
 {
     global $tb_play, $msql, $psql, $tb_class, $tb_bclass, $gid, $config;
     if ($stype == 15) {
-        $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and bid in (23378800,23378803,23378807,23378809,23378812)";
+        $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and ifok=1 and bid in (23378800,23378803,23378807,23378809,23378812)";
     } else {
         if ($stype == 110) {
-            $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and bid in (23378800,23378803,23378807,23378809,23378812,23378813,23378816,23378819,23378821,23378823)";
+            $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and ifok=1 and bid in (23378800,23378803,23378807,23378809,23378812,23378813,23378816,23378819,23378821,23378823)";
         } else {
             if ($stype == 610) {
-                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and bid in (23378813,23378816,23378819,23378821,23378823)";
+                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and ifok=1 and bid in (23378813,23378816,23378819,23378821,23378823)";
             } else {
                 if ($stype == 105) {
-                    $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and bid!=23378798 ";
+                    $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and ifok=1 and bid!=23378798 ";
                 } else {
                     if ($stype == 108) {
-                        $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and bid!=23378785 ";
+                        $sql = "select * from `{$tb_play}` where gid='{$gid}' and ztype=0 and ifok=1 and bid!=23378785 ";
                     }
                 }
             }
@@ -947,27 +947,27 @@ function getsm($bid, $ab, $abcd, $sid, $smtype)
     global $tb_play, $msql, $psql, $tb_class, $gid, $config;
     $fenlei = $config['fenlei'];
     if ($fenlei == 101) {
-        $sql = "select * from `{$tb_play}` where gid='{$gid}' and (( bid=23378755 and  name in('单','双','大','小')) or name in('总和单','总和双','总和大','总和小','龙','虎','和') or  bid=23378767) and bid<>26000000 order by bid,sid,cid,xsort ";
+        $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and (( bid=23378755 and  name in('单','双','大','小')) or name in('总和单','总和双','总和大','总和小','龙','虎','和') or  bid=23378767) and bid<>26000000 order by bid,sid,cid,xsort ";
     } else {
         if ($fenlei == 103 | $fenlei == 121) {
-            $sql = "select * from `{$tb_play}` where gid='{$gid}' and (name in('单','双','大','小','质','合','合单','合双','合数单','合数双','尾大','尾小','总和单','总和双','总和大','总和小','总和尾大','总和尾小','龙','虎','和')) and bid<>26000000 order by bid,sid,cid,xsort";
+            $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and (name in('单','双','大','小','质','合','合单','合双','合数单','合数双','尾大','尾小','总和单','总和双','总和大','总和小','总和尾大','总和尾小','龙','虎','和')) and bid<>26000000 order by bid,sid,cid,xsort";
         } else {
             if ($fenlei == 151) {
-                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid<>26000000 order by bid,sid,cid,xsort";
+                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and bid<>26000000 order by bid,sid,cid,xsort";
             } else {
                 if ($fenlei == 161) {
-                    $sql = "select * from `{$tb_play}` where gid='{$gid}' and cid<> 23379261 and bid<>26000000 order by xsort";
+                    $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and cid<> 23379261 and bid<>26000000 order by xsort";
                 } else {
                     if ($fenlei == 107) {
-                        $sql = "select * from `{$tb_play}` where gid='{$gid}' and name in('单','双','大','小','质','合','龙','虎','冠亚单','冠亚双','冠亚大','冠亚小') and bid<>26000000 order by bid,sid,xsort";
+                        $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and name in('单','双','大','小','质','合','龙','虎','冠亚单','冠亚双','冠亚大','冠亚小') and bid<>26000000 order by bid,sid,xsort";
                     } else {
                         if ($fenlei == 163) {
                             if ($gid == 251) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(251001,251005) and bid<>26000000 order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and bid in(251001,251005) and bid<>26000000 order by bid,sid,xsort";
                             } elseif ($gid == 252) {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and bid in(252001,252002,252003,252004,252005,252006,252007,252008) and bid<>26000000 order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and bid in(252001,252002,252003,252004,252005,252006,252007,252008) and bid<>26000000 order by bid,sid,xsort";
                             } else {
-                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ( name in('单','双','大','小','质','合') or bid='23378858') and bid<>23378857 and bid<>26000000 order by bid,sid,xsort";
+                                $sql = "select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and ( name in('单','双','大','小','质','合') or bid='23378858') and bid<>23378857 and bid<>26000000 order by bid,sid,xsort";
                             }
                         }
                     }
@@ -1024,9 +1024,9 @@ function getbuzlong()
     global $gid, $fsql, $tb_play, $tb_class, $config;
     $buz = array();
     if ($gid == 161 | $gid == 162) {
-        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and buzqishu>=2 and cid in (select cid from `{$tb_class}` where gid='{$gid}' and ftype not in (1,2))  order by buzqishu desc,bid,sid,cid,xsort");
+        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and buzqishu>=2 and cid in (select cid from `{$tb_class}` where gid='{$gid}' and ftype not in (1,2))  order by buzqishu desc,bid,sid,cid,xsort");
     } else {
-        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and buzqishu>=2 and cid in (select cid from `{$tb_class}` where gid='{$gid}' and ftype=0)   and name not in('质','合','总尾质','总尾合','和尾质','和尾合') order by buzqishu desc,bid,sid,cid,xsort");
+        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and buzqishu>=2 and cid in (select cid from `{$tb_class}` where gid='{$gid}' and ftype=0)   and name not in('质','合','总尾质','总尾合','和尾质','和尾合') order by buzqishu desc,bid,sid,cid,xsort");
     }
     $i = 0;
     $tmp = array();
@@ -1054,9 +1054,9 @@ function getzlong($fenlei)
     global $gid, $fsql, $tb_play, $tb_class, $config;
     $z = array();
     if ($gid == 161 | $gid == 162) {
-        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and zqishu>=2 and cid in (select cid from `{$tb_class}` where gid='{$gid}' and ftype not in(1,2))  order by zqishu desc,bid,sid,cid,xsort");
+        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and zqishu>=2 and cid in (select cid from `{$tb_class}` where gid='{$gid}' and ftype not in(1,2))  order by zqishu desc,bid,sid,cid,xsort");
     } else {
-        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and zqishu>=2 and name in('单','双','大','小','龙','虎','冠亚单','冠亚双','冠亚大','冠亚小','总和单','总和双','总和大','总和小','合数单','合数双','尾大','尾小') order by zqishu desc,bid,sid,cid,xsort");
+        $fsql->query("select * from `{$tb_play}` where gid='{$gid}' and ifok=1 and zqishu>=2 and name in('单','双','大','小','龙','虎','冠亚单','冠亚双','冠亚大','冠亚小','总和单','总和双','总和大','总和小','合数单','合数双','尾大','尾小') order by zqishu desc,bid,sid,cid,xsort");
     }
     $i = 0;
     $tmp = array();
