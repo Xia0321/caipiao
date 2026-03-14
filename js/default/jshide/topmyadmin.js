@@ -81,7 +81,6 @@ function myready() {
 
 
     $(".header .nav a").click(function () {
-        return;
         $(this).parent().find('a').removeClass("selected");
         var a = $(this);
         a.addClass("selected");
