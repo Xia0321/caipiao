@@ -1875,11 +1875,24 @@ ul {
 
 /* ========== 记录页现代化样式（未结明细 / 今日已结） ========== */
 .mxj-record-page {
-    min-height: 100%;
     background: #f5f7fa;
     padding: 12px 14px 24px;
     box-sizing: border-box;
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+/* 有顶部(50px) + 无底部 (settlement_page 隐藏了底部导航) */
+.home.settlement_page .mxj-record-page {
+    height: calc(100vh - 50px);
+}
+/* 有顶部(48px) + 有底部(~70px) */
+.home:not(.settlement_page):not(.mypage-view) .mxj-record-page {
+    height: calc(100vh - 48px - 70px);
+}
+/* 无顶部(隐藏) + 有底部(~70px) */
+.home.mypage-view .mxj-record-page {
+    height: calc(100vh - 70px);
 }
 .mxj-record-page .ettwvL {
     background: transparent;
@@ -1900,9 +1913,6 @@ ul {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 90vh;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 .mxj-record-page .ettwvL .wjslist .table-row {
     background: #fff;
