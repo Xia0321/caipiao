@@ -1,0 +1,1118 @@
+/* ============================================================
+   TECH THEME — 科技化大气深色主题
+   覆盖 all.css / master.css / layout.css / info.css
+   ============================================================ */
+
+:root {
+    --t-bg:        #0b0f19;
+    --t-bg2:       #111827;
+    --t-bg3:       #1a2234;
+    --t-card:      #1e293b;
+    --t-elevated:  #243044;
+    --t-cyan:      #00d4ff;
+    --t-blue:      #3b82f6;
+    --t-green:     #22c55e;
+    --t-red:       #f43f5e;
+    --t-orange:    #f59e0b;
+    --t-txt:       #e2e8f0;
+    --t-txt2:      #94a3b8;
+    --t-txt3:      #64748b;
+    --t-border:    #1e3a5f;
+    --t-glow:      rgba(0,212,255,.18);
+    --t-r:         6px;
+    --t-tr:        all .2s ease;
+}
+
+/* =========== BODY / GLOBAL =========== */
+
+body {
+    background: var(--t-bg) !important;
+    color: var(--t-txt) !important;
+    font-family: "Microsoft YaHei","PingFang SC",-apple-system,system-ui,sans-serif !important;
+}
+
+::selection { background: rgba(0,212,255,.25); color: #fff; }
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--t-bg2); }
+::-webkit-scrollbar-thumb { background: var(--t-border); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #2a4a6f; }
+
+/* =========== LINKS =========== */
+
+a { color: var(--t-cyan) !important; text-decoration: none !important; transition: var(--t-tr); }
+a:link, a:visited { color: var(--t-cyan) !important; text-decoration: none !important; font-size: inherit !important; }
+a:hover { color: #66e5ff !important; text-decoration: none !important; font-size: inherit !important; }
+
+a.page { border-color: var(--t-border) !important; color: var(--t-cyan) !important; }
+a.page:hover { background: var(--t-cyan) !important; color: #000 !important; }
+
+/* =========== LAYOUT FRAMEWORK (master.css overrides) =========== */
+
+#header, #contents, #footer { min-width: 0 !important; }
+
+#contents {
+    background: var(--t-bg) !important;
+}
+
+#frame { border: none; }
+
+/* =========== HEADER BAR (top.html .header) =========== */
+
+.header {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2137 40%, #0a1628 100%) !important;
+    border-bottom: 1px solid var(--t-border);
+    box-shadow: 0 2px 20px rgba(0,0,0,.5);
+}
+
+.header .lottery, .header .lottery.nav {
+    background: linear-gradient(90deg, rgba(0,212,255,.08) 0%, rgba(59,130,246,.06) 100%) !important;
+    border-top: 1px solid var(--t-border);
+}
+
+.logo span {
+    color: var(--t-cyan) !important;
+    text-shadow: 0 0 20px rgba(0,212,255,.5), 0 0 40px rgba(0,212,255,.2);
+    font-weight: 700 !important;
+    letter-spacing: 4px;
+}
+
+/* =========== TOP MENU =========== */
+
+.top .menu { color: var(--t-txt) !important; }
+
+.top .expire_info {
+    color: var(--t-cyan) !important;
+}
+
+.top .menu_title {
+    background: rgba(0,212,255,.06) !important;
+    border-bottom: 1px solid var(--t-border);
+}
+
+.menu_title a {
+    background: none !important;
+    color: rgba(255,255,255,.8) !important;
+    text-shadow: none !important;
+    border-radius: 4px;
+    transition: var(--t-tr);
+    font-weight: 500 !important;
+}
+
+.menu_title a:hover, .menu_title a.selected {
+    background: rgba(0,212,255,.15) !important;
+    color: var(--t-cyan) !important;
+    text-shadow: 0 0 10px rgba(0,212,255,.3) !important;
+    font-weight: 600 !important;
+}
+
+/* =========== SUB MENU =========== */
+
+.menu_sub {
+    background: var(--t-bg2) !important;
+    border-bottom: 1px solid var(--t-border) !important;
+}
+
+.menu_sub_title {
+    color: var(--t-cyan) !important;
+    background: none !important;
+}
+
+.menu_sub_title span { color: var(--t-orange) !important; }
+
+.menu_sub_link, .menu_sub_link a, .menu_sub_links a {
+    color: var(--t-txt2) !important;
+}
+
+.menu_sub_link a:hover, .menu_sub_link a.selected,
+.menu_sub_links a:hover, .menu_sub_links a.selected {
+    color: var(--t-cyan) !important;
+    font-weight: 600;
+}
+
+/* =========== NAV BAR (game list) =========== */
+
+.nav a {
+    color: rgba(255,255,255,.65) !important;
+    transition: var(--t-tr);
+    border-radius: 4px;
+    padding: 0 8px;
+}
+
+.nav a:hover, .nav a.selected, .nav a.s {
+    color: var(--t-cyan) !important;
+    background: rgba(0,212,255,.1);
+    font-weight: 600;
+}
+
+/* =========== GAME DROPDOWN (.games in top.html) =========== */
+
+.games {
+    background: var(--t-card) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: var(--t-r);
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+}
+
+.games li { border-color: var(--t-border) !important; }
+
+.games a {
+    background: var(--t-card) !important;
+    color: var(--t-txt) !important;
+    text-shadow: none !important;
+    transition: var(--t-tr);
+}
+
+.games a:hover, .games a.xz {
+    background: rgba(0,212,255,.15) !important;
+    color: var(--t-cyan) !important;
+}
+
+/* =========== TOOLS (top right) =========== */
+
+.tools_user {
+    color: var(--t-txt2) !important;
+}
+
+.tools_user .online { color: var(--t-green); font-weight: 600; }
+
+/* =========== TOP INFO BAR =========== */
+
+.top_info {
+    background: var(--t-bg2) !important;
+    border-bottom: 1px solid var(--t-border) !important;
+    color: var(--t-txt2) !important;
+}
+
+.top_info .title {
+    color: var(--t-cyan) !important;
+}
+
+.top_info .menu a { color: var(--t-txt2) !important; }
+.top_info .menu a:hover, .top_info .menu a.selected { color: var(--t-cyan) !important; }
+
+.top_info .center a { color: var(--t-cyan) !important; }
+.top_info .right a { color: var(--t-txt2) !important; }
+.top_info .back { color: var(--t-cyan) !important; }
+
+/* =========== LOTTERY INFO BAR =========== */
+
+.lottery_info {
+    background: rgba(244,63,94,.1) !important;
+    border-bottom-color: var(--t-border) !important;
+    color: var(--t-txt) !important;
+}
+
+/* =========== FOOTER =========== */
+
+#footer, .footer {
+    background: var(--t-bg2) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-txt2) !important;
+}
+
+.footer span { color: var(--t-txt2) !important; }
+#footer .more { color: var(--t-cyan) !important; }
+
+/* =========== MAIN CONTENT =========== */
+
+.main {
+    background: var(--t-bg) !important;
+    color: var(--t-txt) !important;
+}
+
+.utb { background: var(--t-bg) !important; }
+
+.contents {
+    background: var(--t-bg) !important;
+    border-color: var(--t-border) !important;
+    padding: 8px !important;
+}
+
+/* =========== DATA TABLE (.data_table - header2/headers pages) =========== */
+
+.data_table {
+    border-color: var(--t-border) !important;
+    border-radius: var(--t-r);
+    overflow: hidden;
+}
+
+.data_table th, .data_table td {
+    border-color: var(--t-border) !important;
+    color: var(--t-txt);
+    padding: 4px 6px !important;
+}
+
+.data_table thead tr, .data_table .head, .layout .head {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+}
+
+.data_table thead th, .data_table .head th, .layout .head th {
+    color: var(--t-cyan) !important;
+    font-weight: 600;
+    text-shadow: 0 0 8px rgba(0,212,255,.2);
+}
+
+#drawInfo thead th {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+.data_table caption {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+    border-color: var(--t-border) !important;
+}
+
+.data_table tbody tr {
+    transition: background .15s;
+}
+
+.data_table tbody tr:nth-child(even) {
+    background: rgba(30,58,95,.15);
+}
+
+.data_table tbody tr:hover {
+    background: rgba(0,212,255,.06) !important;
+}
+
+.data_table tbody th {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+}
+
+.data_table .shead th, .info_table tbody th, .ft_ti {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+}
+
+.ft_ti02 {
+    background: rgba(6,214,160,.1) !important;
+    color: var(--t-green) !important;
+}
+
+.data_table .foot, .data_table tfoot tr {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+}
+
+.ft_sd {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+}
+
+.list tbody .hover, .list tbody .hover:nth-child(even) {
+    background: rgba(0,212,255,.08) !important;
+}
+
+.data_table input { color: var(--t-txt) !important; }
+
+/* =========== OLD TABLE (.tinfo - header pages) =========== */
+
+.tinfo {
+    border-color: var(--t-border) !important;
+    border-radius: var(--t-r);
+    overflow: hidden;
+}
+
+.tinfo td {
+    border-color: var(--t-border) !important;
+    color: var(--t-txt);
+}
+
+.tinfo th {
+    border-color: var(--t-border) !important;
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+    font-weight: 600;
+}
+
+.tinfo tr:nth-child(even) td { background: rgba(30,58,95,.1); }
+.tinfo tr:hover td { background: rgba(0,212,255,.06); }
+
+/* =========== OLD TABLE (.einfo) =========== */
+
+.einfo { border-color: var(--t-border) !important; }
+.einfo td { border-color: var(--t-border) !important; color: var(--t-txt); }
+.einfo th {
+    border-color: var(--t-border) !important;
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+/* =========== INFO TABLE =========== */
+
+.info_table tbody td { color: var(--t-txt); }
+.info_table tbody th {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+}
+
+/* =========== XBODY containers =========== */
+
+.xbody1, .xbody2, .xbody3 {
+    color: var(--t-txt);
+}
+
+/* =========== BUTTONS =========== */
+
+.btnf {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%) !important;
+    color: var(--t-cyan) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: 4px !important;
+    padding: 4px 12px !important;
+    font-weight: 500 !important;
+    cursor: pointer;
+    transition: var(--t-tr);
+    font-size: 12px !important;
+}
+
+.btnf:hover {
+    background: linear-gradient(180deg, rgba(0,212,255,.25) 0%, rgba(0,212,255,.15) 100%) !important;
+    color: #fff !important;
+    border-color: var(--t-cyan) !important;
+    box-shadow: 0 0 12px rgba(0,212,255,.2);
+}
+
+.button, .input_panel .button {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%) !important;
+    color: var(--t-cyan) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: 4px;
+    transition: var(--t-tr);
+}
+
+.button:hover {
+    background: rgba(0,212,255,.2) !important;
+    color: #fff !important;
+    border-color: var(--t-cyan) !important;
+}
+
+.input_panel .btn {
+    background: linear-gradient(180deg, var(--t-cyan) 0%, #0099b0 100%) !important;
+    color: #000 !important;
+    border: none !important;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.input_panel .btn:hover {
+    opacity: .9;
+    box-shadow: 0 0 15px rgba(0,212,255,.3);
+    color: #000 !important;
+}
+
+input[type="button"], input[type="submit"], input[type="reset"] {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%);
+    color: var(--t-cyan);
+    border: 1px solid var(--t-border);
+    border-radius: 4px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: var(--t-tr);
+}
+
+input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover {
+    background: rgba(0,212,255,.2);
+    color: #fff;
+    border-color: var(--t-cyan);
+    box-shadow: 0 0 12px rgba(0,212,255,.2);
+}
+
+.s1 {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%) !important;
+    color: var(--t-cyan) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: 4px !important;
+    padding: 2px 8px !important;
+    cursor: pointer;
+    transition: var(--t-tr);
+}
+
+.s1:hover {
+    background: rgba(0,212,255,.2) !important;
+    border-color: var(--t-cyan) !important;
+}
+
+.ft_a, .ft_a:hover {
+    background: var(--t-green) !important;
+    color: #000 !important;
+    border-radius: 4px;
+}
+
+.ico_tick {
+    background-color: var(--t-green) !important;
+}
+
+/* =========== FORM INPUTS =========== */
+
+input[type="text"], input[type="password"], input[type="number"],
+textarea, select {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: 4px;
+    padding: 4px 8px;
+    outline: none;
+    transition: var(--t-tr);
+}
+
+input[type="text"]:focus, input[type="password"]:focus,
+input[type="number"]:focus, textarea:focus, select:focus {
+    border-color: var(--t-cyan) !important;
+    box-shadow: 0 0 0 2px rgba(0,212,255,.15);
+}
+
+select option {
+    background: var(--t-card);
+    color: var(--t-txt);
+}
+
+.input, .input_panel input {
+    border-color: var(--t-border) !important;
+    background: var(--t-bg3) !important;
+    color: var(--t-txt) !important;
+}
+
+/* =========== GAME SELECTOR (.game_class) =========== */
+
+.game_class {
+    background: var(--t-bg2) !important;
+    border-color: var(--t-border) !important;
+    border-radius: var(--t-r);
+}
+
+.game_class ul { background: var(--t-bg2) !important; }
+.game_class li { background: none !important; }
+
+.game_class span {
+    color: var(--t-cyan) !important;
+}
+
+.game_class a, .game_tab_class a {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+    border-radius: 4px !important;
+    border: 1px solid transparent;
+    transition: var(--t-tr);
+}
+
+.game_class a:hover, .game_class a.selected,
+.game_tab_class a:hover, .game_tab_class a.selected {
+    background: rgba(0,212,255,.15) !important;
+    color: var(--t-cyan) !important;
+    border-color: rgba(0,212,255,.3);
+}
+
+.game_tab_class {
+    background: var(--t-bg2) !important;
+    border-bottom-color: var(--t-border) !important;
+}
+
+.game_tab a {
+    background: var(--t-blue) !important;
+    color: #fff !important;
+    border-radius: 4px !important;
+}
+
+/* =========== TAB MENU =========== */
+
+.tab_title {
+    background: var(--t-bg3) !important;
+}
+
+.tab_title a {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+    text-shadow: none !important;
+    border-radius: 4px 4px 0 0;
+    transition: var(--t-tr);
+}
+
+.tab_title a:hover, .tab_title a.selected {
+    background: var(--t-card) !important;
+    color: var(--t-cyan) !important;
+}
+
+.tab_info {
+    background: var(--t-bg3) !important;
+    border-bottom-color: var(--t-border) !important;
+    color: var(--t-txt3) !important;
+}
+
+.tab_info a { color: var(--t-txt2) !important; }
+.tab_info a:hover, .tab_info a.selected {
+    color: var(--t-cyan) !important;
+    background: rgba(0,212,255,.1) !important;
+}
+
+/* =========== PAGINATION =========== */
+
+.page {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt2) !important;
+    text-shadow: none !important;
+    border-radius: var(--t-r);
+}
+
+.page03 a { color: var(--t-cyan) !important; }
+.page03 a:hover { color: #66e5ff !important; }
+
+.page_info .current { color: var(--t-cyan) !important; }
+
+/* =========== POPUP / DIALOG =========== */
+
+.popdiv {
+    background: var(--t-card) !important;
+    border-color: var(--t-border) !important;
+    border-radius: var(--t-r);
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+}
+
+.popdiv .title {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    border-bottom-color: var(--t-border) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-dialog {
+    background: var(--t-card) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: var(--t-r) !important;
+}
+
+.ui-dialog .ui-dialog-titlebar {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-dialog .ui-dialog-content {
+    background: var(--t-card) !important;
+    color: var(--t-txt) !important;
+}
+
+.ui-widget-overlay {
+    background: rgba(0,0,0,.7) !important;
+}
+
+/* =========== UTILITY COLOR CLASSES (preserve semantics, adjust for dark bg) =========== */
+
+.red { color: #f87171 !important; }
+.blue { color: #60a5fa !important; }
+.lv { color: #4ade80 !important; }
+.orange { color: #fb923c !important; }
+.yellow { color: #fbbf24 !important; }
+.hei { color: var(--t-txt) !important; }
+.bai { color: #fff !important; }
+.hong { color: #fda4af !important; }
+.chu { font-weight: bold; }
+
+.bred { background: #991b1b !important; color: #fca5a5 !important; }
+.bbai { background: var(--t-bg3) !important; }
+.bhei { background: #1e293b !important; color: var(--t-txt) !important; }
+.bover { background: rgba(0,212,255,.06) !important; }
+.byellow { background: rgba(251,191,36,.15) !important; color: #fbbf24 !important; }
+.bc { background: rgba(6,214,160,.1) !important; color: var(--t-green) !important; }
+
+.b1 { background: rgba(0,212,255,.2) !important; color: var(--t-cyan) !important; }
+.b2 { background: rgba(168,85,247,.2) !important; color: #c084fc !important; }
+
+.even { background: rgba(30,58,95,.15) !important; }
+.over { background: rgba(251,191,36,.08) !important; }
+.click { background: rgba(168,85,247,.15) !important; }
+
+.ft_red { color: #f87171 !important; }
+.ft_blue { color: #60a5fa !important; }
+.ft_green { color: #4ade80 !important; }
+.ft_gray { color: var(--t-txt3) !important; }
+
+/* =========== THEAD COLORED =========== */
+
+.thead_green {
+    background: linear-gradient(180deg, #166534 0%, #14532d 100%) !important;
+    color: #fff !important;
+}
+
+thead span { color: var(--t-red) !important; }
+
+/* =========== MAIN CONTENT ELEMENTS =========== */
+
+.main_title { color: var(--t-cyan) !important; }
+.main_info { color: var(--t-txt) !important; }
+.main_info span { color: var(--t-red) !important; }
+.main_sta { color: var(--t-txt) !important; }
+.statistics span { color: var(--t-red) !important; }
+
+.part { color: var(--t-cyan) !important; }
+
+.main_te input {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%) !important;
+    border-color: var(--t-border) !important;
+    color: #fff !important;
+}
+
+.main_te a, .main_bu a {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+.main_te a:hover, .main_bu a:hover {
+    background: rgba(0,212,255,.2) !important;
+    color: #fff !important;
+}
+
+/* =========== LOADING OVERLAY =========== */
+
+.loading_overlay {
+    background: rgba(11,15,25,.8) !important;
+}
+
+.loading_overlay span {
+    color: var(--t-txt) !important;
+}
+
+/* =========== TABLE BOX =========== */
+
+.table_box_title {
+    background: var(--t-border) !important;
+}
+
+.table_box_title span {
+    background: var(--t-bg2) !important;
+    color: var(--t-cyan) !important;
+}
+
+.table_box_title a { color: var(--t-green) !important; background: var(--t-bg2) !important; }
+
+/* =========== DATA FOOTER =========== */
+
+.data_footer {
+    border-color: var(--t-border) !important;
+    background: var(--t-bg2) !important;
+    color: var(--t-txt2) !important;
+}
+
+.data_footer a { color: var(--t-cyan) !important; }
+.data_footer .note { color: var(--t-blue) !important; }
+.data_footer .warning { color: var(--t-red) !important; }
+
+/* =========== REPORT SPECIFIC =========== */
+
+.report .color { color: var(--t-blue) !important; }
+.report .minus { color: var(--t-red) !important; }
+
+/* =========== ICON BUTTONS =========== */
+
+.bu_back a { color: var(--t-cyan) !important; }
+.bu_back a:hover { color: #66e5ff !important; }
+.bu_add a { color: var(--t-cyan) !important; }
+.bu_add a:hover { color: #66e5ff !important; }
+
+a.bu_ico:hover { color: var(--t-red) !important; }
+
+/* =========== SORTABLE HEADERS =========== */
+
+.sortable { cursor: pointer; }
+
+/* =========== OLD-STYLE PAGE SPECIFIC (slib, pan, lib, now, etc.) =========== */
+
+.lib th.bred, .now th.bred {
+    background: linear-gradient(180deg, #0a3058 0%, #082847 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+.now td:hover {
+    background: rgba(0,212,255,.1) !important;
+    color: var(--t-txt) !important;
+}
+
+/* =========== QZCLOSE & STATUS =========== */
+
+.qzclose {
+    background: linear-gradient(180deg, #0d3b66 0%, #0a2d4f 100%) !important;
+    color: var(--t-cyan) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: 4px !important;
+    cursor: pointer;
+}
+
+.panstatus, .otherstatus { color: var(--t-cyan) !important; }
+
+.upqishu { color: var(--t-cyan) !important; }
+.upkj { color: var(--t-txt) !important; }
+
+/* =========== MENUS (.menus in top.html) =========== */
+
+.menus {
+    background: rgba(0,212,255,.1) !important;
+    border: 1px solid var(--t-border);
+    border-radius: 4px;
+    color: var(--t-txt) !important;
+}
+
+/* =========== H TAGS =========== */
+
+h1, h2, h3, h4, h5, h6 { color: var(--t-txt) !important; }
+
+/* =========== SPECIFIC OVERRIDES FOR KNOWN INLINE/EMBEDDED PATTERNS =========== */
+
+.editkj, .pikj, .xxtb {
+    background: var(--t-card) !important;
+    border: 2px solid var(--t-border) !important;
+    border-radius: var(--t-r);
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+}
+
+tr.z1 { background: rgba(0,212,255,.15) !important; }
+a.red { color: var(--t-red) !important; }
+.zes { color: var(--t-red) !important; }
+
+/* =========== ALERT / CONFIRM DIALOGS (browser default override) =========== */
+
+/* =========== LEFT NAV =========== */
+
+.menu li { color: var(--t-txt2) !important; }
+.menu li a { color: var(--t-cyan) !important; }
+.menu li a:hover { color: #66e5ff !important; }
+
+/* =========== GAME CATEGORY COLORS (lighten for dark bg) =========== */
+
+label.c100 { background: rgba(140,215,242,.15) !important; color: #8cd7f2 !important; }
+label.c101 { background: rgba(232,209,95,.15) !important; color: #e8d15f !important; }
+label.c108 { background: rgba(255,177,148,.15) !important; color: #ffb194 !important; }
+label.c109 { background: rgba(183,245,98,.15) !important; color: #b7f562 !important; }
+label.c110 { background: rgba(176,209,255,.15) !important; color: #b0d1ff !important; }
+label.c111 { background: rgba(236,181,243,.15) !important; color: #ecb5f3 !important; }
+label.c112 { background: rgba(113,240,195,.15) !important; color: #71f0c3 !important; }
+label.c113 { background: rgba(255,184,108,.15) !important; color: #ffb86c !important; }
+label.c115 { background: rgba(223,227,71,.15) !important; color: #dfe347 !important; }
+
+label.s {
+    background: rgba(244,63,94,.2) !important;
+    color: var(--t-red) !important;
+    border: 1px solid rgba(244,63,94,.3);
+}
+
+/* =========== USER MANAGEMENT STYLES (user.css overrides) =========== */
+
+.user_tb, .user_list, .user_panel {
+    background: var(--t-bg2) !important;
+    border-color: var(--t-border) !important;
+}
+
+.left_panel {
+    background: var(--t-bg2) !important;
+    border-color: var(--t-border) !important;
+}
+
+.param_panel {
+    background: var(--t-bg2) !important;
+}
+
+.query_panel {
+    background: var(--t-bg2) !important;
+}
+
+/* =========== SPECIFIC PAGE OVERRIDES =========== */
+
+.skin_blue { background: var(--t-bg) !important; }
+
+/* editma/editson ball styling */
+.qiua {
+    background-color: rgba(59,130,246,.2) !important;
+    color: var(--t-txt) !important;
+    border-radius: 50%;
+}
+
+.qiub {
+    background-color: rgba(244,63,94,.2) !important;
+    color: var(--t-txt) !important;
+    border-radius: 50%;
+}
+
+/* =========== LOT FONT COLORS =========== */
+
+.lot_font01 { color: var(--t-red) !important; }
+.lot_font02 { color: var(--t-orange) !important; }
+.lot_font03 { color: var(--t-green) !important; text-shadow: none !important; }
+.lot_font04 { color: var(--t-red) !important; }
+
+/* =========== CHECKBOX / RADIO =========== */
+
+input[type="checkbox"], input[type="radio"] {
+    accent-color: var(--t-cyan);
+}
+
+/* =========== TABLE GENERAL =========== */
+
+table { background: transparent !important; }
+td, th { color: inherit; }
+
+/* =========== IMG inside status =========== */
+
+img { filter: none; }
+
+/* =========== MARQUEE (footer) =========== */
+
+marquee { color: var(--t-txt2) !important; }
+marquee a { color: var(--t-cyan) !important; }
+
+/* =========== RESPONSIVE / MINIMUM =========== */
+
+.header { min-width: 1200px; }
+
+/* =========== ANIMATED TECH GLOW on key elements =========== */
+
+@keyframes techPulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(0,212,255,.1); }
+    50% { box-shadow: 0 0 15px rgba(0,212,255,.2); }
+}
+
+.data_table { animation: techPulse 4s ease-in-out infinite; }
+
+/* =========== LABEL =========== */
+
+label { color: inherit; }
+
+/* =========== USER.CSS OVERRIDES =========== */
+
+.user_list tbody .username {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt) !important;
+}
+
+.user_list tbody .username span { color: var(--t-txt) !important; }
+.user_list .account .label { color: var(--t-txt3) !important; }
+.user_list .account .max_limit { color: var(--t-cyan) !important; }
+.user_list .subcount a { color: var(--t-txt2) !important; }
+.user_list .status .s1 { color: var(--t-green) !important; }
+.user_list .status .s2 { color: #a78bfa !important; }
+.user_panel .pbalance { color: var(--t-blue) !important; }
+.user_panel .commission, .user_panel .commission option { color: var(--t-blue) !important; }
+.user_panel .error { color: var(--t-orange) !important; }
+
+.left_panel {
+    background: var(--t-bg2) !important;
+    border-color: var(--t-border) !important;
+}
+
+.left_panel li { border-top-color: var(--t-border) !important; }
+
+.left_panel .title {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+.param_panel thead tr, .param_panel .head { color: var(--t-txt) !important; }
+.param_panel .layout .head {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+.param_panel .data_table tbody th { background: var(--t-bg3) !important; color: var(--t-txt2) !important; }
+.param_panel input { border-color: var(--t-border) !important; }
+.param_panel .changed { background: rgba(0,212,255,.15) !important; color: var(--t-cyan) !important; }
+.param_panel .quick { border-color: var(--t-border) !important; }
+.param_panel .quick th, .param_panel .quick td { border-color: var(--t-border) !important; }
+
+.data { color: var(--t-txt2) !important; }
+
+.tab_title02 { background: var(--t-bg3) !important; }
+.tab_title02 a {
+    background: var(--t-bg3) !important;
+    color: var(--t-txt3) !important;
+    text-shadow: none !important;
+}
+.tab_title02 a:hover, .tab_title02 a.selected {
+    background: var(--t-card) !important;
+    color: var(--t-cyan) !important;
+}
+
+#updateAccountPanel {
+    background: var(--t-card) !important;
+    border-color: var(--t-border) !important;
+}
+#updateAccountPanel .title {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    color: var(--t-cyan) !important;
+}
+
+#setting ul {
+    background: var(--t-bg2) !important;
+    border-color: var(--t-border) !important;
+}
+#setting ul li {
+    background: var(--t-elevated) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-txt) !important;
+}
+#setting .note { color: var(--t-red) !important; }
+#setting .note1 { color: var(--t-blue) !important; }
+
+#statusPanel { color: var(--t-txt) !important; }
+
+.warning_panel { color: var(--t-red) !important; }
+
+/* =========== PAGE-SPECIFIC WHITE BG FIXES =========== */
+
+.nss { background: var(--t-bg2) !important; }
+
+.edittb {
+    background: var(--t-card) !important;
+    border: 2px solid var(--t-border) !important;
+    border-radius: var(--t-r);
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+}
+
+.recordtb .e tr:hover, .recordtb .l tr:hover,
+.page td:hover {
+    background: rgba(0,212,255,.08) !important;
+}
+
+/* =========== JQUERY UI THEME OVERRIDES =========== */
+
+.ui-widget {
+    color: var(--t-txt) !important;
+}
+
+.ui-widget-content {
+    background: var(--t-card) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-txt) !important;
+}
+
+.ui-widget-header {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-state-default, .ui-widget-content .ui-state-default {
+    background: var(--t-bg3) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-txt2) !important;
+}
+
+.ui-state-hover, .ui-widget-content .ui-state-hover,
+.ui-state-focus, .ui-widget-content .ui-state-focus {
+    background: rgba(0,212,255,.1) !important;
+    border-color: var(--t-cyan) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-state-active, .ui-widget-content .ui-state-active {
+    background: rgba(0,212,255,.2) !important;
+    border-color: var(--t-cyan) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-state-highlight {
+    background: rgba(245,158,11,.1) !important;
+    border-color: rgba(245,158,11,.3) !important;
+    color: var(--t-orange) !important;
+}
+
+.ui-state-error {
+    background: rgba(244,63,94,.1) !important;
+    border-color: rgba(244,63,94,.3) !important;
+    color: var(--t-red) !important;
+}
+
+.ui-dialog {
+    box-shadow: 0 12px 48px rgba(0,0,0,.7) !important;
+}
+
+.ui-datepicker {
+    background: var(--t-card) !important;
+    border: 1px solid var(--t-border) !important;
+    border-radius: var(--t-r);
+    box-shadow: 0 8px 32px rgba(0,0,0,.6);
+}
+
+.ui-datepicker-header {
+    background: linear-gradient(180deg, #0f2847 0%, #0a1e3d 100%) !important;
+    border-color: var(--t-border) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-datepicker td a {
+    color: var(--t-txt) !important;
+    background: transparent !important;
+}
+
+.ui-datepicker td a:hover {
+    background: rgba(0,212,255,.1) !important;
+    color: var(--t-cyan) !important;
+}
+
+.ui-datepicker .ui-datepicker-current-day a {
+    background: rgba(0,212,255,.2) !important;
+    color: var(--t-cyan) !important;
+}
+
+/* =========== CONTROL.CSS OVERRIDES =========== */
+
+.control_panel { background: var(--t-bg2) !important; }
+.control_table th { background: var(--t-bg3) !important; color: var(--t-txt2) !important; }
+
+/* =========== BETS / REPORT CSS OVERRIDES =========== */
+
+.bets_table th, .bets_table td { border-color: var(--t-border) !important; }
+.report_table th, .report_table td { border-color: var(--t-border) !important; }
+
+/* =========== GENERIC SAFE OVERRIDES =========== */
+
+span { color: inherit; }
+div { color: inherit; }
+
+table[bgcolor], td[bgcolor], th[bgcolor] {
+    background-color: transparent !important;
+}
+
+/* Fix for pages that use inline background:white on specific elements */
+[style*="background:#fff"], [style*="background: #fff"],
+[style*="background:#FFF"], [style*="background: #FFF"],
+[style*="background:white"], [style*="background: white"] {
+    background: var(--t-card) !important;
+}
+
+[style*="background-color:#fff"], [style*="background-color: #fff"],
+[style*="background-color:#FFF"], [style*="background-color: #FFF"],
+[style*="background-color:white"], [style*="background-color: white"] {
+    background-color: var(--t-card) !important;
+}
+
+/* =========== TECH BORDER ACCENTS =========== */
+
+.data_table, .tinfo, .einfo, .info_table {
+    position: relative;
+}
+
+.data_table::before, .tinfo::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--t-cyan), transparent);
+    border-radius: 3px 0 0 3px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* =========== ANIMATION ENHANCEMENTS =========== */
+
+.data_table, .tinfo, .einfo {
+    animation: none !important;
+}
+
+.main, .contents {
+    animation: fadeIn .3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

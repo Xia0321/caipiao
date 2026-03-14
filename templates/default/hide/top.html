@@ -18,50 +18,45 @@ var globalpath = "{+$globalpath+}";
 
 </script>
 <style type="text/css">
-.menus{width:160px;background:url(/css/default/img/menu.png);text-align:center;cursor:pointer;float:left;}
+.menus{width:160px;text-align:center;cursor:pointer;float:left;background:rgba(0,212,255,.08);border:1px solid rgba(30,58,95,1);border-radius:4px;color:#e2e8f0;padding:2px 8px;}
 .status{float:left;}
-.games{display:none;position:absolute;
-    min-height:400px;
-    background:#FFF;z-index:99;
-    width: 323px;
- 
-}
-.games li{
-    list-style: none;
-    float: left;
-    height:100%;
-    width: 160px;
-    border-bottom: solid 1px #fff;
-}
-.games li:nth-child(even){
-    border-left: solid 1px #fff;
-}
-
-.games  a {
-    float: left; 
-    width: 160px;
-    display: block;
-    height: 30px;
-    color: #fff;
-    line-height: 30px;
-    background: #1554BE;
-    text-shadow: 1px 1px 0 #426b9e;
-    text-align: center;
-    float: left;
-    font-size: 14px;
-    padding-left:5px;
-}
-
-.games a:hover{ 
-    background: #629EDA;
-}
+.games{display:none;position:absolute;min-height:400px;background:#1e293b;z-index:99;width:340px;border:1px solid #1e3a5f;border-radius:6px;box-shadow:0 12px 40px rgba(0,0,0,.6);overflow:hidden;}
+.games li{list-style:none;float:left;height:100%;width:168px;border-bottom:solid 1px #1e3a5f;}
+.games li:nth-child(even){border-left:solid 1px #1e3a5f;}
+.games a{float:left;width:168px;display:block;height:36px;color:#e2e8f0;line-height:36px;background:#1e293b;text-shadow:none;text-align:center;font-size:13px;transition:all .2s ease;}
+.games a:hover{background:rgba(0,212,255,.12);color:#00d4ff;}
+.games a.xz{background:rgba(0,212,255,.15);color:#00d4ff;font-weight:600;}
 #online{cursor:pointer}
-.qzclose{padding:2px;}
-.upkj{float:left;font-weight:bold;color:#000;}
-
-
+.qzclose{padding:3px 10px;background:linear-gradient(180deg,#0d3b66,#0a2d4f);color:#00d4ff;border:1px solid #1e3a5f;border-radius:4px;cursor:pointer;transition:all .2s;}
+.qzclose:hover{background:rgba(0,212,255,.2);border-color:#00d4ff;}
+.upkj{float:left;font-weight:bold;color:#e2e8f0;}
+body{background:#0b0f19;}
+.header{background:linear-gradient(135deg,#0a1628 0%,#0d2137 40%,#0a1628 100%) !important;border-bottom:1px solid #1e3a5f;}
+#contents{background:#0b0f19;}
+#footer{background:#111827;border-color:#1e3a5f;color:#94a3b8;}
+.footer span{color:#94a3b8;}
+.logo span{color:#00d4ff;text-shadow:0 0 20px rgba(0,212,255,.5),0 0 40px rgba(0,212,255,.2);}
+.expire_info{color:#00d4ff !important;}
+.expire_info span,.expire_info label{color:#94a3b8;}
+.expire_info .time0,.expire_info .time1{color:#00d4ff;}
+.upqishu{color:#00d4ff;}
+.menu_title{background:rgba(0,212,255,.04) !important;border-bottom:1px solid #1e3a5f;}
+.menu_title a{background:none !important;color:rgba(255,255,255,.75) !important;text-shadow:none !important;border-radius:4px;font-weight:500;transition:all .2s;}
+.menu_title a:hover,.menu_title a.selected{background:rgba(0,212,255,.12) !important;color:#00d4ff !important;text-shadow:0 0 10px rgba(0,212,255,.3) !important;}
+.menu_sub{background:#111827 !important;border-bottom:1px solid #1e3a5f !important;}
+.menu_sub_title{color:#00d4ff !important;background:none !important;}
+.menu_sub_title span{color:#f59e0b !important;}
+.menu_sub_link a{color:#94a3b8 !important;transition:all .2s;}
+.menu_sub_link a:hover,.menu_sub_link a.selected{color:#00d4ff !important;}
+.nav{background:linear-gradient(90deg,rgba(0,212,255,.06),rgba(59,130,246,.04)) !important;}
+.nav a{color:rgba(255,255,255,.6) !important;transition:all .2s;border-radius:4px;}
+.nav a:hover,.nav a.selected,.nav a.s{color:#00d4ff !important;background:rgba(0,212,255,.08);}
+.tools_user{color:#94a3b8 !important;}
+.s1{background:linear-gradient(180deg,#0d3b66,#0a2d4f);color:#00d4ff;border:1px solid #1e3a5f;border-radius:4px;padding:2px 8px;cursor:pointer;}
+#dialog{background:#1e293b;border:1px solid #1e3a5f;border-radius:6px;color:#e2e8f0;}
 </style>
 <link href="/css/default/ball.css" rel="stylesheet" type="text/css" />
+<link href="/css/default/tech-theme.css" rel="stylesheet" type="text/css" />
 </head>
 <body id="topbody">
 <script id=myjs language="javascript">var mulu='{+$mulu+}';var js=1;var sss='top';</script>
