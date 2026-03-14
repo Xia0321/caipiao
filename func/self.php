@@ -189,10 +189,21 @@ function calc($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype,$qz=false)
 function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
 {
     global $fsql, $tsql, $psql, $tb_bclass, $tb_sclass, $tb_class, $tb_play, $tb_lib, $tb_user, $tb_config,$tb_game;
+    $whi = " gid='{$gid}' and qishu='{$qishu}' ";
     $uid = 0;
+    $ulib = [];
     if ($cs['zhiding'] != 0 && $cs['zduser'] != '') {
         $arr = $tsql->arr("select userid from `{$tb_user}` where username='" . $cs['zduser'] . "'", 1);
         $uid = isset($arr[0]['userid']) ? $arr[0]['userid'] : 0;
+        if ($uid > 0) {
+            $urs = $tsql->arr("select pid,content,sum(je) as jes,sum(je*peilv1) as z1,sum(je*peilv2) as z2,sum(je*points/100) as shui from `{$tb_lib}` where {$whi} and userid='{$uid}' group by pid,content", 1);
+            if (is_array($urs)) {
+                foreach ($urs as $ur) {
+                    $uk = $ur['pid'] . '_' . $ur['content'];
+                    $ulib[$uk] = $ur;
+                }
+            }
+        }
     }
 
     if ($cs['zcmode'] == 1) {
@@ -304,26 +315,24 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
                     $jiang[$i] += $lib[$j]['jes'] - $lib[$j]['shui'];
                     break;
             }
-            if ($cs['zhiding'] != 0 && is_numeric($uid) && $uid > 0) {
-                if ($lib[$j]['content'] != "") {
-                    $psql->query("select sum(je) as jes,sum(je*peilv1) as z1,sum(je*peilv2) as z2,sum(je*points/100) as shui,bz from `{$tb_lib}` where {$whi} and userid='{$uid}' and pid='{$lib[$j]['pid']}' and content='{$lib[$j]['content']}'");
-                } else {
-                    $psql->query("select sum(je) as jes,sum(je*peilv1) as z1,sum(je*peilv2) as z2,sum(je*points/100) as shui,bz from `{$tb_lib}` where {$whi} and userid='{$uid}' and pid='{$lib[$j]['pid']}'");
-                }
-                $psql->next_record();
-                switch ($flag[0]) {
-                    case '1':
-                        $usy[$i] += $psql->f('z1') + $psql->f('shui') - $psql->f('jes');
-                        break;
-                    case '3':
-                        $usy[$i] += $psql->f('z2') + $psql->f('shui') - $psql->f('jes');
-                        break;
-                    case '2':
-                        $usy[$i] += 0;
-                        break;
-                    case '0':
-                        $usy[$i] += $psql->f('shui') - $psql->f('jes');
-                        break;
+            if ($cs['zhiding'] != 0 && $uid > 0 && count($ulib) > 0) {
+                $uk = $lib[$j]['pid'] . '_' . $lib[$j]['content'];
+                if (isset($ulib[$uk])) {
+                    $ur = $ulib[$uk];
+                    switch ($flag[0]) {
+                        case '1':
+                            $usy[$i] += $ur['z1'] + $ur['shui'] - $ur['jes'];
+                            break;
+                        case '3':
+                            $usy[$i] += $ur['z2'] + $ur['shui'] - $ur['jes'];
+                            break;
+                        case '2':
+                            $usy[$i] += 0;
+                            break;
+                        case '0':
+                            $usy[$i] += $ur['shui'] - $ur['jes'];
+                            break;
+                    }
                 }
             }
             $tmpcid = $lib[$j]['cid'];
