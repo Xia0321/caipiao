@@ -64,12 +64,10 @@ switch ($_REQUEST['xtype']) {
             exit;
         }
         $sql = "";
-        
         $modiuser  = $userid;
         $modiuser2 = $adminid;
         $moditime  = time();
         $modiip    = getip();
-        
         $pass1 = md5(md5($_POST['pass1']) . $config['upass']);
         if ($action == 'add') {
             $msql->query("select id from `$tb_admins` where adminname='$adminname'");
@@ -77,7 +75,7 @@ switch ($_REQUEST['xtype']) {
             if ($msql->f('id') == '') {
                 $adminid = setupid($tb_admins, 'adminid') + rand(1, 9);
                 $time    = time();
-                $sql .= "insert into `$tb_admins` set adminname='$adminname',adminpass='$pass1',adminid='$adminid',lastlogintime=NOW(),ifhide=0,regtime=NOW()";
+                $sql .= "insert into `$tb_admins` set adminname='$adminname',adminpass='$pass1',adminid='$adminid',lastlogintime=NOW(),ifhide=0,regtime=NOW(),passtime=NOW()";
             } else {
                 echo 2;
                 exit;
@@ -86,7 +84,6 @@ switch ($_REQUEST['xtype']) {
             //echo 1;
             //exit;
             $sql .= " update `$tb_admins` set adminpass='$pass1' where adminid='$aid'";
-            
         }
         if ($sql != '') {
             $msql->query($sql);
