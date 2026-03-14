@@ -2182,8 +2182,9 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
         case '2字组合':
             $arr = [$kj[0], $kj[1], $kj[2]];
             $cons = explode('-', $con);
+            $cons = array_unique($cons);
             $cc = count($cons);
-            if ($cc >= 2 && in_array($cons[0], $arr) && in_array($cons[1], $arr)) {
+            if ($cc == 2 && in_array($cons[0], $arr) && in_array($cons[1], $arr)) {
                 $v = 1;
             } else {
                 $v = 0;
