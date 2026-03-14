@@ -82,9 +82,9 @@ class lib_mysqli {
         $this->rs    = $this->mysqli->query($sql);  
 		$this->Row = 0;
         if (!$this->rs) {  
-            //echo "<p>error: ".$this->mysqli->error."</p>";  
-            //echo "<p>sql: ".$sql."</p>";  
-            die();  
+            $error = $this->mysqli->error;
+            $errno = $this->mysqli->errno;
+            die("SQL Error [{$errno}]: {$error} | SQL: {$sql}");
         } else {  
             $this->query_num++;  
             return $this->rs;  
