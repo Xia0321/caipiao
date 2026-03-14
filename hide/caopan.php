@@ -77,8 +77,10 @@ switch ($_REQUEST['xtype']) {
             if ($msql->f('id') == '') {
                 $adminid = setupid($tb_admins, 'adminid') + rand(1, 9);
                 $time    = time();
-                $sql .= "insert into `$tb_admins` set adminname='$adminname',adminpass='$pass1',adminid='$adminid',ifhide=0,regtime=NOW(),lastlogintime=NOW(),lastloginip='',logintimes=0,passtime=''";
-                
+                $sql .= "insert into `$tb_admins` set adminname='$adminname',adminpass='$pass1',adminid='$adminid',lastlogintime=NOW(),ifhide=0,regtime=NOW()";
+            } else {
+                echo 2;
+                exit;
             }
         } else if ($action == 'edit') {
             //echo 1;
