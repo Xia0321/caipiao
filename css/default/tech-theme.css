@@ -27,7 +27,7 @@
 
 html {
     height: 100% !important;
-    overflow: hidden;
+    overflow: hidden !important;
 }
 body {
     background: var(--t-bg) !important;
@@ -38,6 +38,21 @@ body {
     overflow-x: hidden !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
+}
+
+/* body 直接子元素撑满高度，保证内页不留空白 */
+body > .main,
+body > .xbody1,
+body > .xbody2,
+body > .xbody3,
+body > .utb,
+body > table:first-of-type {
+    min-height: 100% !important;
+}
+
+/* 覆盖 master.css 的 div{overflow:hidden}，允许内容正常展开 */
+.main, .main > .contents {
+    overflow: visible !important;
 }
 
 ::selection { background: rgba(0,212,255,.25); color: #fff; }
@@ -230,14 +245,19 @@ a.page:hover { background: var(--t-cyan) !important; color: #000 !important; }
     color: var(--t-txt) !important;
     min-height: 100% !important;
     box-sizing: border-box;
+    overflow: visible !important;
 }
 
-.utb { background: var(--t-bg) !important; }
+.utb {
+    background: var(--t-bg) !important;
+    min-height: 100% !important;
+}
 
 .contents {
     background: var(--t-bg) !important;
     border-color: var(--t-border) !important;
     padding: 8px !important;
+    overflow: visible !important;
 }
 
 /* =========== DATA TABLE (.data_table - header2/headers pages) =========== */
