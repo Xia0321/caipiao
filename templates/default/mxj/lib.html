@@ -1,8 +1,9 @@
 
 <style type="text/css">
-/* 移动端注单列表优化 */
+/* 移动端注单列表优化 + 底部导航留白 */
 .others.lib .container-report {
     padding: 8px 8px 80px 8px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0));
     box-sizing: border-box;
 }
 .others.lib .reportcontainer {
@@ -107,16 +108,16 @@
                       <td><span class="cnbig">{+$lib[i].je+}</span></td>
                       <td><span class="cnbig">{+$lib[i].points+}%</span></td>
                       <td><span class="cnbig2 blue fontbold sy">{+$lib[i].ky+}</span></td>
-                    </tr>        
+                    </tr>
                     {+/section+}
-                    
-                    
-                    
+
+
+
                               </tbody>
                 </table>
 
             </div>
-            
+
           <div class="row graylightbg borderbtmred darkred">
             <div class="row darkredbg white cnbig">
               <div class="padding20 clearfix marginleft20">
@@ -141,7 +142,7 @@
             <div class="col-sm-4">
               <div class="previous pull-left previous-btn">
                 <span aria-hidden="true">&lt;&lt; </span>前一页
-                
+
               </div>
             </div>
             <div class="col-sm-4 textcenter">
@@ -149,17 +150,16 @@
             </div>
             <div class="col-sm-4">
               <div class="next pull-right next-btn">
-                  后一页<span aria-hidden="true"> &gt;&gt;</span> 
-                
+                  后一页<span aria-hidden="true"> &gt;&gt;</span>
+
               </div>
             </div>
           </div>
           <div class="col-sm-12 pagination textcenter pagestatus">
               <div>共 {+$rcount+} 笔记录 共 {+$pcount+} 页</div>
           </div>
-
- <div class="gap100" style="height:200px;"></div>
-
-      </div>
-     
-    </div>
+<div class="gap100" style="height:80px;"></div>
+</div>
+</div>
+    <!-- 底部导航：游戏 / 结果 / 记录 / 我的 -->
+    {+include file='bottom_menu.html'+}

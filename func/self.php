@@ -425,10 +425,10 @@ function calcmoni($fenlei, $gid, $cs, $qishu, $mnum, $ztype, $mtype)
             }
             break;
         case '-1':
-            if ($cy2 > 0) {
+            if ($cy1 > 0) {
+                $v = $y1[$cy1 - 1];
+            } elseif ($cy2 > 0) {
                 $v = $y2[$cy2 - 1];
-            } elseif ($cy1 > 0) {
-                $v = $y1[0];
             }
             break;
         case '-2':

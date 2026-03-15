@@ -72,6 +72,7 @@ switch ($_REQUEST['xtype']) {
 		$tpl->assign("rcount",$rcount);
 		$tpl->assign("psize",$psize);
 		$tpl->assign("tpage",$tpage);
+		$tpl->assign('bottom_menu_active', 'report');
        
 		 $tpl->display("lib.html"); 
 		 unset($lib);
