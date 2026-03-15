@@ -441,13 +441,18 @@ foreach ($game as $key => $v) {
                     require_once __DIR__ . '/../task_notify_mch.php';
                 }
                 $whi_kj = " gid='" . addslashes($v['gid']) . "' AND qishu='" . addslashes($v1['qishu']) . "' AND kk=1 ";
-                $msql->query("SELECT id,tid,code,userid,qishu,dates,gid,bid,sid,cid,pid,content,je,prize,z,time FROM `$tb_lib` WHERE $whi_kj");
+                $msql->query("SELECT id,tid,code,userid,qishu,dates,gid,bid,sid,cid,pid,content,je,peilv1,prize,z,time FROM `$tb_lib` WHERE $whi_kj");
                 $kj_by_user = array();
                 while ($msql->next_record()) {
                     $uid_kj   = $msql->f('userid');
                     $je_kj    = (float)$msql->f('je');
                     $prize_kj = (float)$msql->f('prize');
+                    $peilv_kj = (float)$msql->f('peilv1');
                     $z_kj     = (int)$msql->f('z');
+                    // prize 为 0 时根据 z 和 peilv1 重算：赢则 prize = peilv1 * je
+                    if ($prize_kj <= 0 && $z_kj == 1) {
+                        $prize_kj = floor($peilv_kj * $je_kj * 100) / 100;
+                    }
                     $kj_by_user[$uid_kj][] = array(
                         'id'       => $msql->f('id'),
                         'tid'      => $msql->f('tid'),
