@@ -2156,11 +2156,12 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
             break;
         case '1~3':
         case '两面':
-            // 3D/快3：mtype 0=和值，1/2/3=百/十/个，$kj 为 0-based；和值大小 0-13 小、14-27 大(3D)，3-10 小、11-18 大(快3)
+            // 3D/快3：DB mtype 0/1/2=百/十/个，直接对应 $kj 索引；mtype >= count($kj) 时按和值结算
             $mt = (int)$c['mtype'];
             $zf = (int)$kj[0] + (int)$kj[1] + (int)$kj[2];
             $is_k3 = (count($kj) >= 3 && min($kj[0], $kj[1], $kj[2]) >= 1 && max($kj[0], $kj[1], $kj[2]) <= 6);
-            if ($mt === 0) {
+            if ($mt < 0 || $mt >= count($kj)) {
+                // 和值结算（总和大小/单双/质合）
                 if ($p['name'] === '大' || $p['name'] === '小') {
                     $tmp = $is_k3 ? (($zf >= 11) ? '大' : '小') : (($zf >= 14) ? '大' : '小');
                     $v = ($tmp === $p['name']) ? 1 : 0;
@@ -2175,9 +2176,7 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
                     $v = 0;
                 }
             } else {
-                $idx = ($mt <= 0) ? 0 : $mt - 1;
-                if ($idx < 0) $idx = 0;
-                if ($idx >= count($kj)) $idx = count($kj) - 1;
+                $idx = $mt;
                 $ma = isset($kj[$idx]) ? (int)$kj[$idx] : 0;
                 switch ($p['ztype']) {
                     case "码":
@@ -2205,7 +2204,7 @@ function moni_163($fenlei, $gid, $kj, $b, $s, $c, $p, $con, $ft)
             break;
         case '1字定位':
             $mt1 = (int)$c['mtype'];
-            $idx = ($mt1 <= 0) ? 0 : $mt1 - 1;
+            $idx = $mt1;
             if ($idx < 0) $idx = 0;
             if ($idx >= count($kj)) $idx = count($kj) - 1;
             $ma = isset($kj[$idx]) ? (int)$kj[$idx] : -1;
