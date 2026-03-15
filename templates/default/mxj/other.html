@@ -382,6 +382,35 @@ ul {
 }
 .iBBuud a.betting_shortcut,.iBBuud a.not_settlement_shortcut,.iBBuud a.result_shortcut{text-decoration:none;}
 
+/* 底部菜单带 mxj-bottom-nav 时（未结明细/今日已结等）不受上面 .iBBuud 覆盖，保持正确高度与布局，避免遮挡内容 */
+.home .mxj-bottom-nav.iBBuud,
+.home.settlement_page .mxj-bottom-nav {
+    min-height: 56px !important;
+    height: auto !important;
+    padding: 8px 0 12px !important;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0)) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    flex-direction: row !important;
+    border-top: 1px solid #e0e0e0 !important;
+    background: #fff !important;
+    z-index: 100 !important;
+}
+.home .mxj-bottom-nav.iBBuud a,
+.home.settlement_page .mxj-bottom-nav a {
+    width: auto !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    min-height: 48px !important;
+    height: auto !important;
+    float: none !important;
+    border-left: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
 
 .main-content {
     height: calc(-80px + 100%);
@@ -1787,9 +1816,15 @@ ul {
 .home .ilDBjU { background: linear-gradient(135deg, #1a73e8 0%, #4a90d9 100%); box-shadow: 0 2px 8px rgba(26,115,232,0.25); }
 .home .ilDBjU .pn_title { color: #fff; }
 .home .ilDBjU .pn_title .menu { filter: brightness(0) invert(1); opacity: 0.9; }
-/* 结算页仅保留顶栏，顶栏美化 */
+/* 结算页仅保留顶栏，顶栏固定不随内容滚动 */
 .home .ilDBjU.settlement_header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     height: 50px;
+    z-index: 60;
     background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 50%, #1565c0 100%);
     box-shadow: 0 2px 8px rgba(21,101,192,0.35);
     border-bottom: 1px solid rgba(255,255,255,0.15);
@@ -1804,7 +1839,7 @@ ul {
 }
 .home .ilDBjU.settlement_header .pn_back_link { display: block; position: absolute; left: 0; top: 0; bottom: 0; width: 48px; z-index: 2; }
 .home .ilDBjU.settlement_header .pn_title .menu { filter: brightness(0) invert(1); opacity: 0.95; }
-.home.settlement_page .main-content { height: calc(100% - 50px); top: 50px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(70px + env(safe-area-inset-bottom, 0)); box-sizing: border-box; }
+.home.settlement_page .main-content { position: fixed; height: calc(100vh - 50px); top: 50px; left: 0; right: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(90px + env(safe-area-inset-bottom, 0)); box-sizing: border-box; z-index: 40; background: #f5f7fa; }
 .home .ettwvL .table-header {
     background: #fff;
     border-bottom: 1px solid #e0e0e0;
@@ -1883,7 +1918,9 @@ ul {
 }
 /* 有顶部(50px) + 有底部(~70px)，未结明细/今日已结显示底部菜单 */
 .home.settlement_page .mxj-record-page {
-    height: calc(100vh - 50px - 70px);
+    height: auto;
+    min-height: calc(100vh - 50px - 70px);
+    overflow-y: visible;
     padding-bottom: calc(24px + env(safe-area-inset-bottom, 0));
 }
 /* 有顶部(48px) + 有底部(~70px) */
